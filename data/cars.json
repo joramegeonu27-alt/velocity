@@ -1,0 +1,35 @@
+[
+    {
+        "id": "bmw-m4",
+        "brand": "BMW",
+        "model": "M4 Competition",
+        "year": 2026,
+        "horsepower": 503,
+        "engine": "3.0L Twin-Turbo Inline-6",
+        "top_speed": "155 mph",
+        "zero_to_sixty": "3.4 seconds",
+        "image": "/static/images/bmw-m4.jpg"
+    },
+    {
+        "id": "porsche-911",
+        "brand": "Porsche",
+        "model": "911 Carrera",
+        "year": 2026,
+        "horsepower": 379,
+        "engine": "3.0L Twin-Turbo Flat-6",
+        "top_speed": "182 mph",
+        "zero_to_sixty": "4.0 seconds",
+        "image": "/static/images/porsche-911.jpg"
+    },
+    {
+        "id": "amg-gt",
+        "brand": "Mercedes-AMG",
+        "model": "GT 63",
+        "year": 2026,
+        "horsepower": 577,
+        "engine": "4.0L Twin-Turbo V8",
+        "top_speed": "196 mph",
+        "zero_to_sixty": "3.1 seconds",
+        "image": "/static/images/amg-gt.jpg"
+    }
+]
