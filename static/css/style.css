@@ -8,32 +8,45 @@
     box-sizing: border-box;
 }
 
+
 html {
     scroll-behavior: smooth;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background: #0a0a0a;
-    color: #ffffff;
-    line-height: 1.6;
+body {     
+    font-family: Arial, sans-serif;     
+    background-image: url('/static/hero-cover.png');     
+    background-attachment: fixed; /* Fix 1: Controls the scrolling behavior */
+    background-position: center;  /* Fix 2: Centers the image in the hero section */
+    background-repeat: no-repeat; /* Fix 3: The correct value to stop repeating */
+    background-size: cover;     
+    color: #ffffff;     
+    line-height: 1.6; 
+    
+    
 }
+
 
 a {
     color: inherit;
     text-decoration: none;
 }
 
+.feature {
+    background:linear-gradient(to bottom, #1d1914 0%, #63534a 100%);
+}
 
 /* =========================
    NAVIGATION
 ========================= */
 
 .navbar {
-    position: absolute;
+    position: fixed;
+    background: linear-gradient(to bottom, #111111 0%, #22222200 100%);
     top: 0;
     left: 0;
     width: 100%;
+    min-height: 60px;
 
     display: flex;
     justify-content: space-between;
@@ -41,7 +54,7 @@ a {
 
     padding: 30px 7%;
 
-    z-index: 10;
+    z-index: 20;
 }
 
 .logo {
@@ -67,6 +80,13 @@ nav a {
 
 nav a:hover {
     opacity: 1;
+    border-bottom: 1px solid #b9b8b8;
+    transition: border-bottom 0.03s ease-out,
+                scaleX 0.2s ease-in-out;
+    transform: scaleX(1.1);
+    text-shadow: 0 0 10px rgb(159, 160, 160);
+    
+    
 }
 
 
@@ -88,11 +108,12 @@ nav a:hover {
     background:
         linear-gradient(
             90deg,
-            rgba(0, 0, 0, 0.95) 0%,
-            rgba(0, 0, 0, 0.7) 45%,
+            rgba(0, 0, 0, 0.808) 0%,
+            rgba(0, 0, 0, 0.589) 30%,
+            rgba(0, 0, 0, 0.336) 60%,
             rgba(0, 0, 0, 0.15) 100%
         ),
-        url("/static/images/hero-car.jpg") center/cover no-repeat;
+        url("/static/images/hero-car.jpg") center center / cover no-repeat;
 }
 
 
@@ -195,6 +216,122 @@ nav a:hover {
     font-size: 17px;
 }
 
+/* =========================================
+CINEMATIC HERO PARTICLE SYSTEM
+========================================= */
+
+.hero {
+position: relative;
+overflow: hidden;
+}
+
+/* Hero background layer */
+
+.hero-background {
+position: absolute;
+inset: 0;
+
+
+background-image:
+    url("/static/images/hero-car.jpg");
+
+background-size: cover;
+background-position: center;
+
+z-index: 0;
+
+
+}
+
+/* Cinematic darkness over the image */
+
+.hero-cinematic-overlay {
+position: absolute;
+inset: 0;
+
+z-index: 1;
+
+pointer-events: none;
+
+background:
+    radial-gradient(
+        ellipse at 72% 65%,
+        transparent 0%,
+        rgba(0, 0, 0, 0.08) 35%,
+        rgba(0, 0, 0, 0.45) 100%
+    ),
+
+    linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.72) 0%,
+        rgba(0, 0, 0, 0.38) 35%,
+        rgba(0, 0, 0, 0.05) 75%,
+        rgba(0, 0, 0, 0.32) 100%
+    );
+
+}
+
+/* Particle canvas */
+
+.hero-particles {
+position: absolute;
+
+inset: 0;
+
+width: 100%;
+height: 100%;
+
+z-index: 2;
+
+pointer-events: none;
+
+mix-blend-mode: screen;
+
+
+}
+
+/* Keep hero content above particles */
+
+.hero-content {
+position: relative;
+
+z-index: 3;
+
+}
+
+/* Make sure the navigation stays above everything */
+
+.navbar {
+position: relative;
+z-index: 10;
+
+}
+
+/* Optional cinematic vignette around
+the entire hero */
+
+.hero::after {
+content: "";
+
+
+position: absolute;
+
+inset: 0;
+
+z-index: 4;
+
+pointer-events: none;
+
+background:
+    radial-gradient(
+        ellipse at center,
+        transparent 45%,
+        rgba(0, 0, 0, 0.18) 72%,
+        rgba(0, 0, 0, 0.72) 100%
+    );
+
+}
+
 
 /* =========================
    HERO BUTTON
@@ -204,9 +341,9 @@ nav a:hover {
     display: inline-block;
 
     padding: 15px 30px;
+    color: #ffffff;
 
-    background: #ffffff;
-    color: #000000;
+    background: linear-gradient(to bottom, #130d0a 42%, #5c4720 100%);
 
     font-weight: bold;
 
@@ -215,12 +352,16 @@ nav a:hover {
     letter-spacing: 1px;
 
     transition: 0.3s;
+
+    border-radius: 40px;
 }
 
 .hero-button:hover {
     transform: translateY(-3px);
 
-    background: #dddddd;
+      background: linear-gradient(to bottom, #31221a 42%, #745c31 100%);
+      box-shadow: 0 0 8px #be9c5c;
+
 }
 
 
@@ -440,15 +581,18 @@ footer p {
     .car-image {
         height: 280px;
     }
-
-    /* =========================
-   CARS PAGE
+/* =========================
+   CARS PAGE HEADER
 ========================= */
 
 .cars-header {
-    padding: 180px 7% 80px;
+    position: relative;
+
+    padding: 280px 7% 100px;
 
     background: #0a0a0a;
+
+    min-height: 520px;
 }
 
 .cars-header p {
@@ -458,7 +602,7 @@ footer p {
 
     color: #777777;
 
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .cars-header h1 {
@@ -468,12 +612,13 @@ footer p {
 
     letter-spacing: -4px;
 
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 
     background: linear-gradient(
         to bottom,
-        #ffffff,
-        #777777
+        #ffffff 0%,
+        #eeeeee 40%,
+        #777777 100%
     );
 
     -webkit-background-clip: text;
@@ -485,20 +630,14 @@ footer p {
 .cars-header span {
     display: block;
 
-    max-width: 550px;
+    max-width: 600px;
 
     color: #888888;
 
     font-size: 16px;
+
+    line-height: 1.7;
 }
-
-
-.cars-collection {
-    padding: 40px 7% 120px;
-
-    background: #0a0a0a;
-}
-
 
 /* Car specifications */
 
@@ -544,17 +683,58 @@ footer p {
 @media (max-width: 800px) {
 
     .cars-header {
-        padding: 140px 25px 60px;
-    }
-
-    .cars-collection {
-        padding: 30px 25px 80px;
+        padding: 190px 25px 70px;
+        min-height: 450px;
     }
 
     .cars-header h1 {
         letter-spacing: -2px;
     }
 
+    .cars-collection {
+        padding: 30px 25px 80px;
+    }
+}
+
+/* =========================
+   CARS PAGE NAVIGATION FIX
+========================= */
+
+.cars-page .navbar {
+    position: relative;
+    top: auto;
+    left: auto;
+
+    background: #0a0a0a;
+
+    padding: 30px 7%;
+}
+
+
+/* Cars page header */
+
+.cars-page .cars-header {
+    padding: 100px 7% 100px;
+
+    min-height: 480px;
+
+    background: #0a0a0a;
+}
+
+
+/* Mobile */
+
+@media (max-width: 800px) {
+
+    .cars-page .navbar {
+        padding: 25px;
+    }
+
+    .cars-page .cars-header {
+        padding: 80px 25px 70px;
+
+        min-height: 400px;
+    }
 }
 
 }

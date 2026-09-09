@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
-<body>
+<body class="cars-page">
 
     <!-- Navigation -->
     <header class="navbar">
@@ -29,10 +29,8 @@
     <!-- Cars Header -->
     <section class="cars-header">
 
-        <p>THE VÉLOCITY COLLECTION</p>
-
+        <br><br>
         <h1>Explore Cars.</h1>
-
         <span>
             Discover performance, engineering and design
             from some of the world's most remarkable cars.
@@ -48,7 +46,8 @@
 
             {{range .}}
 
-            <article class="car-card">
+            <!-- Individual Car -->
+            <a href="/cars/{{.ID}}" class="car-card">
 
                 <div class="car-image">
 
@@ -58,6 +57,7 @@
                     >
 
                 </div>
+
 
                 <div class="car-info">
 
@@ -69,6 +69,8 @@
                         {{.Horsepower}} HP • {{.Engine}}
                     </span>
 
+
+                    <!-- Car Specifications -->
                     <div class="car-specs">
 
                         <div>
@@ -85,7 +87,7 @@
 
                 </div>
 
-            </article>
+            </a>
 
             {{end}}
 

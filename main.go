@@ -62,6 +62,9 @@ func main() {
 	staticFiles := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", staticFiles))
 
+	imgFiles := http.FileServer(http.Dir("images"))
+	http.Handle("/images/", http.StripPrefix("/images/", imgFiles))
+
 	// Homepage
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/cars", carsHandler)
