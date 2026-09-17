@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{.Brand}} {{.Model}} — VÉLOCITY</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body class="car-detail-page">
+
+    <!-- Navigation -->
+    <header class="navbar">
+
+        <a href="/" class="logo">
+            VÉLOCITY
+        </a>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="/cars">Cars</a>
+            <a href="/compare">Compare</a>
+            <a href="/about">About</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Car Hero -->
+    <section class="car-detail-hero">
+
+        <div class="car-detail-image">
+
+            <img
+                src="{{.Image}}"
+                alt="{{.Brand}} {{.Model}}"
+            >
+
+        </div>
+
+
+        <div class="car-detail-overlay"></div>
+
+
+        <div class="car-detail-content">
+
+            <p class="car-detail-brand">
+                {{.Brand}}
+            </p>
+
+            <h1>
+                {{.Model}}
+            </h1>
+
+            <p class="car-detail-year">
+                {{.Year}}
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Specifications -->
+    <section class="car-details">
+
+        <div class="section-heading">
+
+            <p>VEHICLE SPECIFICATIONS</p>
+
+            <h2>
+                {{.Brand}} {{.Model}}
+            </h2>
+
+        </div>
+
+
+        <div class="detail-spec-grid">
+
+            <div class="detail-spec">
+
+                <span>HORSEPOWER</span>
+
+                <strong>
+                    {{.Horsepower}} HP
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>0–60 MPH</span>
+
+                <strong>
+                    {{.ZeroToSixty}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>TOP SPEED</span>
+
+                <strong>
+                    {{.TopSpeed}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>ENGINE</span>
+
+                <strong>
+                    {{.Engine}}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Back to Cars -->
+    <section class="back-to-cars">
+
+        <a href="/cars" class="hero-button">
+            ← Back to Cars
+        </a>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="logo">
+            VÉLOCITY
+        </div>
+
+        <p>
+            Discover. Explore. Compare.
+        </p>
+
+        <p class="copyright">
+            © 2026 VÉLOCITY. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

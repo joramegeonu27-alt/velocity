@@ -1,75 +1,69 @@
 <!DOCTYPE html>
+<html lang="en">
 
-<html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VÉLOCITY — Car Discovery</title>
+    <title>VÉLOCITY — Car Discovery</title>
 
-<link rel="stylesheet" href="/static/css/style.css">
-
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
 <body>
-    <canvas id="heroParticles" class="hero-particles"></canvas>
 
-<!-- Navigation -->
-<header class="navbar">
-    <div class="logo">VÉLOCITY</div>
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="logo">VÉLOCITY</div>
 
-    <nav>
-        <a href="/">Home</a>
-        <a href="/cars">Cars</a>
-        <a href="/compare">Compare</a>
-        <a href="/about">About</a>
-    </nav>
-</header>
-
-
-<!-- Hero Section -->
-<section class="hero">
-
-    <!-- Hero Background -->
-    <div class="hero-background"></div>
-
-    <!-- Dark cinematic gradient -->
-    <div class="hero-cinematic-overlay"></div>
-
-    <!-- Cinematic Ember / Ash Particle Layer -->
-    <canvas
-        id="heroParticles"
-        class="hero-particles"
-        aria-hidden="true">
-    </canvas>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/cars">Cars</a>
+            <a href="/compare">Compare</a>
+            <a href="/about">About</a>
+        </nav>
+    </header>
 
 
-    <!-- Hero Content -->
-    <div class="hero-content">
+    <!-- Hero Section -->
+    <section class="hero">
 
-        <p class="hero-label">
-            THE FUTURE OF AUTOMOTIVE DISCOVERY
-        </p>
+        <div class="hero-background"></div>
 
-        <h1>
-            ENGINEERED<br>
-            TO BE REMEMBERED.
-        </h1>
+        <div class="hero-cinematic-overlay"></div>
 
-        <p class="hero-description">
-            Discover extraordinary cars, explore their performance,
-            and find the machine that speaks to you.
-        </p>
+        <canvas
+            id="heroParticles"
+            class="hero-particles"
+            aria-hidden="true">
+        </canvas>
 
-        <a href="/cars" class="hero-button">
-            Explore Cars
-        </a>
+        <div class="hero-content">
 
-    </div>
+            <p class="hero-label">
+                THE FUTURE OF AUTOMOTIVE DISCOVERY
+            </p>
 
-</section>
+            <h1>
+                ENGINEERED<br>
+                TO BE REMEMBERED.
+            </h1>
+
+            <p class="hero-description">
+                Discover extraordinary cars, explore their performance,
+                and find the machine that speaks to you.
+            </p>
+
+            <a href="/cars" class="hero-button">
+                Explore Cars
+            </a>
+
+        </div>
+
+    </section>
 
 
-<!-- Featured Cars -->
-<div class="feature">
-
+    <!-- Featured Cars -->
     <section class="featured">
 
         <div class="section-heading">
@@ -79,52 +73,115 @@
 
         <div class="car-grid">
 
+            <!-- Car 1 -->
             <article class="car-card">
 
                 <div class="car-image">
-                    <img
-                        src="/static/images/bmw-m4.jpg"
-                        alt="BMW M4">
+                    <div class="car-image-placeholder">
+                        BMW
+                    </div>
                 </div>
 
                 <div class="car-info">
+
                     <p>BMW</p>
+
                     <h3>M4 Competition</h3>
-                    <span>503 HP • 3.0L Twin-Turbo</span>
+
+                    <span>
+                        503 HP • 3.0L Twin-Turbo
+                    </span>
+
+                    <div class="car-specs">
+
+                        <div>
+                            <small>POWER</small>
+                            <strong>503 HP</strong>
+                        </div>
+
+                        <div>
+                            <small>0–60 MPH</small>
+                            <strong>3.8s</strong>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </article>
 
 
+            <!-- Car 2 -->
             <article class="car-card">
 
                 <div class="car-image">
-                    <img
-                        src="/static/images/porsche-911.jpg"
-                        alt="Porsche 911">
+                    <div class="car-image-placeholder">
+                        PORSCHE
+                    </div>
                 </div>
 
                 <div class="car-info">
+
                     <p>PORSCHE</p>
+
                     <h3>911 Carrera</h3>
-                    <span>379 HP • 3.0L Turbo</span>
+
+                    <span>
+                        379 HP • 3.0L Turbo
+                    </span>
+
+                    <div class="car-specs">
+
+                        <div>
+                            <small>POWER</small>
+                            <strong>379 HP</strong>
+                        </div>
+
+                        <div>
+                            <small>0–60 MPH</small>
+                            <strong>4.0s</strong>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </article>
 
 
+            <!-- Car 3 -->
             <article class="car-card">
 
                 <div class="car-image">
-                    <img
-                        src="/static/images/amg-gt.jpg"
-                        alt="Mercedes AMG GT">
+                    <div class="car-image-placeholder">
+                        AMG
+                    </div>
                 </div>
 
                 <div class="car-info">
+
                     <p>MERCEDES-AMG</p>
+
                     <h3>AMG GT</h3>
-                    <span>577 HP • 4.0L V8 Biturbo</span>
+
+                    <span>
+                        577 HP • 4.0L V8 Biturbo
+                    </span>
+
+                    <div class="car-specs">
+
+                        <div>
+                            <small>POWER</small>
+                            <strong>577 HP</strong>
+                        </div>
+
+                        <div>
+                            <small>0–60 MPH</small>
+                            <strong>3.1s</strong>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </article>
@@ -133,77 +190,88 @@
 
     </section>
 
-</div>
 
+    <!-- Why Velocity -->
+    <section class="why-velocity">
 
-<!-- Why Velocity -->
-<section class="why-velocity">
+        <div class="section-heading">
 
-    <div class="section-heading">
-        <p>THE VÉLOCITY EXPERIENCE</p>
-        <h2>More Than Just Cars.</h2>
-    </div>
+            <p>THE VÉLOCITY EXPERIENCE</p>
 
+            <h2>More Than Just Cars.</h2>
 
-    <div class="features">
-
-        <div class="feature">
-            <h3>01</h3>
-
-            <h4>Discover</h4>
-
-            <p>
-                Explore a collection of remarkable vehicles
-                from the world's most exciting automotive brands.
-            </p>
         </div>
 
 
-        <div class="feature">
-            <h3>02</h3>
+        <div class="features">
 
-            <h4>Compare</h4>
+            <div class="feature">
 
-            <p>
-                Compare performance, specifications and features
-                to find the car that fits your style.
-            </p>
+                <h3>01</h3>
+
+                <h4>Discover</h4>
+
+                <p>
+                    Explore a collection of remarkable vehicles
+                    from the world's most exciting automotive brands.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <h3>02</h3>
+
+                <h4>Compare</h4>
+
+                <p>
+                    Compare performance, specifications and features
+                    to find the car that fits your style.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <h3>03</h3>
+
+                <h4>Explore</h4>
+
+                <p>
+                    Dive deeper into each vehicle and discover
+                    what makes it extraordinary.
+                </p>
+
+            </div>
+
         </div>
 
+    </section>
 
-        <div class="feature">
-            <h3>03</h3>
 
-            <h4>Explore</h4>
+    <!-- Footer -->
+    <footer>
 
-            <p>
-                Dive deeper into each vehicle and discover
-                what makes it extraordinary.
-            </p>
+        <div class="logo">
+            VÉLOCITY
         </div>
 
-    </div>
+        <p>
+            Discover. Explore. Compare.
+        </p>
 
-</section>
+        <p class="copyright">
+            © 2026 VÉLOCITY. All rights reserved.
+        </p>
+
+    </footer>
 
 
-<!-- Footer -->
-<footer>
+    <!-- JavaScript -->
+    <script src="/static/js/hero-cover.js"></script>
 
-    <div class="logo">
-        VÉLOCITY
-    </div>
+</body>
 
-    <p>
-        Discover. Explore. Compare.
-    </p>
-
-    <p class="copyright">
-        © 2026 VÉLOCITY. All rights reserved.
-    </p>
-
-</footer>
-
- <script src="/static/js/hero-cover.js"></script>
-
-</body> </html>
+</html>

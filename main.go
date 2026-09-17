@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type Car struct {
@@ -20,6 +21,22 @@ type Car struct {
 	Image       string `json:"image"`
 }
 
+func loadCars() ([]Car, error) {
+	data, err := os.ReadFile("data/cars.json")
+	if err != nil {
+		return nil, err
+	}
+
+	var cars []Car
+
+	err = json.Unmarshal(data, &cars)
+	if err != nil {
+		return nil, err
+	}
+
+	return cars, nil
+}
+
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/index.html")
 	if err != nil {
@@ -28,22 +45,12 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.Execute(w, nil)
-
 }
 
 func carsHandler(w http.ResponseWriter, r *http.Request) {
-
-	data, err := os.ReadFile("data/cars.json")
+	cars, err := loadCars()
 	if err != nil {
 		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
-		return
-	}
-
-	var cars []Car
-
-	err = json.Unmarshal(data, &cars)
-	if err != nil {
-		http.Error(w, "Unable to read car data", http.StatusInternalServerError)
 		return
 	}
 
@@ -54,6 +61,43 @@ func carsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.Execute(w, cars)
+}
+
+func carDetailHandler(w http.ResponseWriter, r *http.Request) {
+	carID := strings.TrimPrefix(r.URL.Path, "/cars/")
+
+	if carID == "" {
+		http.NotFound(w, r)
+		return
+	}
+
+	cars, err := loadCars()
+	if err != nil {
+		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
+		return
+	}
+
+	var selectedCar *Car
+
+	for i := range cars {
+		if cars[i].ID == carID {
+			selectedCar = &cars[i]
+			break
+		}
+	}
+
+	if selectedCar == nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	tmpl, err := template.ParseFiles("templates/car.html")
+	if err != nil {
+		http.Error(w, "Unable to load car page", http.StatusInternalServerError)
+		return
+	}
+
+	tmpl.Execute(w, selectedCar)
 }
 
 func main() {
@@ -67,7 +111,12 @@ func main() {
 
 	// Homepage
 	http.HandleFunc("/", homeHandler)
+
+	// Cars collection
 	http.HandleFunc("/cars", carsHandler)
+
+	// Individual car
+	http.HandleFunc("/cars/", carDetailHandler)
 
 	fmt.Println("VÉLOCITY server running on http://localhost:8080")
 

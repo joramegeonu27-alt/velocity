@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,9 @@
     <!-- Navigation -->
     <header class="navbar">
 
-        <a href="/" class="logo">VÉLOCITY</a>
+        <a href="/" class="logo">
+            VÉLOCITY
+        </a>
 
         <nav>
             <a href="/">Home</a>
@@ -29,12 +32,36 @@
     <!-- Cars Header -->
     <section class="cars-header">
 
-        <br><br>
         <h1>Explore Cars.</h1>
+
         <span>
             Discover performance, engineering and design
             from some of the world's most remarkable cars.
         </span>
+
+    </section>
+
+
+    <!-- Search -->
+    <section class="car-search">
+
+        <div class="search-box">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+            <input
+                type="text"
+                id="carSearch"
+                placeholder="Search cars, brands or models..."
+            >
+
+            <button id="searchButton">
+                Search
+            </button>
+
+        </div>
 
     </section>
 
@@ -46,8 +73,11 @@
 
             {{range .}}
 
-            <!-- Individual Car -->
-            <a href="/cars/{{.ID}}" class="car-card">
+            <a
+                href="/cars/{{.ID}}"
+                class="car-card"
+                data-car="{{.Brand}} {{.Model}}"
+            >
 
                 <div class="car-image">
 
@@ -61,26 +91,40 @@
 
                 <div class="car-info">
 
-                    <p>{{.Brand}}</p>
+                    <p>
+                        {{.Brand}}
+                    </p>
 
-                    <h3>{{.Model}}</h3>
+                    <h3>
+                        {{.Model}}
+                    </h3>
 
                     <span>
                         {{.Horsepower}} HP • {{.Engine}}
                     </span>
 
 
-                    <!-- Car Specifications -->
                     <div class="car-specs">
 
                         <div>
+
                             <small>0–60</small>
-                            <strong>{{.ZeroToSixty}}</strong>
+
+                            <strong>
+                                {{.ZeroToSixty}}
+                            </strong>
+
                         </div>
 
+
                         <div>
+
                             <small>TOP SPEED</small>
-                            <strong>{{.TopSpeed}}</strong>
+
+                            <strong>
+                                {{.TopSpeed}}
+                            </strong>
+
                         </div>
 
                     </div>
@@ -99,7 +143,9 @@
     <!-- Footer -->
     <footer>
 
-        <div class="logo">VÉLOCITY</div>
+        <div class="logo">
+            VÉLOCITY
+        </div>
 
         <p>
             Discover. Explore. Compare.
@@ -111,5 +157,55 @@
 
     </footer>
 
+
+    <!-- Search JavaScript -->
+    <script>
+
+        const searchInput = document.getElementById("carSearch");
+        const searchButton = document.getElementById("searchButton");
+        const carCards = document.querySelectorAll(".car-card");
+
+
+        function searchCars() {
+
+            const searchText = searchInput.value.toLowerCase().trim();
+
+
+            carCards.forEach(function (card) {
+
+                const carName = card.dataset.car.toLowerCase();
+
+
+                if (carName.includes(searchText)) {
+
+                    card.style.display = "block";
+
+                } else {
+
+                    card.style.display = "none";
+
+                }
+
+            });
+
+        }
+
+
+        searchButton.addEventListener("click", searchCars);
+
+
+        searchInput.addEventListener("keydown", function (event) {
+
+            if (event.key === "Enter") {
+
+                searchCars();
+
+            }
+
+        });
+
+    </script>
+
 </body>
+
 </html>

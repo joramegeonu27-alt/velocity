@@ -1,40 +1,30 @@
-/* =========================
-   GENERAL
-========================= */
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
 
-body {     
-    font-family: Arial, sans-serif;     
-    background-image: url('/static/hero-cover.png');     
-    background-attachment: fixed; /* Fix 1: Controls the scrolling behavior */
-    background-position: center;  /* Fix 2: Centers the image in the hero section */
-    background-repeat: no-repeat; /* Fix 3: The correct value to stop repeating */
-    background-size: cover;     
-    color: #ffffff;     
-    line-height: 1.6; 
-    
-    
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #050505;
+    color: #ffffff;
+    line-height: 1.6;
 }
-
 
 a {
     color: inherit;
     text-decoration: none;
 }
 
-.feature {
-    background:linear-gradient(to bottom, #1d1914 0%, #63534a 100%);
+img {
+    max-width: 100%;
+    display: block;
 }
+
 
 /* =========================
    NAVIGATION
@@ -42,51 +32,58 @@ a {
 
 .navbar {
     position: fixed;
-    background: linear-gradient(to bottom, #111111 0%, #22222200 100%);
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 60px;
+    min-height: 70px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    padding: 30px 7%;
+    padding: 25px 7%;
 
     z-index: 20;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(17, 17, 17, 0.9) 0%,
+        rgba(17, 17, 17, 0) 100%
+    );
+
+    backdrop-filter: blur(4px);
 }
 
 .logo {
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 800;
     letter-spacing: 4px;
+    color: #ffffff;
 }
 
 nav {
     display: flex;
     gap: 35px;
+    align-items: center;
 }
 
 nav a {
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.7);
 
-    opacity: 0.8;
-
-    transition: 0.3s;
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
 }
 
 nav a:hover {
-    opacity: 1;
-    border-bottom: 1px solid #b9b8b8;
-    transition: border-bottom 0.03s ease-out,
-                scaleX 0.2s ease-in-out;
-    transform: scaleX(1.1);
-    text-shadow: 0 0 10px rgb(159, 160, 160);
-    
-    
+    color: #ffffff;
+    transform: translateY(-1px);
+
+    text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.35);
 }
 
 
@@ -95,31 +92,183 @@ nav a:hover {
 ========================= */
 
 .hero {
+    position: relative;
     min-height: 100vh;
+    width: 100%;
 
     display: flex;
     align-items: center;
 
-    padding: 120px 7%;
-
-    position: relative;
     overflow: hidden;
+
+    background: #050505;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+
+    background-image: url("/static/hero-cover.png");
+    background-size: cover;
+    background-position: center right;
+    background-repeat: no-repeat;
+
+    z-index: 0;
+}
+
+.hero-cinematic-overlay {
+    position: absolute;
+    inset: 0;
+
+    z-index: 1;
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at 72% 60%,
+            transparent 0%,
+            rgba(0, 0, 0, 0.08) 35%,
+            rgba(0, 0, 0, 0.5) 100%
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.92) 0%,
+            rgba(0, 0, 0, 0.78) 25%,
+            rgba(0, 0, 0, 0.4) 55%,
+            rgba(0, 0, 0, 0.25) 75%,
+            rgba(0, 0, 0, 0.5) 100%
+        );
+}
+
+.hero-cinematic-overlay::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
 
     background:
         linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.808) 0%,
-            rgba(0, 0, 0, 0.589) 30%,
-            rgba(0, 0, 0, 0.336) 60%,
-            rgba(0, 0, 0, 0.15) 100%
-        ),
-        url("/static/images/hero-car.jpg") center center / cover no-repeat;
+            to bottom,
+            transparent 55%,
+            rgba(0, 0, 0, 0.15) 72%,
+            #050505 100%
+        );
+}
+
+.hero-particles {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 2;
+    pointer-events: none;
+
+    mix-blend-mode: screen;
+}
+
+.hero-content {
+    position: relative;
+
+    z-index: 3;
+
+    width: min(1200px, 90%);
+    margin: 0 auto;
+
+    padding-top: 70px;
+
+    text-align: left;
+}
+
+.hero-label {
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 5px;
+    text-transform: uppercase;
+
+    margin-bottom: 25px;
+
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.hero h1 {
+    max-width: 850px;
+
+    font-size: clamp(55px, 7vw, 105px);
+
+    line-height: 0.92;
+    letter-spacing: -4px;
+
+    margin-bottom: 30px;
+
+    font-weight: 800;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #ffffff 35%,
+            #eeeeee 55%,
+            #777777 100%
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+}
+
+.hero-description {
+    max-width: 520px;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    margin-bottom: 38px;
+
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.hero-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 15px 30px;
+
+    background: rgba(255, 255, 255, 0.95);
+    color: #050505;
+
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.hero-button:hover {
+    background: transparent;
+    color: #ffffff;
+
+    border-color: rgba(255, 255, 255, 0.8);
+
+    transform: translateY(-3px);
 }
 
 
-/* =========================
-   STRAIGHT RISING ASH LIGHT
-========================= */
+/* Rising ash light */
 
 .hero::before {
     content: "";
@@ -132,22 +281,24 @@ nav a:hover {
     width: 100%;
     height: 180px;
 
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(120, 120, 120, 0.05),
-        rgba(150, 150, 150, 0.09),
-        rgba(120, 120, 120, 0.05),
-        transparent
-    );
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            rgba(120, 120, 120, 0.03),
+            rgba(150, 150, 150, 0.08),
+            rgba(120, 120, 120, 0.03),
+            transparent
+        );
 
     filter: blur(25px);
 
     animation: ashLight 5s linear infinite;
 
     pointer-events: none;
-}
 
+    z-index: 2;
+}
 
 @keyframes ashLight {
 
@@ -158,220 +309,45 @@ nav a:hover {
     100% {
         top: -180px;
     }
-
 }
 
-/* =========================
-   HERO CONTENT
-========================= */
 
-.hero-content {
-    max-width: 700px;
-
-    position: relative;
-    z-index: 2;
-}
-
-.hero-label {
-    font-size: 12px;
-    letter-spacing: 4px;
-
-    margin-bottom: 25px;
-
-    opacity: 0.7;
-}
-
-.hero h1 {
-    font-size: clamp(50px, 7vw, 100px);
-
-    line-height: 0.95;
-
-    letter-spacing: -3px;
-
-    margin-bottom: 30px;
-
-    /* White at the top → ash gray at the bottom */
-    background: linear-gradient(
-        to bottom,
-        #ffffff 0%,
-        #eeeeee 35%,
-        #bdbdbd 65%,
-        #777777 100%
-    );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    background-clip: text;
-    color: transparent;
-}
-
-.hero-description {
-    max-width: 500px;
-
-    color: #bdbdbd;
-
-    margin-bottom: 40px;
-
-    font-size: 17px;
-}
-
-/* =========================================
-CINEMATIC HERO PARTICLE SYSTEM
-========================================= */
-
-.hero {
-position: relative;
-overflow: hidden;
-}
-
-/* Hero background layer */
-
-.hero-background {
-position: absolute;
-inset: 0;
-
-
-background-image:
-    url("/static/images/hero-car.jpg");
-
-background-size: cover;
-background-position: center;
-
-z-index: 0;
-
-
-}
-
-/* Cinematic darkness over the image */
-
-.hero-cinematic-overlay {
-position: absolute;
-inset: 0;
-
-z-index: 1;
-
-pointer-events: none;
-
-background:
-    radial-gradient(
-        ellipse at 72% 65%,
-        transparent 0%,
-        rgba(0, 0, 0, 0.08) 35%,
-        rgba(0, 0, 0, 0.45) 100%
-    ),
-
-    linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0.72) 0%,
-        rgba(0, 0, 0, 0.38) 35%,
-        rgba(0, 0, 0, 0.05) 75%,
-        rgba(0, 0, 0, 0.32) 100%
-    );
-
-}
-
-/* Particle canvas */
-
-.hero-particles {
-position: absolute;
-
-inset: 0;
-
-width: 100%;
-height: 100%;
-
-z-index: 2;
-
-pointer-events: none;
-
-mix-blend-mode: screen;
-
-
-}
-
-/* Keep hero content above particles */
-
-.hero-content {
-position: relative;
-
-z-index: 3;
-
-}
-
-/* Make sure the navigation stays above everything */
-
-.navbar {
-position: relative;
-z-index: 10;
-
-}
-
-/* Optional cinematic vignette around
-the entire hero */
+/* Hero vignette */
 
 .hero::after {
-content: "";
+    content: "";
 
+    position: absolute;
 
-position: absolute;
+    inset: 0;
 
-inset: 0;
+    z-index: 4;
 
-z-index: 4;
+    pointer-events: none;
 
-pointer-events: none;
-
-background:
-    radial-gradient(
-        ellipse at center,
-        transparent 45%,
-        rgba(0, 0, 0, 0.18) 72%,
-        rgba(0, 0, 0, 0.72) 100%
-    );
-
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 40%,
+            rgba(0, 0, 0, 0.2) 72%,
+            rgba(0, 0, 0, 0.7) 100%
+        );
 }
 
 
 /* =========================
-   HERO BUTTON
+   FEATURED CARS
 ========================= */
 
-.hero-button {
-    display: inline-block;
+.featured {
+    padding: 130px 7% 140px;
 
-    padding: 15px 30px;
-    color: #ffffff;
-
-    background: linear-gradient(to bottom, #130d0a 42%, #5c4720 100%);
-
-    font-weight: bold;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1px;
-
-    transition: 0.3s;
-
-    border-radius: 40px;
-}
-
-.hero-button:hover {
-    transform: translateY(-3px);
-
-      background: linear-gradient(to bottom, #31221a 42%, #745c31 100%);
-      box-shadow: 0 0 8px #be9c5c;
-
-}
-
-
-/* =========================
-   SECTIONS
-========================= */
-
-.featured,
-.why-velocity {
-    padding: 120px 7%;
+    background:
+        linear-gradient(
+            to bottom,
+            #050505 0%,
+            #080808 100%
+        );
 }
 
 .section-heading {
@@ -379,25 +355,25 @@ background:
 }
 
 .section-heading > p {
-    font-size: 12px;
+    font-size: 11px;
 
     letter-spacing: 4px;
 
-    opacity: 0.5;
+    opacity: 0.45;
 
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .section-heading h2 {
-    font-size: clamp(35px, 5vw, 60px);
+    font-size: clamp(38px, 5vw, 65px);
 
     line-height: 1;
+
+    letter-spacing: -2px;
 }
 
 
-/* =========================
-   CAR GRID
-========================= */
+/* Cards */
 
 .car-grid {
     display: grid;
@@ -408,79 +384,192 @@ background:
 }
 
 .car-card {
-    background: #111111;
+    position: relative;
+
+    display: block;
+
+    background: #0b0b0b;
 
     overflow: hidden;
 
-    transition: 0.4s;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    transition:
+        transform 0.45s ease,
+        border-color 0.45s ease,
+        box-shadow 0.45s ease;
 }
 
 .car-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-10px);
+
+    border-color: rgba(255, 255, 255, 0.2);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.5);
 }
 
 
-/* =========================
-   CAR IMAGE
-========================= */
+/* Image area */
 
 .car-image {
-    height: 300px;
+    position: relative;
+
+    width: 100%;
+    height: 320px;
 
     overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #151515,
+            #080808
+        );
 }
 
-.car-image img {
+.car-image-placeholder {
     width: 100%;
     height: 100%;
 
-    object-fit: cover;
+    display: flex;
 
-    transition: 0.5s;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 5px;
+
+    color: rgba(255, 255, 255, 0.2);
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 255, 255, 0.06),
+            transparent 60%
+        );
+
+    transition:
+        transform 0.7s ease,
+        color 0.5s ease;
 }
 
-.car-card:hover img {
-    transform: scale(1.05);
+.car-card:hover .car-image-placeholder {
+    transform: scale(1.06);
+
+    color: rgba(255, 255, 255, 0.45);
 }
 
 
-/* =========================
-   CAR INFORMATION
-========================= */
+/* Image bottom fade */
+
+.car-image::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 35%;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.45),
+            transparent
+        );
+
+    pointer-events: none;
+}
+
+
+/* Car information */
 
 .car-info {
-    padding: 25px;
+    padding: 28px;
 }
 
-.car-info p {
-    font-size: 11px;
+.car-info > p {
+    font-size: 10px;
 
     letter-spacing: 3px;
 
-    opacity: 0.5;
+    color: #777777;
 
-    margin-bottom: 8px;
+    margin-bottom: 9px;
 }
 
 .car-info h3 {
-    font-size: 25px;
+    font-size: 27px;
 
-    margin-bottom: 8px;
+    line-height: 1.1;
+
+    margin-bottom: 10px;
+
+    letter-spacing: -0.5px;
 }
 
-.car-info span {
-    color: #888888;
+.car-info > span {
+    display: block;
+
+    color: #777777;
 
     font-size: 13px;
 }
 
 
+/* Specs */
+
+.car-specs {
+    display: flex;
+
+    gap: 55px;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #222222;
+}
+
+.car-specs div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.car-specs small {
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    color: #555555;
+}
+
+.car-specs strong {
+    font-size: 14px;
+
+    font-weight: 500;
+
+    color: #dddddd;
+}
+
+
 /* =========================
-   WHY VELOCITY
+   WHY VÉLOCITY
 ========================= */
 
 .why-velocity {
-    background: #111111;
+    padding: 130px 7%;
+
+    background: #101010;
 }
 
 .features {
@@ -492,23 +581,103 @@ background:
 }
 
 .feature h3 {
-    font-size: 14px;
+    font-size: 13px;
 
-    opacity: 0.4;
+    letter-spacing: 2px;
 
-    margin-bottom: 30px;
+    color: #555555;
+
+    margin-bottom: 25px;
 }
 
 .feature h4 {
-    font-size: 28px;
+    font-size: 30px;
 
     margin-bottom: 15px;
 }
 
 .feature p {
-    color: #888888;
+    color: #777777;
 
     max-width: 350px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================
+   CARS PAGE
+========================= */
+
+.cars-page {
+    background: #050505;
+}
+
+.cars-page .navbar {
+    position: relative;
+
+    top: auto;
+    left: auto;
+
+    background: #0a0a0a;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cars-header {
+    position: relative;
+
+    width: 100%;
+
+    padding: 100px 7%;
+
+    min-height: 480px;
+
+    background: #0a0a0a;
+}
+
+.cars-header h1 {
+    font-size: clamp(55px, 8vw, 100px);
+
+    line-height: 0.95;
+
+    letter-spacing: -4px;
+
+    margin-bottom: 30px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #eeeeee 40%,
+            #777777 100%
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+}
+
+.cars-header span {
+    display: block;
+
+    max-width: 600px;
+
+    color: #888888;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+}
+
+.cars-collection {
+    width: min(1200px, 90%);
+
+    margin: 0 auto;
+
+    padding: 80px 0 100px;
 }
 
 
@@ -517,9 +686,16 @@ background:
 ========================= */
 
 footer {
-    padding: 70px 7%;
+    padding: 70px 7% 40px;
 
     background: #050505;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.06);
+}
+
+footer .logo {
+    margin-bottom: 15px;
 }
 
 footer p {
@@ -542,26 +718,67 @@ footer p {
 @media (max-width: 800px) {
 
     .navbar {
-        padding: 25px;
+        padding: 20px 25px;
+
+        flex-direction: column;
+
+        gap: 18px;
     }
 
     nav {
-        gap: 15px;
+        gap: 18px;
     }
 
     nav a {
-        font-size: 11px;
+        font-size: 10px;
     }
 
+
     .hero {
-        padding: 100px 25px;
+        min-height: 100vh;
+
+        align-items: center;
+    }
+
+    .hero-background {
+        background-position: 65% center;
+    }
+
+    .hero-cinematic-overlay {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.95),
+                rgba(0, 0, 0, 0.68)
+            );
+    }
+
+    .hero-content {
+        width: 90%;
+
+        padding-top: 100px;
+
+        text-align: left;
     }
 
     .hero h1 {
-        font-size: clamp(45px, 13vw, 75px);
+        font-size: clamp(48px, 13vw, 75px);
 
         letter-spacing: -2px;
     }
+
+    .hero-description {
+        font-size: 14px;
+
+        max-width: 400px;
+    }
+
+    .hero-button {
+        padding: 14px 24px;
+
+        font-size: 11px;
+    }
+
 
     .featured,
     .why-velocity {
@@ -581,45 +798,136 @@ footer p {
     .car-image {
         height: 280px;
     }
-/* =========================
-   CARS PAGE HEADER
+
+
+    .cars-page .navbar {
+        padding: 25px;
+    }
+
+    .cars-header {
+        padding: 80px 25px 70px;
+
+        min-height: 400px;
+    }
+
+    .cars-header h1 {
+        font-size: 55px;
+
+        letter-spacing: -2px;
+    }
+
+    .cars-collection {
+        width: 90%;
+
+        padding: 50px 0 80px;
+    }
+
+
+    footer {
+        padding: 60px 25px 35px;
+    }
+
+
+    /* =========================
+   CAR DETAIL PAGE
 ========================= */
 
-.cars-header {
+.car-detail-page {
+    background: #050505;
+}
+
+
+/* Car hero */
+
+.car-detail-hero {
     position: relative;
 
-    padding: 280px 7% 100px;
+    min-height: 75vh;
 
-    background: #0a0a0a;
+    display: flex;
 
-    min-height: 520px;
+    align-items: flex-end;
+
+    overflow: hidden;
+
+    background: #080808;
 }
 
-.cars-header p {
+.car-detail-image {
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+}
+
+.car-detail-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    opacity: 0.8;
+
+    transform: scale(1.02);
+}
+
+.car-detail-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            #050505 0%,
+            rgba(5, 5, 5, 0.7) 25%,
+            rgba(5, 5, 5, 0.15) 65%,
+            rgba(5, 5, 5, 0.35) 100%
+        );
+}
+
+.car-detail-content {
+    position: relative;
+
+    z-index: 2;
+
+    width: min(1200px, 90%);
+
+    margin: 0 auto;
+
+    padding-bottom: 80px;
+}
+
+.car-detail-brand {
     font-size: 12px;
 
-    letter-spacing: 4px;
+    letter-spacing: 5px;
 
-    color: #777777;
+    text-transform: uppercase;
 
-    margin-bottom: 25px;
+    color: #999999;
+
+    margin-bottom: 15px;
 }
 
-.cars-header h1 {
-    font-size: clamp(55px, 8vw, 100px);
+.car-detail-content h1 {
+    font-size: clamp(55px, 8vw, 110px);
 
-    line-height: 0.95;
+    line-height: 0.9;
 
     letter-spacing: -4px;
 
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 
-    background: linear-gradient(
-        to bottom,
-        #ffffff 0%,
-        #eeeeee 40%,
-        #777777 100%
-    );
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff,
+            #aaaaaa
+        );
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -627,98 +935,73 @@ footer p {
     background-clip: text;
 }
 
-.cars-header span {
-    display: block;
-
-    max-width: 600px;
-
-    color: #888888;
-
+.car-detail-year {
     font-size: 16px;
 
-    line-height: 1.7;
+    color: #777777;
+
+    letter-spacing: 3px;
 }
 
-/* Car specifications */
 
-.car-specs {
-    display: flex;
+/* Specifications */
 
-    gap: 40px;
+.car-details {
+    padding: 120px 7%;
 
-    margin-top: 25px;
+    background: #050505;
+}
 
-    padding-top: 20px;
+.detail-spec-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
 
     border-top: 1px solid #222222;
+    border-bottom: 1px solid #222222;
 }
 
-.car-specs div {
-    display: flex;
+.detail-spec {
+    padding: 35px 25px;
 
-    flex-direction: column;
-
-    gap: 3px;
+    border-right: 1px solid #222222;
 }
 
-.car-specs small {
-    font-size: 9px;
-
-    letter-spacing: 2px;
-
-    color: #666666;
+.detail-spec:last-child {
+    border-right: none;
 }
 
-.car-specs strong {
-    font-size: 14px;
+.detail-spec span {
+    display: block;
 
-    font-weight: normal;
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    color: #555555;
+
+    margin-bottom: 15px;
+}
+
+.detail-spec strong {
+    display: block;
+
+    font-size: 18px;
+
+    font-weight: 500;
 
     color: #dddddd;
+
+    line-height: 1.4;
 }
 
 
-/* Cars page mobile */
+/* Back button */
 
-@media (max-width: 800px) {
+.back-to-cars {
+    padding: 0 7% 120px;
 
-    .cars-header {
-        padding: 190px 25px 70px;
-        min-height: 450px;
-    }
-
-    .cars-header h1 {
-        letter-spacing: -2px;
-    }
-
-    .cars-collection {
-        padding: 30px 25px 80px;
-    }
-}
-
-/* =========================
-   CARS PAGE NAVIGATION FIX
-========================= */
-
-.cars-page .navbar {
-    position: relative;
-    top: auto;
-    left: auto;
-
-    background: #0a0a0a;
-
-    padding: 30px 7%;
-}
-
-
-/* Cars page header */
-
-.cars-page .cars-header {
-    padding: 100px 7% 100px;
-
-    min-height: 480px;
-
-    background: #0a0a0a;
+    background: #050505;
 }
 
 
@@ -726,15 +1009,181 @@ footer p {
 
 @media (max-width: 800px) {
 
-    .cars-page .navbar {
-        padding: 25px;
+    .car-detail-hero {
+        min-height: 70vh;
     }
 
-    .cars-page .cars-header {
-        padding: 80px 25px 70px;
-
-        min-height: 400px;
+    .car-detail-content {
+        padding-bottom: 60px;
     }
+
+    .car-detail-content h1 {
+        font-size: 60px;
+
+        letter-spacing: -2px;
+    }
+
+    .car-details {
+        padding: 80px 25px;
+    }
+
+    .detail-spec-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .detail-spec {
+        border-bottom: 1px solid #222222;
+    }
+
+    .detail-spec:nth-child(2) {
+        border-right: none;
+    }
+
+    .detail-spec:nth-child(3) {
+        border-right: 1px solid #222222;
+    }
+
+    .back-to-cars {
+        padding: 0 25px 80px;
+    }
+}
+
+/* =========================
+   GOOGLE STYLE CAR SEARCH
+========================= */
+
+.car-search {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 45px 0 80px;
+}
+
+.search-box {
+    width: 650px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+
+    background: #ffffff;
+
+    border: 1px solid #d9d9d9;
+
+    border-radius: 30px;
+
+    padding: 0 8px 0 20px;
+
+    box-sizing: border-box;
+
+    transition: 0.25s ease;
+}
+
+.search-box:hover {
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.08);
+}
+
+.search-box:focus-within {
+    border-color: #555;
+    box-shadow: 0 2px 14px rgba(255, 255, 255, 0.12);
+}
+
+
+/* Magnifying glass */
+
+.search-icon {
+    font-size: 18px;
+    margin-right: 12px;
+
+    filter: grayscale(1);
+
+    opacity: 0.65;
+}
+
+
+/* Search input */
+
+.search-box input {
+    flex: 1;
+
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #111;
+
+    font-size: 16px;
+}
+
+.search-box input::placeholder {
+    color: #777;
+}
+
+
+/* Search button */
+
+.search-box button {
+    height: 44px;
+
+    padding: 0 22px;
+
+    border: none;
+
+    border-radius: 23px;
+
+    background: #111;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.search-box button:hover {
+    background: #333;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   MOBILE SEARCH
+========================= */
+
+@media (max-width: 700px) {
+
+    .car-search {
+        width: 90%;
+        margin: 35px auto 60px;
+    }
+
+    .search-box {
+        width: 100%;
+        height: 54px;
+    }
+
+    .search-box input {
+        font-size: 14px;
+    }
+
+    .search-box button {
+        padding: 0 16px;
+        font-size: 12px;
+    }
+
+    .search-icon {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+
 }
 
 }
