@@ -1,6 +1,9 @@
 const particleCanvas = document.getElementById("heroParticles");
 const particleContext = particleCanvas.getContext("2d");
 
+const prefersReducedMotion =
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 let particleWidth;
 let particleHeight;
 let pixelRatio;
@@ -312,7 +315,8 @@ class CinematicEmber {
 
 
         /* =================================
-           HOT EMBER
+           HOT EMBER — tuned to match the
+           site's brass/copper accent (#D9793F)
            ================================= */
 
         if (this.isHot) {
@@ -321,7 +325,7 @@ class CinematicEmber {
                 10;
 
             particleContext.shadowColor =
-                `rgba(255, 90, 20, ${alpha})`;
+                `rgba(217, 121, 63, ${alpha})`;
 
 
             const glow =
@@ -337,25 +341,25 @@ class CinematicEmber {
 
             glow.addColorStop(
                 0,
-                `rgba(255, 220, 140, ${alpha})`
+                `rgba(240, 200, 160, ${alpha})`
             );
 
 
             glow.addColorStop(
                 0.25,
-                `rgba(255, 120, 35, ${alpha * 0.9})`
+                `rgba(240, 149, 92, ${alpha * 0.9})`
             );
 
 
             glow.addColorStop(
                 0.6,
-                `rgba(255, 50, 10, ${alpha * 0.3})`
+                `rgba(217, 121, 63, ${alpha * 0.3})`
             );
 
 
             glow.addColorStop(
                 1,
-                "rgba(255, 20, 0, 0)"
+                "rgba(217, 121, 63, 0)"
             );
 
 
@@ -469,9 +473,6 @@ function createEmbers() {
 }
 
 
-createEmbers();
-
-
 /* =========================================
    ANIMATION LOOP
    ========================================= */
@@ -502,7 +503,26 @@ function animateCinematicParticles() {
 }
 
 
-animateCinematicParticles();
+/*
+ * Respect reduced-motion preference: draw a single
+ * still frame of embers instead of a running animation.
+ */
+
+createEmbers();
+
+if (prefersReducedMotion) {
+
+    particleContext.clearRect(0, 0, particleWidth, particleHeight);
+
+    for (const ember of embers) {
+        ember.draw();
+    }
+
+} else {
+
+    animateCinematicParticles();
+
+}
 
 
 /* =========================================
@@ -514,7 +534,16 @@ window.addEventListener(
     () => {
 
         setTimeout(
-            createEmbers,
+            () => {
+                createEmbers();
+
+                if (prefersReducedMotion) {
+                    particleContext.clearRect(0, 0, particleWidth, particleHeight);
+                    for (const ember of embers) {
+                        ember.draw();
+                    }
+                }
+            },
             100
         );
 

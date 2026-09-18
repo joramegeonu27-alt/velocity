@@ -32,38 +32,39 @@
     <!-- Cars Header -->
     <section class="cars-header">
 
-        <h1>Explore Cars.</h1>
+        <h1 class="fade-text">Explore Cars.</h1>
 
-        <span>
+        <p>
             Discover performance, engineering and design
             from some of the world's most remarkable cars.
-        </span>
+        </p>
 
-    </section>
+        <!-- Search -->
+        <div class="car-search">
 
+            <div class="search-box">
 
-    <!-- Search -->
-    <section class="car-search">
+                <span class="search-icon">🔍</span>
 
-        <div class="search-box">
+                <input
+                    type="text"
+                    id="carSearch"
+                    placeholder="Search cars, brands or models..."
+                >
 
-            <span class="search-icon">
-                🔍
-            </span>
+                <button id="searchButton">
+                    Search
+                </button>
 
-            <input
-                type="text"
-                id="carSearch"
-                placeholder="Search cars, brands or models..."
-            >
-
-            <button id="searchButton">
-                Search
-            </button>
+            </div>
 
         </div>
 
     </section>
+
+    <p class="no-results" id="noResults" hidden>
+        No cars match your search. Try a different make or model.
+    </p>
 
 
     <!-- Cars Collection -->
@@ -84,6 +85,7 @@
                     <img
                         src="{{.Image}}"
                         alt="{{.Brand}} {{.Model}}"
+                        loading="lazy"
                     >
 
                 </div>
@@ -91,13 +93,9 @@
 
                 <div class="car-info">
 
-                    <p>
-                        {{.Brand}}
-                    </p>
+                    <p>{{.Brand}}</p>
 
-                    <h3>
-                        {{.Model}}
-                    </h3>
+                    <h3>{{.Model}}</h3>
 
                     <span>
                         {{.Horsepower}} HP • {{.Engine}}
@@ -107,24 +105,20 @@
                     <div class="car-specs">
 
                         <div>
-
                             <small>0–60</small>
 
                             <strong>
                                 {{.ZeroToSixty}}
                             </strong>
-
                         </div>
 
 
                         <div>
-
-                            <small>TOP SPEED</small>
+                            <small>Top speed</small>
 
                             <strong>
                                 {{.TopSpeed}}
                             </strong>
-
                         </div>
 
                     </div>
@@ -158,17 +152,19 @@
     </footer>
 
 
-    <!-- Search JavaScript -->
+    <!-- Search -->
     <script>
 
         const searchInput = document.getElementById("carSearch");
         const searchButton = document.getElementById("searchButton");
         const carCards = document.querySelectorAll(".car-card");
+        const noResults = document.getElementById("noResults");
 
 
         function searchCars() {
 
             const searchText = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
 
 
             carCards.forEach(function (card) {
@@ -179,6 +175,7 @@
                 if (carName.includes(searchText)) {
 
                     card.style.display = "block";
+                    visibleCount++;
 
                 } else {
 
@@ -187,6 +184,8 @@
                 }
 
             });
+
+            noResults.hidden = visibleCount !== 0;
 
         }
 
