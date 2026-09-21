@@ -1869,4 +1869,212 @@ footer p {
     .back-to-cars {
         padding: 0 25px 80px;
     }
+
+    /* =========================
+   COMPARE PAGE — picker + table
+========================= */
+
+.picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.picker-card {
+    position: relative;
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #0b0b0b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: var(--sans);
+    color: var(--text);
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.picker-card:hover,
+.picker-card:focus-visible {
+    border-color: rgba(255, 255, 255, 0.22);
+    transform: translateY(-3px);
+}
+
+.picker-card.is-selected {
+    border-color: var(--ember);
+    box-shadow: 0 0 0 1px var(--ember), 0 12px 30px rgba(217, 121, 63, 0.15);
+}
+
+.picker-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.picker-card.is-selected .picker-check {
+    background: var(--ember);
+    border-color: var(--ember);
+}
+
+.picker-card.is-selected .picker-check::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #1a0f08;
+    font-weight: 700;
+}
+
+.picker-image {
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(135deg, #151515, #080808);
+}
+
+.picker-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(20%) contrast(1.05) brightness(0.92);
+}
+
+.picker-card.is-selected .picker-image img {
+    filter: grayscale(0%) contrast(1.05) brightness(1);
+}
+
+.picker-info {
+    padding: 14px 16px 16px;
+}
+
+.picker-info p {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.picker-info h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.picker-note {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin-bottom: 60px;
+}
+
+.compare-heading {
+    margin-bottom: 30px;
+}
+
+.compare-table-wrap {
+    overflow-x: auto;
+    border-top: 1px solid var(--line-soft);
+    padding-top: 4px;
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 480px;
+}
+
+.compare-table th,
+.compare-table td {
+    text-align: left;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line-soft);
+    white-space: nowrap;
+}
+
+.compare-table tbody th {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    font-weight: 500;
+    white-space: normal;
+}
+
+.compare-table tbody td {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 15px;
+    color: #dddddd;
+}
+
+.compare-car-head {
+    position: relative;
+    width: 160px;
+    padding-top: 6px;
+}
+
+.compare-car-image {
+    width: 100%;
+    height: 90px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #151515, #080808);
+    margin-bottom: 12px;
+}
+
+.compare-car-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.compare-car-head p {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.compare-car-head h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 16px;
+    white-space: normal;
+}
+
+.compare-remove {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--line-soft);
+    background: var(--ink-2);
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.compare-remove:hover,
+.compare-remove:focus-visible {
+    color: var(--ember-bright);
+    border-color: var(--ember);
+}
+
 }

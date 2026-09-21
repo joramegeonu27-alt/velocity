@@ -21,6 +21,36 @@ type Car struct {
 	Image       string `json:"image"`
 }
 
+type CompareData struct {
+	Cars     []Car
+	CarsJSON template.JS
+}
+
+func compareHandler(w http.ResponseWriter, r *http.Request) {
+	cars, err := loadCars()
+	if err != nil {
+		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
+		return
+	}
+
+	carsJSON, err := json.Marshal(cars)
+	if err != nil {
+		http.Error(w, "Unable to prepare comparison data", http.StatusInternalServerError)
+		return
+	}
+
+	tmpl, err := template.ParseFiles("templates/compare.html")
+	if err != nil {
+		http.Error(w, "Unable to load compare page", http.StatusInternalServerError)
+		return
+	}
+
+	tmpl.Execute(w, CompareData{
+		Cars:     cars,
+		CarsJSON: template.JS(carsJSON),
+	})
+}
+
 func loadCars() ([]Car, error) {
 	data, err := os.ReadFile("data/cars.json")
 	if err != nil {
@@ -100,6 +130,16 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, selectedCar)
 }
 
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("templates/about.html")
+	if err != nil {
+		http.Error(w, "Unable to load about page", http.StatusInternalServerError)
+		return
+	}
+
+	tmpl.Execute(w, nil)
+}
+
 func main() {
 
 	// Serve CSS, JavaScript and images
@@ -114,6 +154,10 @@ func main() {
 
 	// Cars collection
 	http.HandleFunc("/cars", carsHandler)
+
+	http.HandleFunc("/compare", compareHandler)
+
+	http.HandleFunc("/about", aboutHandler)
 
 	// Individual car
 	http.HandleFunc("/cars/", carDetailHandler)

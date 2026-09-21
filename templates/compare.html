@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Compare Cars — VÉLOCITY</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body class="cars-page">
+
+    <!-- Navigation -->
+    <header class="navbar">
+
+        <a href="/" class="logo">
+            VÉLOCITY
+        </a>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="/cars">Cars</a>
+            <a href="/compare">Compare</a>
+            <a href="/about">About</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Compare Header -->
+    <section class="cars-header">
+
+        <h1 class="fade-text">Compare Cars.</h1>
+
+        <p>
+            Choose two or three cars from the collection below
+            and see how they stack up, spec for spec.
+        </p>
+
+    </section>
+
+
+    <!-- Picker -->
+    <section class="cars-collection">
+
+        <div class="section-heading">
+            <p>Step 1</p>
+            <h2>Pick your cars</h2>
+        </div>
+
+        <div class="picker-grid" id="pickerGrid">
+
+            {{range .Cars}}
+
+            <button
+                type="button"
+                class="picker-card"
+                data-id="{{.ID}}"
+                aria-pressed="false"
+            >
+
+                <span class="picker-check" aria-hidden="true"></span>
+
+                <div class="picker-image">
+                    <img src="{{.Image}}" alt="" loading="lazy">
+                </div>
+
+                <div class="picker-info">
+                    <p>{{.Brand}}</p>
+                    <h3>{{.Model}}</h3>
+                </div>
+
+            </button>
+
+            {{end}}
+
+        </div>
+
+        <p class="picker-note" id="pickerNote">Select at least 2 cars to compare (3 max).</p>
+
+
+        <!-- Comparison table -->
+        <div class="section-heading compare-heading" id="compareHeading" hidden>
+            <p>Step 2</p>
+            <h2>The comparison</h2>
+        </div>
+
+        <div class="compare-table-wrap" id="compareTableWrap" hidden>
+            <table class="compare-table" id="compareTable">
+                <thead>
+                    <tr id="compareHeadRow"></tr>
+                </thead>
+                <tbody id="compareBody"></tbody>
+            </table>
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="logo">
+            VÉLOCITY
+        </div>
+
+        <p>
+            Discover. Explore. Compare.
+        </p>
+
+        <p class="copyright">
+            © 2026 VÉLOCITY. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script id="carsData" type="application/json">{{.CarsJSON}}</script>
+
+    <script>
+
+        const CARS = JSON.parse(document.getElementById("carsData").textContent);
+        const CARS_BY_ID = {};
+        CARS.forEach(function (car) { CARS_BY_ID[car.id] = car; });
+
+        const MAX_SELECTED = 3;
+        let selectedIds = [];
+
+        const pickerCards = document.querySelectorAll(".picker-card");
+        const pickerNote = document.getElementById("pickerNote");
+        const compareHeading = document.getElementById("compareHeading");
+        const compareTableWrap = document.getElementById("compareTableWrap");
+        const compareHeadRow = document.getElementById("compareHeadRow");
+        const compareBody = document.getElementById("compareBody");
+
+        const SPEC_ROWS = [
+            { label: "Year", key: "year" },
+            { label: "Horsepower", key: "horsepower", suffix: " HP" },
+            { label: "Engine", key: "engine" },
+            { label: "0–60 mph", key: "zero_to_sixty" },
+            { label: "Top speed", key: "top_speed" }
+        ];
+
+
+        function updatePickerNote() {
+
+            if (selectedIds.length >= MAX_SELECTED) {
+                pickerNote.textContent = "3 of 3 selected — remove one to add another.";
+            } else if (selectedIds.length === 1) {
+                pickerNote.textContent = "Pick at least 1 more car to compare.";
+            } else {
+                pickerNote.textContent = "Select at least 2 cars to compare (3 max).";
+            }
+
+        }
+
+
+        function toggleCard(card) {
+
+            const id = card.dataset.id;
+            const alreadySelected = selectedIds.includes(id);
+
+            if (alreadySelected) {
+
+                selectedIds = selectedIds.filter(function (existingId) {
+                    return existingId !== id;
+                });
+
+                card.classList.remove("is-selected");
+                card.setAttribute("aria-pressed", "false");
+
+            } else {
+
+                if (selectedIds.length >= MAX_SELECTED) {
+                    return;
+                }
+
+                selectedIds.push(id);
+                card.classList.add("is-selected");
+                card.setAttribute("aria-pressed", "true");
+
+            }
+
+            updatePickerNote();
+            renderComparison();
+
+        }
+
+
+        pickerCards.forEach(function (card) {
+            card.addEventListener("click", function () {
+                toggleCard(card);
+            });
+        });
+
+
+        function removeFromComparison(id) {
+
+            const card = document.querySelector('.picker-card[data-id="' + id + '"]');
+
+            selectedIds = selectedIds.filter(function (existingId) {
+                return existingId !== id;
+            });
+
+            if (card) {
+                card.classList.remove("is-selected");
+                card.setAttribute("aria-pressed", "false");
+            }
+
+            updatePickerNote();
+            renderComparison();
+
+        }
+
+
+        function renderComparison() {
+
+            if (selectedIds.length < 2) {
+
+                compareHeading.hidden = true;
+                compareTableWrap.hidden = true;
+                compareHeadRow.innerHTML = "";
+                compareBody.innerHTML = "";
+                return;
+
+            }
+
+            compareHeading.hidden = false;
+            compareTableWrap.hidden = false;
+
+
+            // Header row: blank label cell + one cell per selected car
+            let headHTML = "<th></th>";
+
+            selectedIds.forEach(function (id) {
+
+                const car = CARS_BY_ID[id];
+
+                headHTML +=
+                    '<th>' +
+                    '<div class="compare-car-head">' +
+                    '<button type="button" class="compare-remove" data-id="' + id + '" aria-label="Remove ' + car.brand + ' ' + car.model + '">×</button>' +
+                    '<div class="compare-car-image"><img src="' + car.image + '" alt=""></div>' +
+                    '<p>' + car.brand + '</p>' +
+                    '<h3>' + car.model + '</h3>' +
+                    '</div>' +
+                    '</th>';
+
+            });
+
+            compareHeadRow.innerHTML = headHTML;
+
+
+            // Spec rows
+            let bodyHTML = "";
+
+            SPEC_ROWS.forEach(function (row) {
+
+                bodyHTML += "<tr><th>" + row.label + "</th>";
+
+                selectedIds.forEach(function (id) {
+
+                    const car = CARS_BY_ID[id];
+                    const value = car[row.key] + (row.suffix || "");
+
+                    bodyHTML += "<td>" + value + "</td>";
+
+                });
+
+                bodyHTML += "</tr>";
+
+            });
+
+            compareBody.innerHTML = bodyHTML;
+
+
+            // Wire up the remove (×) buttons just rendered
+            compareBody.parentElement.querySelectorAll(".compare-remove").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    removeFromComparison(button.dataset.id);
+                });
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>

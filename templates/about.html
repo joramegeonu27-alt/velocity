@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About — VÉLOCITY</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/about.css">
+</head>
+
+<body class="about-page">
+
+    <!-- Scroll progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Custom cursor (desktop only, see about.js) -->
+    <div class="cursor-spotlight" id="cursorSpotlight" aria-hidden="true"></div>
+    <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+    <!-- Section dot navigation -->
+    <nav class="section-dots" id="sectionDots" aria-label="Page sections">
+        <a href="#about-hero" class="section-dot" data-label="Top" data-target="about-hero"></a>
+        <a href="#story" class="section-dot" data-label="Story" data-target="story"></a>
+        <a href="#numbers" class="section-dot" data-label="Numbers" data-target="numbers"></a>
+        <a href="#journey" class="section-dot" data-label="Journey" data-target="journey"></a>
+        <a href="#values" class="section-dot" data-label="Values" data-target="values"></a>
+        <a href="#cta" class="section-dot" data-label="Explore" data-target="cta"></a>
+    </nav>
+
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <a href="/" class="logo">VÉLOCITY</a>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="/cars">Cars</a>
+            <a href="/compare">Compare</a>
+            <a href="/about">About</a>
+        </nav>
+    </header>
+
+
+    <!-- Hero -->
+    <section class="about-hero" id="about-hero">
+
+        <div class="ambient-glow ambient-glow--a" aria-hidden="true"></div>
+        <div class="ambient-glow ambient-glow--b" aria-hidden="true"></div>
+
+        <div class="about-hero-content reveal" data-reveal>
+
+            <p class="hero-label">About Vélocity</p>
+
+            <h1 class="hero-luxury">
+                <span class="hero-line"><span class="hero-line-text">Built by drivers.</span></span>
+                <span class="hero-line"><span class="hero-line-text">Driven by obsession.</span></span>
+            </h1>
+
+            <p class="about-hero-description">
+                Vélocity started as a spreadsheet of cars we couldn't stop talking about.
+                It grew into a place to discover, compare and obsess over the machines
+                that make driving feel like something worth remembering.
+            </p>
+
+        </div>
+
+        <div class="scroll-cue" aria-hidden="true">
+            <span></span>
+        </div>
+
+    </section>
+
+
+    <!-- Story -->
+    <section class="about-story" id="story">
+
+        <div class="about-story-inner">
+
+            <p class="section-heading-eyebrow reveal" data-reveal>Our Story</p>
+
+            <p class="about-story-text">
+                <span class="reveal-line" data-reveal>We were tired of car listings that read like inventory sheets —</span>
+                <span class="reveal-line" data-reveal>rows of numbers with none of the feeling.</span>
+                <span class="reveal-line" data-reveal>So a small team of engineers, photographers and lifelong</span>
+                <span class="reveal-line" data-reveal>car obsessives built the site we wished existed:</span>
+                <span class="reveal-line accent" data-reveal>one that treats every car like the engineering marvel it is.</span>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Brand marquee -->
+    <section class="brand-marquee" aria-label="Brands catalogued on Vélocity">
+        <div class="marquee-track">
+            <span>BMW</span><span>PORSCHE</span><span>MERCEDES-AMG</span><span>AUDI</span>
+            <span>FERRARI</span><span>LAMBORGHINI</span><span>MCLAREN</span><span>ASTON MARTIN</span>
+            <span>BMW</span><span>PORSCHE</span><span>MERCEDES-AMG</span><span>AUDI</span>
+            <span>FERRARI</span><span>LAMBORGHINI</span><span>MCLAREN</span><span>ASTON MARTIN</span>
+        </div>
+    </section>
+
+
+    <!-- Numbers -->
+    <section class="about-numbers" id="numbers">
+
+        <div class="section-heading reveal" data-reveal>
+            <p>By the numbers</p>
+            <h2>Vélocity, quantified.</h2>
+        </div>
+
+        <div class="stat-grid">
+
+            <div class="stat reveal" data-reveal>
+                <strong class="stat-value" data-count="150" data-suffix="+">0</strong>
+                <span>Vehicles catalogued</span>
+            </div>
+
+            <div class="stat reveal" data-reveal>
+                <strong class="stat-value" data-count="40">0</strong>
+                <span>Manufacturers</span>
+            </div>
+
+            <div class="stat reveal" data-reveal>
+                <strong class="stat-value" data-count="12">0</strong>
+                <span>Countries reached</span>
+            </div>
+
+            <div class="stat reveal" data-reveal>
+                <strong class="stat-value" data-count="1200000" data-suffix="+" data-format="compact">0</strong>
+                <span>Data points tracked</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Journey -->
+    <section class="about-journey" id="journey">
+
+        <div class="section-heading reveal" data-reveal>
+            <p>The journey</p>
+            <h2>How we got here.</h2>
+        </div>
+
+        <div class="timeline">
+
+            <div class="timeline-item reveal" data-reveal>
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <span class="timeline-year">2023</span>
+                    <h3>Vélocity is founded</h3>
+                    <p>Three friends, one shared spreadsheet, and a stubborn belief that car discovery deserved better.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal" data-reveal>
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <span class="timeline-year">2024</span>
+                    <h3>First 100 cars catalogued</h3>
+                    <p>Every entry hand-verified — specs, photography and all — before it ever reached the site.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal" data-reveal>
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <span class="timeline-year">2025</span>
+                    <h3>Compare tool launches</h3>
+                    <p>Spec-for-spec comparison, built for people who read the fine print before the badge.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal" data-reveal>
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <span class="timeline-year">2026</span>
+                    <h3>Going global</h3>
+                    <p>New markets, new manufacturers, same obsession with getting the details right.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Values -->
+    <section class="about-values" id="values">
+
+        <div class="ambient-glow ambient-glow--a" aria-hidden="true"></div>
+
+        <div class="section-heading reveal" data-reveal>
+            <p>What we believe</p>
+            <h2>The Vélocity standard.</h2>
+        </div>
+
+        <div class="value-grid">
+
+            <div class="value-card reveal" data-reveal data-tilt>
+                <span class="value-index">01</span>
+                <h3>Precision</h3>
+                <p>Every spec on this site is verified, not estimated. Numbers matter to the people who read them.</p>
+            </div>
+
+            <div class="value-card reveal" data-reveal data-tilt>
+                <span class="value-index">02</span>
+                <h3>Transparency</h3>
+                <p>No sponsored placements, no inflated horsepower. What you see is what the manufacturer built.</p>
+            </div>
+
+            <div class="value-card reveal" data-reveal data-tilt>
+                <span class="value-index">03</span>
+                <h3>Obsession</h3>
+                <p>We geek out over torque curves and turbo lag the same way you do. It shows in the details.</p>
+            </div>
+
+            <div class="value-card reveal" data-reveal data-tilt>
+                <span class="value-index">04</span>
+                <h3>Performance first</h3>
+                <p>Every car earns its place here for how it drives — not just how it photographs.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CTA -->
+    <section class="about-cta" id="cta">
+
+        <div class="ambient-glow ambient-glow--b" aria-hidden="true"></div>
+
+        <h2 class="fade-text reveal" data-reveal>Ready to find your next drive?</h2>
+
+        <a href="/cars" class="hero-button reveal" data-reveal>
+            Explore the Collection
+        </a>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="logo">VÉLOCITY</div>
+        <p>Discover. Explore. Compare.</p>
+        <p class="copyright">© 2026 VÉLOCITY. All rights reserved.</p>
+    </footer>
+
+
+    <script src="/static/js/about.js"></script>
+
+</body>
+
+</html>
