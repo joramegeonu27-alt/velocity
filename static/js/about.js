@@ -30,18 +30,38 @@
 
 
     /* =========================================
+       AMBIENT BACKGROUND PARALLAX
+       The orbs drift on their own via CSS; this adds a slow
+       extra offset tied to scroll position for depth.
+       ========================================= */
+
+    const ambientBg = document.getElementById("ambientBg");
+
+    function updateAmbientParallax() {
+
+        if (prefersReducedMotion || !ambientBg) return;
+
+        const offset = window.scrollY * 0.06;
+        ambientBg.style.transform = "translateY(" + offset + "px)";
+
+    }
+
+    window.addEventListener("scroll", updateAmbientParallax, { passive: true });
+    updateAmbientParallax();
+
+
+    /* =========================================
        REVEAL ON SCROLL
        ========================================= */
 
     const revealTargets = document.querySelectorAll("[data-reveal]");
 
-    // Stagger successive reveal-lines within the same paragraph
     let lineIndex = 0;
 
     revealTargets.forEach(function (el) {
 
         if (el.classList.contains("reveal-line")) {
-            el.style.transitionDelay = (lineIndex % 5) * 90 + "ms";
+            el.style.transitionDelay = (lineIndex % 6) * 80 + "ms";
             lineIndex++;
         }
 
@@ -65,6 +85,77 @@
 
     revealTargets.forEach(function (el) {
         revealObserver.observe(el);
+    });
+
+
+    /* =========================================
+       SCRAMBLE TEXT (section eyebrows)
+       ========================================= */
+
+    const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    function scrambleInto(el) {
+
+        const finalText = el.textContent;
+
+        if (prefersReducedMotion) return;
+
+        const duration = 500;
+        const start = performance.now();
+
+        function tick(now) {
+
+            const progress = Math.min((now - start) / duration, 1);
+            const revealCount = Math.floor(progress * finalText.length);
+
+            let out = "";
+
+            for (let i = 0; i < finalText.length; i++) {
+
+                if (i < revealCount) {
+                    out += finalText[i];
+                } else if (finalText[i] === " ") {
+                    out += " ";
+                } else {
+                    out += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+                }
+
+            }
+
+            el.textContent = out;
+
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                el.textContent = finalText;
+            }
+
+        }
+
+        requestAnimationFrame(tick);
+
+    }
+
+    const scrambleTargets = document.querySelectorAll("[data-scramble]");
+
+    const scrambleObserver = new IntersectionObserver(
+        function (entries) {
+
+            entries.forEach(function (entry) {
+
+                if (entry.isIntersecting) {
+                    scrambleInto(entry.target);
+                    scrambleObserver.unobserve(entry.target);
+                }
+
+            });
+
+        },
+        { threshold: 0.6 }
+    );
+
+    scrambleTargets.forEach(function (el) {
+        scrambleObserver.observe(el);
     });
 
 
@@ -194,79 +285,48 @@
 
 
     /* =========================================
-       CUSTOM CURSOR (desktop, motion-safe only)
+       TIMELINE FILL PROGRESS
        ========================================= */
 
-    if (hasFinePointer && !prefersReducedMotion) {
+    const timelineFill = document.getElementById("timelineFill");
+    const timelineItems = document.querySelectorAll(".timeline-item");
 
-        const cursorDot = document.getElementById("cursorDot");
-        const cursorRing = document.getElementById("cursorRing");
-        const cursorSpotlight = document.getElementById("cursorSpotlight");
+    if (timelineFill && timelineItems.length) {
 
-        let dotX = 0, dotY = 0;
-        let ringX = 0, ringY = 0;
-        let glowX = 0, glowY = 0;
-        let hasMoved = false;
+        let revealedCount = 0;
 
-        window.addEventListener("mousemove", function (e) {
+        const timelineObserver = new IntersectionObserver(
+            function (entries) {
 
-            dotX = e.clientX;
-            dotY = e.clientY;
+                entries.forEach(function (entry) {
 
-            if (!hasMoved) {
-                document.body.classList.add("cursor-active");
-                ringX = dotX;
-                ringY = dotY;
-                glowX = dotX;
-                glowY = dotY;
-                hasMoved = true;
-            }
+                    if (entry.isIntersecting) {
 
-        });
+                        entry.target.classList.add("is-visible");
+                        revealedCount++;
 
-        function animateCursor() {
+                        const fillPercent = (revealedCount / timelineItems.length) * 100;
+                        timelineFill.style.height = fillPercent + "%";
 
-            // Ring: fast, tight chase right behind the real cursor
-            ringX += (dotX - ringX) * 0.35;
-            ringY += (dotY - ringY) * 0.35;
+                        timelineObserver.unobserve(entry.target);
 
-            // Spotlight: slow, heavy float — the layered "expensive" trail
-            glowX += (dotX - glowX) * 0.05;
-            glowY += (dotY - glowY) * 0.05;
+                    }
 
-            cursorDot.style.transform =
-                "translate(" + dotX + "px, " + dotY + "px) translate(-50%, -50%)";
+                });
 
-            cursorRing.style.transform =
-                "translate(" + ringX + "px, " + ringY + "px) translate(-50%, -50%)";
+            },
+            { threshold: 0.4 }
+        );
 
-            cursorSpotlight.style.transform =
-                "translate(" + glowX + "px, " + glowY + "px) translate(-50%, -50%)";
-
-            requestAnimationFrame(animateCursor);
-
-        }
-
-        animateCursor();
-
-        document.querySelectorAll("a, button").forEach(function (el) {
-
-            el.addEventListener("mouseenter", function () {
-                cursorRing.style.transform += " scale(1.6)";
-                cursorRing.style.borderColor = "var(--ember-bright)";
-            });
-
-            el.addEventListener("mouseleave", function () {
-                cursorRing.style.borderColor = "var(--ember)";
-            });
-
+        timelineItems.forEach(function (item) {
+            timelineObserver.observe(item);
         });
 
     }
 
 
     /* =========================================
-       VALUE CARD TILT (desktop, motion-safe only)
+       VALUE CARD TILT + CONTAINED CURSOR GLOW
        ========================================= */
 
     if (hasFinePointer && !prefersReducedMotion) {
@@ -291,6 +351,12 @@
                 card.style.transform =
                     "perspective(600px) rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateY(-4px)";
 
+                // Contained glow highlight — stays within the card's own bounds
+                if (card.hasAttribute("data-glow")) {
+                    card.style.setProperty("--mx", x + "px");
+                    card.style.setProperty("--my", y + "px");
+                }
+
             });
 
             card.addEventListener("mouseleave", function () {
@@ -298,6 +364,42 @@
                 card.style.transition = "transform 0.5s ease, border-color 0.3s ease, box-shadow 0.3s ease";
                 card.style.transform = "perspective(600px) rotateX(0) rotateY(0) translateY(0)";
 
+            });
+
+        });
+
+    }
+
+
+    /* =========================================
+       MAGNETIC BUTTON
+       ========================================= */
+
+    if (hasFinePointer && !prefersReducedMotion) {
+
+        document.querySelectorAll("[data-magnetic]").forEach(function (btn) {
+
+            const strength = 0.35;
+            const radius = 90;
+
+            btn.addEventListener("mousemove", function (e) {
+
+                const rect = btn.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                const dx = e.clientX - centerX;
+                const dy = e.clientY - centerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < radius) {
+                    btn.style.transform = "translate(" + dx * strength + "px, " + dy * strength + "px)";
+                }
+
+            });
+
+            btn.addEventListener("mouseleave", function () {
+                btn.style.transform = "translate(0, 0)";
             });
 
         });

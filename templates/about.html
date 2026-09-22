@@ -13,18 +13,25 @@
 
 <body class="about-page">
 
+    <!-- Persistent ambient light — lives behind the whole page, drifts on its own -->
+    <div class="ambient-bg" id="ambientBg" aria-hidden="true">
+        <div class="aurora-sweep"></div>
+        <div class="ambient-orb ambient-orb--ember"></div>
+        <div class="ambient-orb ambient-orb--pale"></div>
+        <div class="ambient-orb ambient-orb--deep"></div>
+    </div>
+
+    <!-- Film grain texture -->
+    <div class="grain-overlay" aria-hidden="true"></div>
+
     <!-- Scroll progress -->
     <div class="scroll-progress" id="scrollProgress"></div>
-
-    <!-- Custom cursor (desktop only, see about.js) -->
-    <div class="cursor-spotlight" id="cursorSpotlight" aria-hidden="true"></div>
-    <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
 
     <!-- Section dot navigation -->
     <nav class="section-dots" id="sectionDots" aria-label="Page sections">
         <a href="#about-hero" class="section-dot" data-label="Top" data-target="about-hero"></a>
         <a href="#story" class="section-dot" data-label="Story" data-target="story"></a>
+        <a href="#process" class="section-dot" data-label="Process" data-target="process"></a>
         <a href="#numbers" class="section-dot" data-label="Numbers" data-target="numbers"></a>
         <a href="#journey" class="section-dot" data-label="Journey" data-target="journey"></a>
         <a href="#values" class="section-dot" data-label="Values" data-target="values"></a>
@@ -47,9 +54,6 @@
 
     <!-- Hero -->
     <section class="about-hero" id="about-hero">
-
-        <div class="ambient-glow ambient-glow--a" aria-hidden="true"></div>
-        <div class="ambient-glow ambient-glow--b" aria-hidden="true"></div>
 
         <div class="about-hero-content reveal" data-reveal>
 
@@ -80,7 +84,7 @@
 
         <div class="about-story-inner">
 
-            <p class="section-heading-eyebrow reveal" data-reveal>Our Story</p>
+            <p class="section-heading-eyebrow reveal" data-reveal data-scramble>Our Story</p>
 
             <p class="about-story-text">
                 <span class="reveal-line" data-reveal>We were tired of car listings that read like inventory sheets —</span>
@@ -90,19 +94,78 @@
                 <span class="reveal-line accent" data-reveal>one that treats every car like the engineering marvel it is.</span>
             </p>
 
+            <p class="about-story-text about-story-text--secondary">
+                <span class="reveal-line" data-reveal>It started small — a shared spreadsheet, a handful of cars we</span>
+                <span class="reveal-line" data-reveal>couldn't stop arguing about, and way too many browser tabs</span>
+                <span class="reveal-line" data-reveal>open to manufacturer spec sheets at 2am. What we kept coming</span>
+                <span class="reveal-line" data-reveal>back to was simple: the numbers only tell half the story.</span>
+                <span class="reveal-line" data-reveal>A 0–60 time doesn't capture the sound of a flat-six waking up,</span>
+                <span class="reveal-line" data-reveal>and a horsepower figure doesn't explain why some cars get</span>
+                <span class="reveal-line" data-reveal>remembered and others just get driven. So we set out to build</span>
+                <span class="reveal-line accent" data-reveal>a place that respects both — the spec sheet and the feeling.</span>
+            </p>
+
         </div>
 
     </section>
 
 
-    <!-- Brand marquee -->
+    <!-- How We Work -->
+    <section class="about-process" id="process">
+
+        <div class="section-heading reveal" data-reveal>
+            <p data-scramble>How we work</p>
+            <h2>Nothing goes live by accident.</h2>
+        </div>
+
+        <div class="process-grid">
+
+            <div class="process-step reveal" data-reveal>
+                <span class="process-number">01</span>
+                <h3>Source</h3>
+                <p>We pull specs directly from manufacturer documentation — never third-party estimates or forum guesswork.</p>
+            </div>
+
+            <div class="process-step reveal" data-reveal>
+                <span class="process-number">02</span>
+                <h3>Verify</h3>
+                <p>Every figure gets cross-checked against at least two independent sources before it's allowed near the site.</p>
+            </div>
+
+            <div class="process-step reveal" data-reveal>
+                <span class="process-number">03</span>
+                <h3>Shoot</h3>
+                <p>Where we can, we photograph the car ourselves. Where we can't, we credit whoever did — always.</p>
+            </div>
+
+            <div class="process-step reveal" data-reveal>
+                <span class="process-number">04</span>
+                <h3>Publish</h3>
+                <p>Nothing goes live until someone who actually loves cars has personally signed off on it.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Brand marquee — two rows, opposite directions, for depth -->
     <section class="brand-marquee" aria-label="Brands catalogued on Vélocity">
-        <div class="marquee-track">
+
+        <div class="marquee-track marquee-track--forward">
             <span>BMW</span><span>PORSCHE</span><span>MERCEDES-AMG</span><span>AUDI</span>
             <span>FERRARI</span><span>LAMBORGHINI</span><span>MCLAREN</span><span>ASTON MARTIN</span>
             <span>BMW</span><span>PORSCHE</span><span>MERCEDES-AMG</span><span>AUDI</span>
             <span>FERRARI</span><span>LAMBORGHINI</span><span>MCLAREN</span><span>ASTON MARTIN</span>
         </div>
+
+        <div class="marquee-track marquee-track--reverse">
+            <span>PRECISION</span><span>PERFORMANCE</span><span>ENGINEERING</span><span>OBSESSION</span>
+            <span>DETAIL</span><span>TRANSPARENCY</span><span>SPEED</span><span>CRAFT</span>
+            <span>PRECISION</span><span>PERFORMANCE</span><span>ENGINEERING</span><span>OBSESSION</span>
+            <span>DETAIL</span><span>TRANSPARENCY</span><span>SPEED</span><span>CRAFT</span>
+        </div>
+
     </section>
 
 
@@ -110,7 +173,7 @@
     <section class="about-numbers" id="numbers">
 
         <div class="section-heading reveal" data-reveal>
-            <p>By the numbers</p>
+            <p data-scramble>By the numbers</p>
             <h2>Vélocity, quantified.</h2>
         </div>
 
@@ -145,11 +208,13 @@
     <section class="about-journey" id="journey">
 
         <div class="section-heading reveal" data-reveal>
-            <p>The journey</p>
+            <p data-scramble>The journey</p>
             <h2>How we got here.</h2>
         </div>
 
-        <div class="timeline">
+        <div class="timeline" id="timeline">
+
+            <div class="timeline-fill" id="timelineFill"></div>
 
             <div class="timeline-item reveal" data-reveal>
                 <div class="timeline-marker"></div>
@@ -195,34 +260,32 @@
     <!-- Values -->
     <section class="about-values" id="values">
 
-        <div class="ambient-glow ambient-glow--a" aria-hidden="true"></div>
-
         <div class="section-heading reveal" data-reveal>
-            <p>What we believe</p>
+            <p data-scramble>What we believe</p>
             <h2>The Vélocity standard.</h2>
         </div>
 
         <div class="value-grid">
 
-            <div class="value-card reveal" data-reveal data-tilt>
+            <div class="value-card reveal" data-reveal data-tilt data-glow>
                 <span class="value-index">01</span>
                 <h3>Precision</h3>
                 <p>Every spec on this site is verified, not estimated. Numbers matter to the people who read them.</p>
             </div>
 
-            <div class="value-card reveal" data-reveal data-tilt>
+            <div class="value-card reveal" data-reveal data-tilt data-glow>
                 <span class="value-index">02</span>
                 <h3>Transparency</h3>
                 <p>No sponsored placements, no inflated horsepower. What you see is what the manufacturer built.</p>
             </div>
 
-            <div class="value-card reveal" data-reveal data-tilt>
+            <div class="value-card reveal" data-reveal data-tilt data-glow>
                 <span class="value-index">03</span>
                 <h3>Obsession</h3>
                 <p>We geek out over torque curves and turbo lag the same way you do. It shows in the details.</p>
             </div>
 
-            <div class="value-card reveal" data-reveal data-tilt>
+            <div class="value-card reveal" data-reveal data-tilt data-glow>
                 <span class="value-index">04</span>
                 <h3>Performance first</h3>
                 <p>Every car earns its place here for how it drives — not just how it photographs.</p>
@@ -236,11 +299,9 @@
     <!-- CTA -->
     <section class="about-cta" id="cta">
 
-        <div class="ambient-glow ambient-glow--b" aria-hidden="true"></div>
-
         <h2 class="fade-text reveal" data-reveal>Ready to find your next drive?</h2>
 
-        <a href="/cars" class="hero-button reveal" data-reveal>
+        <a href="/cars" class="hero-button reveal" data-reveal data-magnetic>
             Explore the Collection
         </a>
 
