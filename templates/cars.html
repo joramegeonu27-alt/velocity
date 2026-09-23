@@ -8,6 +8,7 @@
     <title>VÉLOCITY — Cars</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/cars.css">
 </head>
 
 <body class="cars-page">
@@ -32,15 +33,20 @@
     <!-- Cars Header -->
     <section class="cars-header">
 
-        <h1 class="fade-text">Explore Cars.</h1>
+        <div class="cars-header-glow" aria-hidden="true"></div>
 
-        <p>
-            Discover performance, engineering and design
-            from some of the world's most remarkable cars.
+        <p class="cars-eyebrow reveal-in">The Collection</p>
+
+        <h1 class="fade-text cars-title reveal-in">Explore Cars.</h1>
+
+        <p class="reveal-in">
+            From understated grand tourers to cars built purely to set a lap time,
+            every entry here is verified spec-for-spec — no rounded numbers,
+            no manufacturer marketing copy. Just the car, as it actually performs.
         </p>
 
         <!-- Search -->
-        <div class="car-search">
+        <div class="car-search reveal-in">
 
             <div class="search-box">
 
@@ -62,6 +68,53 @@
 
     </section>
 
+
+    <!-- Toolbar: filter by make, sort, view mode -->
+    <section class="cars-toolbar-wrap">
+
+        <p class="toolbar-lead">Narrow it down by make, or sort by the numbers that matter to you.</p>
+
+        <div class="cars-toolbar">
+
+            <div class="filter-chips" id="filterChips">
+                <button type="button" class="filter-chip is-active" data-brand="all">All makes</button>
+                <!-- additional chips are generated from the collection below, via JS -->
+            </div>
+
+            <div class="toolbar-controls">
+
+                <label class="sort-control">
+                    <span>Sort</span>
+                    <select id="sortSelect">
+                        <option value="default">Featured</option>
+                        <option value="hp-desc">Horsepower: High to low</option>
+                        <option value="hp-asc">Horsepower: Low to high</option>
+                        <option value="zero-asc">0–60: Fastest first</option>
+                        <option value="topspeed-desc">Top speed: Highest first</option>
+                        <option value="name-asc">Name: A–Z</option>
+                    </select>
+                </label>
+
+                <div class="view-toggle" role="group" aria-label="Layout">
+
+                    <button type="button" class="view-btn is-active" id="viewGridBtn" aria-pressed="true" aria-label="Grid view">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor"/></svg>
+                    </button>
+
+                    <button type="button" class="view-btn" id="viewListBtn" aria-pressed="false" aria-label="List view">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1.5" width="13" height="2.5" rx="0.5" stroke="currentColor"/><rect x="1" y="6.25" width="13" height="2.5" rx="0.5" stroke="currentColor"/><rect x="1" y="11" width="13" height="2.5" rx="0.5" stroke="currentColor"/></svg>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <p class="results-line" id="resultsLine"></p>
+
+    </section>
+
     <p class="no-results" id="noResults" hidden>
         No cars match your search. Try a different make or model.
     </p>
@@ -70,14 +123,18 @@
     <!-- Cars Collection -->
     <section class="cars-collection">
 
-        <div class="car-grid">
+        <div class="car-grid" id="carGrid">
 
             {{range .}}
 
             <a
                 href="/cars/{{.ID}}"
-                class="car-card"
+                class="car-card reveal-card"
                 data-car="{{.Brand}} {{.Model}}"
+                data-brand="{{.Brand}}"
+                data-hp="{{.Horsepower}}"
+                data-topspeed="{{.TopSpeed}}"
+                data-zerotosixty="{{.ZeroToSixty}}"
             >
 
                 <div class="car-image">
@@ -152,58 +209,7 @@
     </footer>
 
 
-    <!-- Search -->
-    <script>
-
-        const searchInput = document.getElementById("carSearch");
-        const searchButton = document.getElementById("searchButton");
-        const carCards = document.querySelectorAll(".car-card");
-        const noResults = document.getElementById("noResults");
-
-
-        function searchCars() {
-
-            const searchText = searchInput.value.toLowerCase().trim();
-            let visibleCount = 0;
-
-
-            carCards.forEach(function (card) {
-
-                const carName = card.dataset.car.toLowerCase();
-
-
-                if (carName.includes(searchText)) {
-
-                    card.style.display = "block";
-                    visibleCount++;
-
-                } else {
-
-                    card.style.display = "none";
-
-                }
-
-            });
-
-            noResults.hidden = visibleCount !== 0;
-
-        }
-
-
-        searchButton.addEventListener("click", searchCars);
-
-
-        searchInput.addEventListener("keydown", function (event) {
-
-            if (event.key === "Enter") {
-
-                searchCars();
-
-            }
-
-        });
-
-    </script>
+    <script src="/static/js/cars.js"></script>
 
 </body>
 

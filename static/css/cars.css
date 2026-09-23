@@ -1,0 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&display=swap');
+
+/* =========================================================
+   CARS PAGE — classic, slick upgrade
+   Loaded in addition to style.css — relies on its tokens
+   ========================================================= */
+
+
+/* =========================
+   HEADER
+========================= */
+
+.cars-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.cars-header-glow {
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(217, 121, 63, 0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cars-header > * {
+    position: relative;
+    z-index: 1;
+}
+
+.cars-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 18px;
+}
+
+.cars-title {
+    font-family: 'Fraunces', var(--display);
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: -1px;
+}
+
+
+/* Gentle one-time entrance for the header — not scroll-triggered,
+   it's already in view on load */
+
+.reveal-in {
+    opacity: 0;
+    animation: revealIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cars-eyebrow.reveal-in { animation-delay: 0.05s; }
+.cars-title.reveal-in { animation-delay: 0.15s; }
+.cars-header > p.reveal-in { animation-delay: 0.3s; }
+.car-search.reveal-in { animation-delay: 0.42s; }
+
+@keyframes revealIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-in {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+
+/* =========================
+   TOOLBAR
+========================= */
+
+.cars-toolbar-wrap {
+    width: min(1200px, 90%);
+    margin: 0 auto;
+    padding-top: 46px;
+}
+
+.toolbar-lead {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.cars-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-chip {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    letter-spacing: 0.3px;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--line-soft);
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+}
+
+.filter-chip:hover,
+.filter-chip:focus-visible {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--text);
+}
+
+.filter-chip.is-active {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: #1a0f08;
+    font-weight: 600;
+}
+
+.toolbar-controls {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.sort-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+}
+
+.sort-control select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 4px 20px 4px 2px;
+    cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: right 6px top 55%, right 0px top 55%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    transition: border-color 0.25s ease;
+}
+
+.sort-control select:hover,
+.sort-control select:focus-visible {
+    border-color: var(--ember);
+    outline: none;
+}
+
+.sort-control select option {
+    background: var(--ink-2);
+    color: var(--text);
+}
+
+.view-toggle {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    padding: 3px;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 26px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.view-btn:hover,
+.view-btn:focus-visible {
+    color: var(--text);
+}
+
+.view-btn.is-active {
+    background: var(--ember);
+    color: #1a0f08;
+}
+
+.results-line {
+    padding-top: 16px;
+    color: var(--muted-2);
+    font-size: 12.5px;
+    letter-spacing: 0.3px;
+    transition: color 0.2s ease;
+}
+
+.results-line.is-updating {
+    color: var(--ember-bright);
+}
+
+@keyframes chipPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+}
+
+.filter-chip.is-popping {
+    animation: chipPop 0.28s ease;
+}
+
+.car-grid {
+    transition: opacity 0.22s ease;
+}
+
+.car-grid.is-switching {
+    opacity: 0;
+}
+
+
+/* =========================
+   CARD ENTRANCE (scroll reveal)
+========================= */
+
+.reveal-card {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-card {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+
+/* =========================
+   LIST VIEW MODE
+========================= */
+
+.car-grid.is-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+}
+
+.car-grid.is-list .car-card {
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.car-grid.is-list .car-image {
+    width: 220px;
+    height: auto;
+    flex: 0 0 auto;
+}
+
+.car-grid.is-list .car-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 22px 32px;
+}
+
+.car-grid.is-list .car-specs {
+    margin-top: 16px;
+    padding-top: 16px;
+    max-width: 320px;
+}
+
+@media (max-width: 700px) {
+    .car-grid.is-list .car-card {
+        flex-direction: column;
+    }
+
+    .car-grid.is-list .car-image {
+        width: 100%;
+        height: 220px;
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .cars-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .toolbar-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+}
