@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"velocity/api"
 )
 
 type Car struct {
@@ -26,33 +27,43 @@ type CompareData struct {
 	CarsJSON template.JS
 }
 
-func compareHandler(w http.ResponseWriter, r *http.Request) {
-	cars, err := loadCars()
-	if err != nil {
-		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
-		return
+func loadAPICars() ([]Car, error) {
+	apiKey := os.Getenv("VEHICLES_API_KEY")
+
+	if apiKey == "" {
+		return nil, fmt.Errorf("VEHICLES_API_KEY is not set")
 	}
 
-	carsJSON, err := json.Marshal(cars)
+	listings, err := api.SearchVehicles(apiKey, 5)
+
 	if err != nil {
-		http.Error(w, "Unable to prepare comparison data", http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
-	tmpl, err := template.ParseFiles("templates/compare.html")
-	if err != nil {
-		http.Error(w, "Unable to load compare page", http.StatusInternalServerError)
-		return
+	var cars []Car
+
+	for _, listing := range listings {
+		car := Car{
+			ID:          listing.VIN,
+			Brand:       listing.Make,
+			Model:       listing.Model,
+			Year:        listing.Year,
+			Horsepower:  0,
+			Engine:      listing.Trim,
+			TopSpeed:    "N/A",
+			ZeroToSixty: "N/A",
+			Image:       listing.Image,
+		}
+
+		cars = append(cars, car)
 	}
 
-	tmpl.Execute(w, CompareData{
-		Cars:     cars,
-		CarsJSON: template.JS(carsJSON),
-	})
+	return cars, nil
 }
 
 func loadCars() ([]Car, error) {
 	data, err := os.ReadFile("data/cars.json")
+
 	if err != nil {
 		return nil, err
 	}
@@ -60,6 +71,7 @@ func loadCars() ([]Car, error) {
 	var cars []Car
 
 	err = json.Unmarshal(data, &cars)
+
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +81,7 @@ func loadCars() ([]Car, error) {
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/index.html")
+
 	if err != nil {
 		http.Error(w, "Unable to load page", http.StatusInternalServerError)
 		return
@@ -78,13 +91,15 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func carsHandler(w http.ResponseWriter, r *http.Request) {
-	cars, err := loadCars()
+	cars, err := loadAPICars()
+
 	if err != nil {
 		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
 		return
 	}
 
 	tmpl, err := template.ParseFiles("templates/cars.html")
+
 	if err != nil {
 		http.Error(w, "Unable to load cars page", http.StatusInternalServerError)
 		return
@@ -101,7 +116,8 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cars, err := loadCars()
+	cars, err := loadAPICars()
+
 	if err != nil {
 		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
 		return
@@ -122,6 +138,7 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl, err := template.ParseFiles("templates/car.html")
+
 	if err != nil {
 		http.Error(w, "Unable to load car page", http.StatusInternalServerError)
 		return
@@ -132,6 +149,7 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/about.html")
+
 	if err != nil {
 		http.Error(w, "Unable to load about page", http.StatusInternalServerError)
 		return
@@ -140,31 +158,71 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
-func main() {
+func compareHandler(w http.ResponseWriter, r *http.Request) {
+	cars, err := loadCars()
 
-	// Serve CSS, JavaScript and images
+	if err != nil {
+		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
+		return
+	}
+
+	carsJSON, err := json.Marshal(cars)
+
+	if err != nil {
+		http.Error(w, "Unable to prepare comparison data", http.StatusInternalServerError)
+		return
+	}
+
+	tmpl, err := template.ParseFiles("templates/compare.html")
+
+	if err != nil {
+		http.Error(w, "Unable to load compare page", http.StatusInternalServerError)
+		return
+	}
+
+	tmpl.Execute(w, CompareData{
+		Cars:     cars,
+		CarsJSON: template.JS(carsJSON),
+	})
+}
+
+func main() {
+	apiKey := os.Getenv("VEHICLES_API_KEY")
+
+	if apiKey == "" {
+		fmt.Println("VEHICLES_API_KEY is not set")
+		return
+	}
+
+	specs, err := api.GetSpecifications(
+		"5TDDZRBHXNS221317",
+		apiKey,
+	)
+
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	fmt.Println("Vehicle specifications:")
+	fmt.Printf("%+v\n", specs)
+
 	staticFiles := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", staticFiles))
 
 	imgFiles := http.FileServer(http.Dir("images"))
 	http.Handle("/images/", http.StripPrefix("/images/", imgFiles))
 
-	// Homepage
 	http.HandleFunc("/", homeHandler)
-
-	// Cars collection
 	http.HandleFunc("/cars", carsHandler)
-
 	http.HandleFunc("/compare", compareHandler)
-
 	http.HandleFunc("/about", aboutHandler)
-
-	// Individual car
 	http.HandleFunc("/cars/", carDetailHandler)
 
 	fmt.Println("VÉLOCITY server running on http://localhost:8080")
 
-	err := http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":8080", nil)
+
 	if err != nil {
 		fmt.Println(err)
 	}
