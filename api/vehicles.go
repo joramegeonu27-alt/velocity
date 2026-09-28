@@ -25,14 +25,12 @@ type VehicleResponse struct {
 }
 
 func GetVehicle(vin string, apiKey string) (Vehicle, error) {
-
 	url := fmt.Sprintf(
 		"https://api.vehicles.dev/v1/vehicles/vin/%s",
 		vin,
 	)
 
 	req, err := http.NewRequest("GET", url, nil)
-
 	if err != nil {
 		return Vehicle{}, err
 	}
@@ -40,10 +38,7 @@ func GetVehicle(vin string, apiKey string) (Vehicle, error) {
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Accept", "application/json")
 
-	client := &http.Client{}
-
-	resp, err := client.Do(req)
-
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return Vehicle{}, err
 	}
@@ -60,7 +55,6 @@ func GetVehicle(vin string, apiKey string) (Vehicle, error) {
 	var data VehicleResponse
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
-
 	if err != nil {
 		return Vehicle{}, err
 	}
@@ -98,14 +92,12 @@ type SpecificationsResponse struct {
 }
 
 func GetSpecifications(vin string, apiKey string) (VehicleSpecifications, error) {
-
 	url := fmt.Sprintf(
 		"https://api.vehicles.dev/v1/vehicles/specifications/%s",
 		vin,
 	)
 
 	req, err := http.NewRequest("GET", url, nil)
-
 	if err != nil {
 		return VehicleSpecifications{}, err
 	}
@@ -113,10 +105,7 @@ func GetSpecifications(vin string, apiKey string) (VehicleSpecifications, error)
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Accept", "application/json")
 
-	client := &http.Client{}
-
-	resp, err := client.Do(req)
-
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return VehicleSpecifications{}, err
 	}
@@ -125,7 +114,7 @@ func GetSpecifications(vin string, apiKey string) (VehicleSpecifications, error)
 
 	if resp.StatusCode != http.StatusOK {
 		return VehicleSpecifications{}, fmt.Errorf(
-			"API returned status: %s",
+			"Specifications API returned status: %s",
 			resp.Status,
 		)
 	}
@@ -133,7 +122,6 @@ func GetSpecifications(vin string, apiKey string) (VehicleSpecifications, error)
 	var data SpecificationsResponse
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
-
 	if err != nil {
 		return VehicleSpecifications{}, err
 	}
@@ -161,39 +149,67 @@ type Listing struct {
 
 type ListingsResponse struct {
 	Count   int       `json:"count"`
+	Limit   int       `json:"limit"`
+	Offset  int       `json:"offset"`
 	Total   int       `json:"total"`
 	Results []Listing `json:"results"`
 }
 
-func SearchVehicles(apiKey string, limit int) ([]Listing, error) {
+func SearchVehicles(
+	apiKey string,
+	limit int,
+	offset int,
+) (ListingsResponse, error) {
 
-	url := fmt.Sprintf(
-		"https://api.vehicles.dev/v1/vehicles/listings?limit=%d",
-		limit,
-	)
-
-	req, err := http.NewRequest("GET", url, nil)
-
-	if err != nil {
-		return nil, err
+	if limit < 1 {
+		limit = 50
 	}
 
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-	req.Header.Set("Accept", "application/json")
+	if limit > 500 {
+		limit = 500
+	}
 
-	client := &http.Client{}
+	if offset < 0 {
+		offset = 0
+	}
 
-	resp, err := client.Do(req)
+	url := fmt.Sprintf(
+		"https://api.vehicles.dev/v1/vehicles/listings?limit=%d&offset=%d",
+		limit,
+		offset,
+	)
+
+	req, err := http.NewRequest(
+		"GET",
+		url,
+		nil,
+	)
 
 	if err != nil {
-		return nil, err
+		return ListingsResponse{}, err
+	}
+
+	req.Header.Set(
+		"Authorization",
+		"Bearer "+apiKey,
+	)
+
+	req.Header.Set(
+		"Accept",
+		"application/json",
+	)
+
+	resp, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		return ListingsResponse{}, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf(
-			"API returned status: %s",
+		return ListingsResponse{}, fmt.Errorf(
+			"Listings API returned status: %s",
 			resp.Status,
 		)
 	}
@@ -203,8 +219,76 @@ func SearchVehicles(apiKey string, limit int) ([]Listing, error) {
 	err = json.NewDecoder(resp.Body).Decode(&data)
 
 	if err != nil {
-		return nil, err
+		return ListingsResponse{}, err
 	}
 
-	return data.Results, nil
+	return data, nil
+}
+
+type VehiclePhotos struct {
+	GalleryComplete bool     `json:"galleryComplete"`
+	GalleryCount    int      `json:"galleryCount"`
+	ListingSource   string   `json:"listingSource"`
+	ListingURL      string   `json:"listingUrl"`
+	PhotoCount      int      `json:"photoCount"`
+	Photos          []string `json:"photos"`
+	PrimaryImage    string   `json:"primaryImage"`
+	Source          string   `json:"source"`
+	VIN             string   `json:"vin"`
+}
+
+func GetVehiclePhotos(
+	vin string,
+	apiKey string,
+) (VehiclePhotos, error) {
+
+	url := fmt.Sprintf(
+		"https://api.vehicles.dev/v1/vehicles/photos/%s",
+		vin,
+	)
+
+	req, err := http.NewRequest(
+		"GET",
+		url,
+		nil,
+	)
+
+	if err != nil {
+		return VehiclePhotos{}, err
+	}
+
+	req.Header.Set(
+		"Authorization",
+		"Bearer "+apiKey,
+	)
+
+	req.Header.Set(
+		"Accept",
+		"application/json",
+	)
+
+	resp, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		return VehiclePhotos{}, err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return VehiclePhotos{}, fmt.Errorf(
+			"Photos API returned status: %s",
+			resp.Status,
+		)
+	}
+
+	var data VehiclePhotos
+
+	err = json.NewDecoder(resp.Body).Decode(&data)
+
+	if err != nil {
+		return VehiclePhotos{}, err
+	}
+
+	return data, nil
 }

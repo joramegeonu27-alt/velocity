@@ -1,56 +1,436 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Compare Cars — VÉLOCITY</title>
+```
+<title>Compare Cars — VÉLOCITY</title>
 
-    <link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/style.css">
+
+<style>
+    .compare-page {
+        background: #050505;
+        color: #fff;
+        min-height: 100vh;
+    }
+
+    .compare-hero {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 150px 60px 70px;
+    }
+
+    .compare-hero span {
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        font-size: 12px;
+    }
+
+    .compare-hero h1 {
+        margin: 15px 0 20px;
+        font-size: clamp(55px, 8vw, 110px);
+        line-height: 0.9;
+        letter-spacing: -4px;
+        background: linear-gradient(
+            to bottom,
+            #ffffff,
+            #777
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .compare-hero p {
+        max-width: 600px;
+        color: #888;
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .compare-section {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px 60px 100px;
+    }
+
+    .section-heading {
+        margin-bottom: 35px;
+    }
+
+    .section-heading span {
+        display: block;
+        color: #777;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        font-size: 11px;
+        margin-bottom: 8px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 400;
+    }
+
+    .picker-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+    }
+
+    .picker-card {
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        background: #0b0b0b;
+        color: white;
+        text-align: left;
+        cursor: pointer;
+        transition:
+            transform 0.35s ease,
+            border-color 0.35s ease,
+            box-shadow 0.35s ease;
+    }
+
+    .picker-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .picker-card.is-selected {
+        border-color: rgba(255, 255, 255, 0.8);
+        box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.15),
+            0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .picker-image {
+        height: 220px;
+        overflow: hidden;
+        background: #111;
+    }
+
+    .picker-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s ease;
+    }
+
+    .picker-card:hover .picker-image img {
+        transform: scale(1.05);
+    }
+
+    .picker-info {
+        padding: 20px;
+    }
+
+    .picker-info p {
+        margin: 0 0 6px;
+        color: #888;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+    }
+
+    .picker-info h3 {
+        margin: 0 0 8px;
+        font-size: 22px;
+        font-weight: 400;
+    }
+
+    .picker-info small {
+        color: #666;
+    }
+
+    .picker-check {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 3;
+        width: 24px;
+        height: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.55);
+        transition: 0.25s ease;
+    }
+
+    .picker-card.is-selected .picker-check {
+        background: #fff;
+        border-color: #fff;
+    }
+
+    .picker-card.is-selected .picker-check::after {
+        content: "✓";
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #000;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .picker-note {
+        margin: 22px 0 60px;
+        color: #666;
+        font-size: 13px;
+    }
+
+    .comparison-area {
+        display: none;
+    }
+
+    .comparison-area.visible {
+        display: block;
+    }
+
+    .comparison-status {
+        margin-bottom: 20px;
+        color: #777;
+        font-size: 13px;
+    }
+
+    .compare-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #080808;
+    }
+
+    .compare-table {
+        width: 100%;
+        min-width: 850px;
+        border-collapse: collapse;
+    }
+
+    .compare-table th,
+    .compare-table td {
+        padding: 22px 20px;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: left;
+    }
+
+    .compare-table thead th {
+        min-width: 230px;
+        background: #0d0d0d;
+        vertical-align: top;
+    }
+
+    .compare-table thead th:first-child {
+        min-width: 170px;
+    }
+
+    .compare-table tbody th {
+        width: 170px;
+        color: #777;
+        font-size: 11px;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: #090909;
+    }
+
+    .compare-table tbody td {
+        color: #ddd;
+        font-size: 15px;
+    }
+
+    .compare-car-head {
+        position: relative;
+    }
+
+    .compare-car-image {
+        width: 100%;
+        height: 160px;
+        margin-bottom: 18px;
+        overflow: hidden;
+        background: #111;
+    }
+
+    .compare-car-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .compare-car-head p {
+        margin: 0 0 5px;
+        color: #777;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+    }
+
+    .compare-car-head h3 {
+        margin: 0 0 5px;
+        font-size: 23px;
+        font-weight: 400;
+    }
+
+    .compare-car-head small {
+        color: #666;
+    }
+
+    .compare-remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 3;
+        width: 28px;
+        height: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.75);
+        color: #fff;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+        transition: 0.25s ease;
+    }
+
+    .compare-remove:hover {
+        background: #fff;
+        color: #000;
+    }
+
+    .loading-cell {
+        padding: 50px !important;
+        text-align: center !important;
+        color: #777 !important;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 11px !important;
+    }
+
+    .error-cell {
+        padding: 50px !important;
+        text-align: center !important;
+        color: #999 !important;
+    }
+
+    .not-available {
+        color: #555 !important;
+    }
+
+    @media (max-width: 1100px) {
+
+        .picker-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 800px) {
+
+        .compare-hero {
+            padding: 130px 25px 50px;
+        }
+
+        .compare-section {
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+
+        .picker-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .compare-hero h1 {
+            font-size: 60px;
+        }
+    }
+
+    @media (max-width: 550px) {
+
+        .picker-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .picker-image {
+            height: 250px;
+        }
+
+        .compare-hero h1 {
+            font-size: 48px;
+            letter-spacing: -2px;
+        }
+
+        .section-heading h2 {
+            font-size: 28px;
+        }
+    }
+</style>
+```
+
 </head>
 
-<body class="cars-page">
+<body class="compare-page">
 
-    <!-- Navigation -->
-    <header class="navbar">
+```
+<header class="navbar">
 
-        <a href="/" class="logo">
-            VÉLOCITY
-        </a>
+    <a href="/" class="logo">
+        VÉLOCITY
+    </a>
 
-        <nav>
-            <a href="/">Home</a>
-            <a href="/cars">Cars</a>
-            <a href="/compare">Compare</a>
-            <a href="/about">About</a>
-        </nav>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/cars">Cars</a>
+        <a href="/compare">Compare</a>
+        <a href="/about">About</a>
+    </nav>
 
-    </header>
+</header>
 
+<main>
 
-    <!-- Compare Header -->
-    <section class="cars-header">
+    <section class="compare-hero">
 
-        <h1 class="fade-text">Compare Cars.</h1>
+        <span>
+            VÉLOCITY / Comparison
+        </span>
+
+        <h1>
+            Compare.
+        </h1>
 
         <p>
-            Choose two or three cars from the collection below
-            and see how they stack up, spec for spec.
+            Select two or three vehicles and explore their
+            engineering, performance and specifications
+            side by side.
         </p>
 
     </section>
 
-
-    <!-- Picker -->
-    <section class="cars-collection">
+    <section class="compare-section">
 
         <div class="section-heading">
-            <p>Step 1</p>
-            <h2>Pick your cars</h2>
+
+            <span>
+                Step 01
+            </span>
+
+            <h2>
+                Select your vehicles
+            </h2>
+
         </div>
 
-        <div class="picker-grid" id="pickerGrid">
+        <div
+            class="picker-grid"
+            id="pickerGrid"
+        >
 
             {{range .Cars}}
 
@@ -61,15 +441,39 @@
                 aria-pressed="false"
             >
 
-                <span class="picker-check" aria-hidden="true"></span>
+                <span
+                    class="picker-check"
+                    aria-hidden="true"
+                ></span>
 
                 <div class="picker-image">
-                    <img src="{{.Image}}" alt="" loading="lazy">
+
+                    {{if .Image}}
+
+                    <img
+                        src="{{.Image}}"
+                        alt="{{.Brand}} {{.Model}}"
+                        loading="lazy"
+                    >
+
+                    {{end}}
+
                 </div>
 
                 <div class="picker-info">
-                    <p>{{.Brand}}</p>
-                    <h3>{{.Model}}</h3>
+
+                    <p>
+                        {{.Brand}}
+                    </p>
+
+                    <h3>
+                        {{.Model}}
+                    </h3>
+
+                    <small>
+                        {{.Year}}
+                    </small>
+
                 </div>
 
             </button>
@@ -78,214 +482,843 @@
 
         </div>
 
-        <p class="picker-note" id="pickerNote">Select at least 2 cars to compare (3 max).</p>
+        <p
+            class="picker-note"
+            id="pickerNote"
+        >
+            Select at least 2 cars to compare — 3 maximum.
+        </p>
 
+        <div
+            class="comparison-area"
+            id="comparisonArea"
+        >
 
-        <!-- Comparison table -->
-        <div class="section-heading compare-heading" id="compareHeading" hidden>
-            <p>Step 2</p>
-            <h2>The comparison</h2>
-        </div>
+            <div class="section-heading">
 
-        <div class="compare-table-wrap" id="compareTableWrap" hidden>
-            <table class="compare-table" id="compareTable">
-                <thead>
-                    <tr id="compareHeadRow"></tr>
-                </thead>
-                <tbody id="compareBody"></tbody>
-            </table>
+                <span>
+                    Step 02
+                </span>
+
+                <h2>
+                    The comparison
+                </h2>
+
+            </div>
+
+            <p
+                class="comparison-status"
+                id="comparisonStatus"
+            >
+                Select vehicles to begin.
+            </p>
+
+            <div
+                class="compare-table-wrap"
+                id="compareTableWrap"
+            >
+
+                <table
+                    class="compare-table"
+                    id="compareTable"
+                >
+
+                    <thead>
+
+                        <tr id="compareHeadRow"></tr>
+
+                    </thead>
+
+                    <tbody id="compareBody"></tbody>
+
+                </table>
+
+            </div>
+
         </div>
 
     </section>
 
+</main>
 
-    <!-- Footer -->
-    <footer>
+<footer>
 
-        <div class="logo">
-            VÉLOCITY
-        </div>
+    <div class="logo">
+        VÉLOCITY
+    </div>
 
-        <p>
-            Discover. Explore. Compare.
-        </p>
+    <p>
+        Discover. Explore. Compare.
+    </p>
 
-        <p class="copyright">
-            © 2026 VÉLOCITY. All rights reserved.
-        </p>
+    <p class="copyright">
+        © 2026 VÉLOCITY. All rights reserved.
+    </p>
 
-    </footer>
+</footer>
 
+<script
+    id="carsData"
+    type="application/json"
+>{{.CarsJSON}}</script>
 
-    <script id="carsData" type="application/json">{{.CarsJSON}}</script>
+<script>
 
-    <script>
+    const CARS = JSON.parse(
+        document.getElementById("carsData").textContent
+    );
 
-        const CARS = JSON.parse(document.getElementById("carsData").textContent);
-        const CARS_BY_ID = {};
-        CARS.forEach(function (car) { CARS_BY_ID[car.id] = car; });
+    const CARS_BY_ID = {};
 
-        const MAX_SELECTED = 3;
-        let selectedIds = [];
+    CARS.forEach(function (car) {
 
-        const pickerCards = document.querySelectorAll(".picker-card");
-        const pickerNote = document.getElementById("pickerNote");
-        const compareHeading = document.getElementById("compareHeading");
-        const compareTableWrap = document.getElementById("compareTableWrap");
-        const compareHeadRow = document.getElementById("compareHeadRow");
-        const compareBody = document.getElementById("compareBody");
+        CARS_BY_ID[car.id] = car;
 
-        const SPEC_ROWS = [
-            { label: "Year", key: "year" },
-            { label: "Horsepower", key: "horsepower", suffix: " HP" },
-            { label: "Engine", key: "engine" },
-            { label: "0–60 mph", key: "zero_to_sixty" },
-            { label: "Top speed", key: "top_speed" }
-        ];
+    });
 
+    const MAX_SELECTED = 3;
 
-        function updatePickerNote() {
+    let selectedIds = [];
 
-            if (selectedIds.length >= MAX_SELECTED) {
-                pickerNote.textContent = "3 of 3 selected — remove one to add another.";
-            } else if (selectedIds.length === 1) {
-                pickerNote.textContent = "Pick at least 1 more car to compare.";
-            } else {
-                pickerNote.textContent = "Select at least 2 cars to compare (3 max).";
-            }
+    let detailedSpecs = {};
+
+    const pickerCards =
+        document.querySelectorAll(".picker-card");
+
+    const pickerNote =
+        document.getElementById("pickerNote");
+
+    const comparisonArea =
+        document.getElementById("comparisonArea");
+
+    const comparisonStatus =
+        document.getElementById("comparisonStatus");
+
+    const compareHeadRow =
+        document.getElementById("compareHeadRow");
+
+    const compareBody =
+        document.getElementById("compareBody");
+
+    const SPEC_ROWS = [
+
+        {
+            label: "Year",
+            type: "listing",
+            key: "year"
+        },
+
+        {
+            label: "Price",
+            type: "listing",
+            key: "price",
+            prefix: "$"
+        },
+
+        {
+            label: "Mileage",
+            type: "listing",
+            key: "miles",
+            suffix: " miles"
+        },
+
+        {
+            label: "Horsepower",
+            type: "spec",
+            key: "engine_hp",
+            suffix: " HP"
+        },
+
+        {
+            label: "Engine",
+            type: "engine"
+        },
+
+        {
+            label: "Cylinders",
+            type: "spec",
+            key: "cylinders"
+        },
+
+        {
+            label: "Displacement",
+            type: "spec",
+            key: "displacement_l",
+            suffix: " L"
+        },
+
+        {
+            label: "Transmission",
+            type: "transmission"
+        },
+
+        {
+            label: "Drivetrain",
+            type: "spec",
+            key: "drive_type"
+        },
+
+        {
+            label: "Fuel",
+            type: "spec",
+            key: "fuel_primary"
+        },
+
+        {
+            label: "Seats",
+            type: "spec",
+            key: "seats"
+        },
+
+        {
+            label: "Doors",
+            type: "spec",
+            key: "doors"
+        },
+
+        {
+            label: "Body",
+            type: "spec",
+            key: "body_class"
+        },
+
+        {
+            label: "Condition",
+            type: "listing",
+            key: "condition"
+        },
+
+        {
+            label: "Color",
+            type: "listing",
+            key: "color"
+        },
+
+        {
+            label: "Series",
+            type: "spec",
+            key: "series"
+        },
+
+        {
+            label: "Manufacturer",
+            type: "spec",
+            key: "manufacturer"
+        },
+
+        {
+            label: "Vehicle Type",
+            type: "spec",
+            key: "vehicle_type"
+        },
+
+        {
+            label: "Plant Country",
+            type: "spec",
+            key: "plant_country"
+        }
+
+    ];
+
+    function getValue(value, row) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === "" ||
+            value === 0
+        ) {
+
+            return '<span class="not-available">N/A</span>';
 
         }
 
+        return (
+            (row.prefix || "") +
+            value +
+            (row.suffix || "")
+        );
 
-        function toggleCard(card) {
+    }
 
-            const id = card.dataset.id;
-            const alreadySelected = selectedIds.includes(id);
+    function getEngineValue(specs) {
 
-            if (alreadySelected) {
+        if (!specs) {
+            return '<span class="not-available">N/A</span>';
+        }
 
-                selectedIds = selectedIds.filter(function (existingId) {
-                    return existingId !== id;
-                });
+        const displacement =
+            specs.displacement_l;
 
-                card.classList.remove("is-selected");
-                card.setAttribute("aria-pressed", "false");
+        const configuration =
+            specs.engine_config;
 
-            } else {
+        const cylinders =
+            specs.cylinders;
 
-                if (selectedIds.length >= MAX_SELECTED) {
-                    return;
-                }
+        if (
+            displacement &&
+            configuration &&
+            cylinders
+        ) {
 
-                selectedIds.push(id);
-                card.classList.add("is-selected");
-                card.setAttribute("aria-pressed", "true");
-
-            }
-
-            updatePickerNote();
-            renderComparison();
+            return (
+                displacement +
+                "L " +
+                configuration +
+                " " +
+                cylinders +
+                "cyl"
+            );
 
         }
 
+        if (displacement && cylinders) {
 
-        pickerCards.forEach(function (card) {
-            card.addEventListener("click", function () {
-                toggleCard(card);
-            });
+            return (
+                displacement +
+                "L " +
+                cylinders +
+                "cyl"
+            );
+
+        }
+
+        if (displacement) {
+
+            return displacement + "L";
+
+        }
+
+        return '<span class="not-available">N/A</span>';
+    }
+
+    function getTransmissionValue(specs) {
+
+        if (!specs) {
+            return '<span class="not-available">N/A</span>';
+        }
+
+        const transmission =
+            specs.transmission_style;
+
+        const speeds =
+            specs.transmission_speeds;
+
+        if (transmission && speeds) {
+
+            return (
+                transmission +
+                " (" +
+                speeds +
+                "-speed)"
+            );
+
+        }
+
+        if (transmission) {
+
+            return transmission;
+
+        }
+
+        return '<span class="not-available">N/A</span>';
+    }
+
+    function updatePickerNote() {
+
+        if (
+            selectedIds.length === MAX_SELECTED
+        ) {
+
+            pickerNote.textContent =
+                "3 of 3 selected — remove one to select another.";
+
+        } else if (
+            selectedIds.length === 2
+        ) {
+
+            pickerNote.textContent =
+                "2 vehicles selected — you can add one more.";
+
+        } else if (
+            selectedIds.length === 1
+        ) {
+
+            pickerNote.textContent =
+                "Select one more vehicle to compare.";
+
+        } else {
+
+            pickerNote.textContent =
+                "Select at least 2 cars to compare — 3 maximum.";
+
+        }
+    }
+
+    function showLoading() {
+
+        comparisonArea.classList.add(
+            "visible"
+        );
+
+        comparisonStatus.textContent =
+            "Loading detailed vehicle specifications...";
+
+        compareHeadRow.innerHTML = "";
+
+        compareBody.innerHTML =
+            '<tr>' +
+            '<td ' +
+            'class="loading-cell" ' +
+            'colspan="' +
+            (selectedIds.length + 1) +
+            '">' +
+            'Loading specifications...' +
+            '</td>' +
+            '</tr>';
+    }
+
+    function showError() {
+
+        comparisonArea.classList.add(
+            "visible"
+        );
+
+        comparisonStatus.textContent =
+            "We could not load the detailed specifications.";
+
+        compareHeadRow.innerHTML = "";
+
+        compareBody.innerHTML =
+            '<tr>' +
+            '<td ' +
+            'class="error-cell" ' +
+            'colspan="' +
+            (selectedIds.length + 1) +
+            '">' +
+            'Unable to load vehicle specifications. ' +
+            'Please try again.' +
+            '</td>' +
+            '</tr>';
+    }
+
+    async function loadDetailedSpecifications() {
+
+        if (selectedIds.length < 2) {
+
+            comparisonArea.classList.remove(
+                "visible"
+            );
+
+            compareHeadRow.innerHTML = "";
+
+            compareBody.innerHTML = "";
+
+            return;
+
+        }
+
+        showLoading();
+
+        const params =
+            new URLSearchParams();
+
+        selectedIds.forEach(function (id) {
+
+            params.append(
+                "vin",
+                id
+            );
+
         });
 
+        try {
 
-        function removeFromComparison(id) {
+            const response =
+                await fetch(
+                    "/api/compare/specs?" +
+                    params.toString()
+                );
 
-            const card = document.querySelector('.picker-card[data-id="' + id + '"]');
+            if (!response.ok) {
 
-            selectedIds = selectedIds.filter(function (existingId) {
-                return existingId !== id;
-            });
+                throw new Error(
+                    "Specifications request failed"
+                );
 
-            if (card) {
-                card.classList.remove("is-selected");
-                card.setAttribute("aria-pressed", "false");
             }
 
-            updatePickerNote();
+            const firstResponse =
+                await response.json();
+
+            /*
+                The current Go endpoint accepts
+                one VIN at a time.
+
+                Therefore we fetch the selected
+                vehicles individually.
+            */
+
+            detailedSpecs = {};
+
+            const firstVIN =
+                selectedIds[0];
+
+            detailedSpecs[firstVIN] =
+                firstResponse;
+
+            for (
+                let i = 1;
+                i < selectedIds.length;
+                i++
+            ) {
+
+                const vin =
+                    selectedIds[i];
+
+                const singleParams =
+                    new URLSearchParams();
+
+                singleParams.append(
+                    "vin",
+                    vin
+                );
+
+                const specResponse =
+                    await fetch(
+                        "/api/compare/specs?" +
+                        singleParams.toString()
+                    );
+
+                if (!specResponse.ok) {
+
+                    throw new Error(
+                        "Unable to load specifications"
+                    );
+
+                }
+
+                detailedSpecs[vin] =
+                    await specResponse.json();
+
+            }
+
             renderComparison();
+
+        } catch (error) {
+
+            console.error(
+                "Compare API error:",
+                error
+            );
+
+            showError();
+
+        }
+    }
+
+    function renderComparison() {
+
+        if (selectedIds.length < 2) {
+
+            comparisonArea.classList.remove(
+                "visible"
+            );
+
+            return;
 
         }
 
+        comparisonArea.classList.add(
+            "visible"
+        );
 
-        function renderComparison() {
+        comparisonStatus.textContent =
+            selectedIds.length +
+            " vehicles selected — detailed specifications loaded.";
 
-            if (selectedIds.length < 2) {
+        let headHTML =
+            "<th>Specification</th>";
 
-                compareHeading.hidden = true;
-                compareTableWrap.hidden = true;
-                compareHeadRow.innerHTML = "";
-                compareBody.innerHTML = "";
-                return;
+        selectedIds.forEach(function (id) {
+
+            const car =
+                CARS_BY_ID[id];
+
+            headHTML +=
+
+                "<th>" +
+
+                '<div class="compare-car-head">' +
+
+                '<button ' +
+                'type="button" ' +
+                'class="compare-remove" ' +
+                'data-id="' +
+                id +
+                '" ' +
+                'aria-label="Remove ' +
+                car.brand +
+                " " +
+                car.model +
+                '">' +
+                "×" +
+                "</button>" +
+
+                '<div class="compare-car-image">';
+
+            if (car.image) {
+
+                headHTML +=
+
+                    '<img src="' +
+                    car.image +
+                    '" alt="' +
+                    car.brand +
+                    " " +
+                    car.model +
+                    '">';
 
             }
 
-            compareHeading.hidden = false;
-            compareTableWrap.hidden = false;
+            headHTML +=
 
+                "</div>" +
 
-            // Header row: blank label cell + one cell per selected car
-            let headHTML = "<th></th>";
+                "<p>" +
+                car.brand +
+                "</p>" +
+
+                "<h3>" +
+                car.model +
+                "</h3>" +
+
+                "<small>" +
+                car.year +
+                "</small>" +
+
+                "</div>" +
+
+                "</th>";
+
+        });
+
+        compareHeadRow.innerHTML =
+            headHTML;
+
+        let bodyHTML = "";
+
+        SPEC_ROWS.forEach(function (row) {
+
+            bodyHTML +=
+                "<tr>" +
+                "<th>" +
+                row.label +
+                "</th>";
 
             selectedIds.forEach(function (id) {
 
-                const car = CARS_BY_ID[id];
+                const car =
+                    CARS_BY_ID[id];
 
-                headHTML +=
-                    '<th>' +
-                    '<div class="compare-car-head">' +
-                    '<button type="button" class="compare-remove" data-id="' + id + '" aria-label="Remove ' + car.brand + ' ' + car.model + '">×</button>' +
-                    '<div class="compare-car-image"><img src="' + car.image + '" alt=""></div>' +
-                    '<p>' + car.brand + '</p>' +
-                    '<h3>' + car.model + '</h3>' +
-                    '</div>' +
-                    '</th>';
+                const specs =
+                    detailedSpecs[id];
+
+                let value;
+
+                if (
+                    row.type === "listing"
+                ) {
+
+                    value =
+                        getValue(
+                            car[row.key],
+                            row
+                        );
+
+                } else if (
+                    row.type === "engine"
+                ) {
+
+                    value =
+                        getEngineValue(
+                            specs
+                        );
+
+                } else if (
+                    row.type === "transmission"
+                ) {
+
+                    value =
+                        getTransmissionValue(
+                            specs
+                        );
+
+                } else {
+
+                    value =
+                        getValue(
+                            specs
+                                ? specs[row.key]
+                                : null,
+                            row
+                        );
+
+                }
+
+                bodyHTML +=
+                    "<td>" +
+                    value +
+                    "</td>";
 
             });
 
-            compareHeadRow.innerHTML = headHTML;
+            bodyHTML +=
+                "</tr>";
 
+        });
 
-            // Spec rows
-            let bodyHTML = "";
+        compareBody.innerHTML =
+            bodyHTML;
 
-            SPEC_ROWS.forEach(function (row) {
+        document
+            .querySelectorAll(
+                ".compare-remove"
+            )
+            .forEach(function (button) {
 
-                bodyHTML += "<tr><th>" + row.label + "</th>";
+                button.addEventListener(
+                    "click",
+                    function () {
 
-                selectedIds.forEach(function (id) {
+                        removeFromComparison(
+                            button.dataset.id
+                        );
 
-                    const car = CARS_BY_ID[id];
-                    const value = car[row.key] + (row.suffix || "");
-
-                    bodyHTML += "<td>" + value + "</td>";
-
-                });
-
-                bodyHTML += "</tr>";
+                    }
+                );
 
             });
+    }
 
-            compareBody.innerHTML = bodyHTML;
+    function removeFromComparison(id) {
 
+        selectedIds =
+            selectedIds.filter(
+                function (existingId) {
 
-            // Wire up the remove (×) buttons just rendered
-            compareBody.parentElement.querySelectorAll(".compare-remove").forEach(function (button) {
-                button.addEventListener("click", function () {
-                    removeFromComparison(button.dataset.id);
-                });
-            });
+                    return existingId !== id;
+
+                }
+            );
+
+        const card =
+            document.querySelector(
+                '.picker-card[data-id="' +
+                id +
+                '"]'
+            );
+
+        if (card) {
+
+            card.classList.remove(
+                "is-selected"
+            );
+
+            card.setAttribute(
+                "aria-pressed",
+                "false"
+            );
 
         }
 
-    </script>
+        delete detailedSpecs[id];
+
+        updatePickerNote();
+
+        if (selectedIds.length >= 2) {
+
+            loadDetailedSpecifications();
+
+        } else {
+
+            comparisonArea.classList.remove(
+                "visible"
+            );
+
+            compareHeadRow.innerHTML = "";
+
+            compareBody.innerHTML = "";
+
+        }
+    }
+
+    function toggleCard(card) {
+
+        const id =
+            card.dataset.id;
+
+        const alreadySelected =
+            selectedIds.includes(id);
+
+        if (alreadySelected) {
+
+            removeFromComparison(id);
+
+            return;
+
+        }
+
+        if (
+            selectedIds.length >= MAX_SELECTED
+        ) {
+
+            pickerNote.textContent =
+                "You can compare a maximum of 3 vehicles.";
+
+            return;
+
+        }
+
+        selectedIds.push(id);
+
+        card.classList.add(
+            "is-selected"
+        );
+
+        card.setAttribute(
+            "aria-pressed",
+            "true"
+        );
+
+        updatePickerNote();
+
+        if (selectedIds.length >= 2) {
+
+            loadDetailedSpecifications();
+
+        }
+
+    }
+
+    pickerCards.forEach(function (card) {
+
+        card.addEventListener(
+            "click",
+            function () {
+
+                toggleCard(card);
+
+            }
+        );
+
+    });
+
+    updatePickerNote();
+
+</script>
+```
 
 </body>
 

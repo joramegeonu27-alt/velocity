@@ -8,71 +8,417 @@
     <title>{{.Brand}} {{.Model}} — VÉLOCITY</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
+
+    <style>
+        .car-detail-page {
+            background: #050505;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .car-detail-hero {
+            position: relative;
+            min-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .car-detail-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .car-detail-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    to top,
+                    #050505 0%,
+                    rgba(5, 5, 5, 0.75) 25%,
+                    rgba(5, 5, 5, 0.20) 65%,
+                    rgba(5, 5, 5, 0.35) 100%
+                );
+        }
+
+        .car-detail-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 140px 60px 80px;
+        }
+
+        .car-detail-label {
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .car-detail-content h1 {
+            font-size: clamp(50px, 8vw, 110px);
+            line-height: 0.9;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            background: linear-gradient(
+                to bottom,
+                #ffffff,
+                #777
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .car-detail-year {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #aaa;
+            letter-spacing: 5px;
+        }
+
+        .car-detail-actions {
+            margin-top: 35px;
+        }
+
+        .back-to-cars {
+            display: inline-block;
+            padding: 14px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .back-to-cars:hover {
+            background: white;
+            color: black;
+        }
+
+        /* PHOTO GALLERY */
+
+        .car-gallery {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 60px;
+        }
+
+        .car-gallery-title {
+            margin-bottom: 30px;
+        }
+
+        .car-gallery-title span {
+            display: block;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .car-gallery-title h2 {
+            margin: 0;
+            font-size: 38px;
+            font-weight: 500;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+            border-radius: 4px;
+            background: #111;
+        }
+
+        .gallery-item:first-child {
+            grid-column: span 2;
+            height: 420px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.7s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.06);
+        }
+
+        .gallery-item::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.35),
+                transparent
+            );
+            pointer-events: none;
+        }
+
+        /* SPECIFICATIONS */
+
+        .car-details {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 60px 100px;
+        }
+
+        .car-details-heading {
+            margin-bottom: 35px;
+        }
+
+        .car-details-heading span {
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 12px;
+        }
+
+        .car-details-heading h2 {
+            font-size: 38px;
+            font-weight: 500;
+            margin: 8px 0 0;
+        }
+
+        .detail-spec-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .detail-spec {
+            padding: 30px;
+            min-height: 110px;
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .detail-spec span {
+            display: block;
+            color: #777;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .detail-spec strong {
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .car-detail-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 35px 60px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+
+            .car-detail-content {
+                padding: 130px 25px 60px;
+            }
+
+            .car-gallery,
+            .car-details {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .gallery-item:first-child {
+                grid-column: span 2;
+            }
+
+            .detail-spec-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .car-detail-hero {
+                min-height: 75vh;
+            }
+
+            .car-detail-content h1 {
+                font-size: 48px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-item:first-child {
+                grid-column: span 1;
+                height: 300px;
+            }
+
+            .gallery-item {
+                height: 240px;
+            }
+
+            .detail-spec-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .car-detail-footer {
+                padding: 30px 20px;
+            }
+        }
+    </style>
 </head>
 
 <body class="car-detail-page">
 
-    <!-- Navigation -->
-    <header class="navbar">
+    <!-- NAVBAR -->
 
-        <a href="/" class="logo">
+    <nav class="navbar">
+
+        <div class="logo">
             VÉLOCITY
-        </a>
+        </div>
 
-        <nav>
+        <div class="nav-links">
+
             <a href="/">Home</a>
+
             <a href="/cars">Cars</a>
+
             <a href="/compare">Compare</a>
+
             <a href="/about">About</a>
-        </nav>
-
-    </header>
-
-
-    <!-- Car Hero -->
-    <section class="car-detail-hero">
-
-        <div class="car-detail-image">
-
-            <img
-                src="{{.Image}}"
-                alt="{{.Brand}} {{.Model}}"
-            >
 
         </div>
 
+    </nav>
+
+
+    <!-- HERO -->
+
+    <section class="car-detail-hero">
+
+        {{if .Image}}
+
+        <img
+            class="car-detail-image"
+            src="{{.Image}}"
+            alt="{{.Brand}} {{.Model}}"
+        >
+
+        {{end}}
 
         <div class="car-detail-overlay"></div>
 
-
         <div class="car-detail-content">
 
-            <p class="car-detail-brand">
+            <div class="car-detail-label">
                 {{.Brand}}
-            </p>
+            </div>
 
-            <h1 class="fade-text">
+            <h1>
                 {{.Model}}
             </h1>
 
-            <p class="car-detail-year">
+            <div class="car-detail-year">
                 {{.Year}}
-            </p>
+            </div>
+
+            <div class="car-detail-actions">
+
+                <a
+                    href="/cars"
+                    class="back-to-cars"
+                >
+                    ← Back to Cars
+                </a>
+
+            </div>
 
         </div>
 
     </section>
 
 
-    <!-- Specifications -->
-    <section class="car-details">
+    <!-- PHOTO GALLERY -->
 
-        <div class="section-heading">
+    {{if .Photos}}
 
-            <p>Vehicle specifications</p>
+    <section class="car-gallery">
+
+        <div class="car-gallery-title">
+
+            <span>
+                Visual Archive
+            </span>
 
             <h2>
-                {{.Brand}} {{.Model}}
+                Explore the {{.Model}}
+            </h2>
+
+        </div>
+
+
+        <div class="gallery-grid">
+
+            {{range .Photos}}
+
+            <div class="gallery-item">
+
+                <img
+                    src="{{.}}"
+                    alt="{{$.Brand}} {{$.Model}}"
+                    loading="lazy"
+                >
+
+            </div>
+
+            {{end}}
+
+        </div>
+
+    </section>
+
+    {{end}}
+
+
+    <!-- SPECIFICATIONS -->
+
+    <section class="car-details">
+
+        <div class="car-details-heading">
+
+            <span>
+                Engineering
+            </span>
+
+            <h2>
+                Vehicle Specifications
             </h2>
 
         </div>
@@ -82,10 +428,16 @@
 
             <div class="detail-spec">
 
-                <span>Horsepower</span>
+                <span>
+                    Horsepower
+                </span>
 
                 <strong>
-                    {{.Horsepower}} HP
+                    {{if .Horsepower}}
+                        {{.Horsepower}} HP
+                    {{else}}
+                        N/A
+                    {{end}}
                 </strong>
 
             </div>
@@ -93,10 +445,16 @@
 
             <div class="detail-spec">
 
-                <span>0–60 mph</span>
+                <span>
+                    Engine
+                </span>
 
                 <strong>
-                    {{.ZeroToSixty}}
+                    {{if .Engine}}
+                        {{.Engine}}
+                    {{else}}
+                        N/A
+                    {{end}}
                 </strong>
 
             </div>
@@ -104,10 +462,16 @@
 
             <div class="detail-spec">
 
-                <span>Top speed</span>
+                <span>
+                    Cylinders
+                </span>
 
                 <strong>
-                    {{.TopSpeed}}
+                    {{if .Cylinders}}
+                        {{.Cylinders}}
+                    {{else}}
+                        N/A
+                    {{end}}
                 </strong>
 
             </div>
@@ -115,10 +479,216 @@
 
             <div class="detail-spec">
 
-                <span>Engine</span>
+                <span>
+                    Displacement
+                </span>
 
                 <strong>
-                    {{.Engine}}
+                    {{if .Displacement}}
+                        {{.Displacement}} L
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Transmission
+                </span>
+
+                <strong>
+                    {{if .Transmission}}
+                        {{.Transmission}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Drivetrain
+                </span>
+
+                <strong>
+                    {{if .Drivetrain}}
+                        {{.Drivetrain}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Fuel
+                </span>
+
+                <strong>
+                    {{if .Fuel}}
+                        {{.Fuel}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Body
+                </span>
+
+                <strong>
+                    {{if .BodyClass}}
+                        {{.BodyClass}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Seats
+                </span>
+
+                <strong>
+                    {{if .Seats}}
+                        {{.Seats}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Doors
+                </span>
+
+                <strong>
+                    {{if .Doors}}
+                        {{.Doors}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Color
+                </span>
+
+                <strong>
+                    {{if .Color}}
+                        {{.Color}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Condition
+                </span>
+
+                <strong>
+                    {{if .Condition}}
+                        {{.Condition}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Mileage
+                </span>
+
+                <strong>
+                    {{if .Miles}}
+                        {{.Miles}} miles
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Series
+                </span>
+
+                <strong>
+                    {{if .Series}}
+                        {{.Series}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Manufacturer
+                </span>
+
+                <strong>
+                    {{if .Manufacturer}}
+                        {{.Manufacturer}}
+                    {{else}}
+                        N/A
+                    {{end}}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-spec">
+
+                <span>
+                    Model Year
+                </span>
+
+                <strong>
+                    {{.Year}}
                 </strong>
 
             </div>
@@ -128,30 +698,11 @@
     </section>
 
 
-    <!-- Back to Cars -->
-    <section class="back-to-cars">
+    <!-- FOOTER -->
 
-        <a href="/cars" class="hero-button">
-            ← Back to Cars
-        </a>
+    <footer class="car-detail-footer">
 
-    </section>
-
-
-    <!-- Footer -->
-    <footer>
-
-        <div class="logo">
-            VÉLOCITY
-        </div>
-
-        <p>
-            Discover. Explore. Compare.
-        </p>
-
-        <p class="copyright">
-            © 2026 VÉLOCITY. All rights reserved.
-        </p>
+        VÉLOCITY — Engineered to be remembered.
 
     </footer>
 
