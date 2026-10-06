@@ -49,13 +49,14 @@ type CompareData struct {
 	CarsJSON template.JS
 }
 
+const APIkey = "vdev_QnAEDy6TiJmcF6NNCM1tht"
+
 func loadAPICars(limit int, offset int) ([]Car, int, error) {
 
-	apiKey := os.Getenv("VEHICLES_API_KEY")
+	var apiKey string
+	apiKey = APIkey
 
-	if apiKey == "" {
-		return nil, 0, fmt.Errorf("VEHICLES_API_KEY is not set")
-	}
+	fmt.Println(apiKey)
 
 	response, err := api.SearchVehicles(
 		apiKey,
@@ -564,6 +565,8 @@ func main() {
 		"/about",
 		aboutHandler,
 	)
+
+	fmt.Println(os.Getenv("VEHICLES_API_KEY"))
 
 	fmt.Println(
 		"VÉLOCITY server running on http://localhost:8080",
