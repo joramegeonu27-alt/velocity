@@ -918,88 +918,52 @@
 
         showLoading();
 
-        const params =
-            new URLSearchParams();
-
-        selectedIds.forEach(function (id) {
-
-            params.append(
-                "vin",
-                id
-            );
-
-        });
+        detailedSpecs = {};
 
         try {
 
-            const response =
-                await fetch(
-                    "/api/compare/specs?" +
-                    params.toString()
-                );
+            const responses = await Promise.all(
 
-            if (!response.ok) {
+                selectedIds.map(async function (id) {
 
-                throw new Error(
-                    "Specifications request failed"
-                );
+                    const params =
+                        new URLSearchParams();
 
-            }
-
-            const firstResponse =
-                await response.json();
-
-            /*
-                The current Go endpoint accepts
-                one VIN at a time.
-
-                Therefore we fetch the selected
-                vehicles individually.
-            */
-
-            detailedSpecs = {};
-
-            const firstVIN =
-                selectedIds[0];
-
-            detailedSpecs[firstVIN] =
-                firstResponse;
-
-            for (
-                let i = 1;
-                i < selectedIds.length;
-                i++
-            ) {
-
-                const vin =
-                    selectedIds[i];
-
-                const singleParams =
-                    new URLSearchParams();
-
-                singleParams.append(
-                    "vin",
-                    vin
-                );
-
-                const specResponse =
-                    await fetch(
-                        "/api/compare/specs?" +
-                        singleParams.toString()
+                    params.append(
+                        "vin",
+                        id
                     );
 
-                if (!specResponse.ok) {
+                    const response =
+                        await fetch(
+                            "/api/compare/specs?" +
+                            params.toString()
+                        );
 
-                    throw new Error(
-                        "Unable to load specifications"
-                    );
+                    if (!response.ok) {
 
-                }
+                        throw new Error(
+                            "Unable to load specifications for " +
+                            id
+                        );
 
-                detailedSpecs[vin] =
-                    await specResponse.json();
+                    }
 
-            }
+                    return {
+                        id: id,
+                        specs: await response.json()
+                    };
+
+                })
+
+            );
+
+            responses.forEach(function (result) {
+
+                detailedSpecs[result.id] =
+                    result.specs;
+
+            });
 
             renderComparison();
 
