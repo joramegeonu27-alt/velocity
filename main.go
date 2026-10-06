@@ -224,44 +224,41 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if selectedCar == nil { http.NotFound(w, r); return }
 
-	if apiKey == "" || len(selectedCar.ID) != 17 {
-		goto renderDetail
-	}
+	if apiKey != "" && len(selectedCar.ID) == 17 {
+		specs, err := api.GetSpecifications(
+			selectedCar.ID,
+			apiKey,
+		)
 
-	specs, err := api.GetSpecifications(
-		selectedCar.ID,
-		apiKey,
-	)
+		if err == nil {
 
-	if err == nil {
-
-		selectedCar.Horsepower, _ = strconv.Atoi(
+			selectedCar.Horsepower, _ = strconv.Atoi(
 			specs.EngineHP,
 		)
 
-		selectedCar.Cylinders = specs.Cylinders
-		selectedCar.Displacement = specs.DisplacementL
-		selectedCar.Seats = specs.Seats
-		selectedCar.Doors = specs.Doors
-		selectedCar.BodyClass = specs.BodyClass
-		selectedCar.EngineConfig = specs.EngineConfig
-		selectedCar.Series = specs.Series
-		selectedCar.Manufacturer = specs.Manufacturer
+			selectedCar.Cylinders = specs.Cylinders
+			selectedCar.Displacement = specs.DisplacementL
+			selectedCar.Seats = specs.Seats
+			selectedCar.Doors = specs.Doors
+			selectedCar.BodyClass = specs.BodyClass
+			selectedCar.EngineConfig = specs.EngineConfig
+			selectedCar.Series = specs.Series
+			selectedCar.Manufacturer = specs.Manufacturer
 
-		if specs.FuelPrimary != "" {
-			selectedCar.Fuel = specs.FuelPrimary
+			if specs.FuelPrimary != "" {
+				selectedCar.Fuel = specs.FuelPrimary
 		}
 
-		if specs.DriveType != "" {
-			selectedCar.Drivetrain = specs.DriveType
+			if specs.DriveType != "" {
+				selectedCar.Drivetrain = specs.DriveType
 		}
 
-		if specs.TransmissionStyle != "" {
+			if specs.TransmissionStyle != "" {
 
-			selectedCar.Transmission =
+					selectedCar.Transmission =
 				specs.TransmissionStyle
 
-			if specs.TransmissionSpeeds != "" {
+				if specs.TransmissionSpeeds != "" {
 
 				selectedCar.Transmission =
 					specs.TransmissionStyle +
@@ -271,31 +268,30 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		if specs.DisplacementL != "" &&
+			if specs.DisplacementL != "" &&
 			specs.EngineConfig != "" &&
 			specs.Cylinders != "" {
 
-			selectedCar.Engine =
+				selectedCar.Engine =
 				specs.DisplacementL +
 					"L " +
-					specs.EngineConfig +
-					" " +
-					specs.Cylinders +
-					"cyl"
+						specs.EngineConfig +
+						" " +
+						specs.Cylinders +
+						"cyl"
 		}
-	}
+		}
 
-	photos, err := api.GetVehiclePhotos(
+		photos, err := api.GetVehiclePhotos(
 		selectedCar.ID,
 		apiKey,
 	)
-	if err == nil {
-		selectedCar.Photos = photos.Photos
-		selectedCar.PrimaryImage = photos.PrimaryImage
-		if photos.PrimaryImage != "" { selectedCar.Image = photos.PrimaryImage }
+		if err == nil {
+			selectedCar.Photos = photos.Photos
+			selectedCar.PrimaryImage = photos.PrimaryImage
+			if photos.PrimaryImage != "" { selectedCar.Image = photos.PrimaryImage }
+		}
 	}
-
-renderDetail:
 	tmpl, err := template.ParseFiles(
 		"templates/car.html",
 	)
