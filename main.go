@@ -49,51 +49,58 @@ type CompareData struct {
 	CarsJSON template.JS
 }
 
-const APIkey = "vdev_QnAEDy6TiJmcF6NNCM1tht"
+func getAPIKey() string {
+	return strings.TrimSpace(os.Getenv("VEHICLES_API_KEY"))
+}
 
 func loadAPICars(limit int, offset int) ([]Car, int, error) {
+	if limit < 1 { limit = 50 }
+	if limit > 500 { limit = 500 }
+	if offset < 0 { offset = 0 }
 
-	var apiKey string
-	apiKey = APIkey
+	apiKey := getAPIKey()
+	if apiKey == "" {
+		return loadLocalPage(limit, offset)
+	}
 
-	fmt.Println(apiKey)
-
-	response, err := api.SearchVehicles(
-		apiKey,
-		limit,
-		offset,
-	)
-
+	response, err := api.SearchVehicles(apiKey, limit, offset)
 	if err != nil {
-		return nil, 0, err
+		fmt.Println("Vehicles.dev unavailable; using local catalogue:", err)
+		return loadLocalPage(limit, offset)
 	}
 
-	var cars []Car
-
+	cars := make([]Car, 0, len(response.Results))
 	for _, listing := range response.Results {
-
-		car := Car{
-			ID:           listing.VIN,
-			Brand:        listing.Make,
-			Model:        listing.Model,
-			Year:         listing.Year,
-			Image:        listing.Image,
-			Price:        listing.Price,
-			Miles:        listing.Miles,
-			Fuel:         listing.Fuel,
-			Drivetrain:   listing.Drivetrain,
-			Transmission: listing.Transmission,
-			Color:        listing.Color,
-			Condition:    listing.Condition,
-			Engine:       listing.Trim,
-			TopSpeed:     "N/A",
-			ZeroToSixty:  "N/A",
-		}
-
-		cars = append(cars, car)
+		cars = append(cars, Car{
+			ID: listing.VIN, Brand: listing.Make, Model: listing.Model, Year: listing.Year,
+			Image: listing.Image, Price: listing.Price, Miles: listing.Miles, Fuel: listing.Fuel,
+			Drivetrain: listing.Drivetrain, Transmission: listing.Transmission, Color: listing.Color,
+			Condition: listing.Condition, Engine: listing.Trim, TopSpeed: "N/A", ZeroToSixty: "N/A",
+		})
 	}
-
 	return cars, response.Total, nil
+}
+
+func loadLocalPage(limit, offset int) ([]Car, int, error) {
+	cars, err := loadCars()
+	if err != nil { return nil, 0, err }
+	total := len(cars)
+	if offset >= total { return []Car{}, total, nil }
+	end := offset + limit
+	if end > total { end = total }
+	return cars[offset:end], total, nil
+}
+
+func findLocalCar(id string) (*Car, error) {
+	cars, err := loadCars()
+	if err != nil { return nil, err }
+	for i := range cars {
+		if cars[i].ID == id {
+			car := cars[i]
+			return &car, nil
+		}
+	}
+	return nil, nil
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -201,16 +208,7 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	apiKey := os.Getenv("VEHICLES_API_KEY")
-
-	if apiKey == "" {
-		http.Error(
-			w,
-			"VEHICLES_API_KEY is not set",
-			http.StatusInternalServerError,
-		)
-		return
-	}
+	apiKey := getAPIKey()
 
 	cars, _, err := loadAPICars(50, 0)
 
