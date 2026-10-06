@@ -30,38 +30,45 @@
     </header>
 
 
-    <!-- Cinematic 3D Cars Hero -->
+    <!-- Interactive Cars Hero -->
     <section class="cars-hero" aria-label="VÉLOCITY interactive car showcase">
 
         <div class="cars-hero-bg" aria-hidden="true"></div>
         <div class="cars-hero-grid" aria-hidden="true"></div>
         <div class="cars-hero-glow" aria-hidden="true"></div>
 
-        <canvas id="carHeroCanvas" aria-label="Interactive 3D concept car"></canvas>
+        <div class="cars-hero-stage" aria-hidden="true">
+            <div class="cars-hero-orbit"></div>
+            <img
+                id="heroCarImage"
+                class="cars-hero-car"
+                src="https://autoimage.capitalone.com/stock-media/chrome/2026-BMW-M4-Competition_xDrive-475-cc_2026BMC641955065_01_2100_475.png?height=900&width=1200"
+                alt=""
+            >
+        </div>
 
         <div class="cars-hero-content">
             <p class="cars-eyebrow reveal-in">The Collection</p>
-            <h1 class="fade-text cars-title reveal-in">Explore Cars.</h1>
+
+            <h1 class="cars-title reveal-in">
+                Explore Cars.
+            </h1>
+
             <p class="cars-hero-copy reveal-in">
                 Discover machines engineered around performance, design and precision.
-                Drag to explore the VÉLOCITY concept in 3D.
+                Explore the collection through an interactive automotive showcase.
             </p>
 
             <div class="cars-hero-actions reveal-in">
                 <a href="#collection" class="hero-button">View Collection</a>
-                <span class="cars-hero-hint">Drag · Scroll · Explore</span>
+                <span class="cars-hero-hint">Move · Hover · Explore</span>
             </div>
         </div>
 
         <div class="cars-hero-meta" aria-hidden="true">
             <span>VÉLOCITY / 03</span>
             <span>INTERACTIVE SHOWCASE</span>
-            <span>3D MODEL: UNITY FAN / KHRONOS • CC BY 4.0</span>
-        </div>
-
-        <div class="cars-hero-loader" id="carHeroLoader">
-            <span></span>
-            <small>Loading 3D experience</small>
+            <span>LIVE COLLECTION</span>
         </div>
 
     </section>
@@ -232,7 +239,7 @@
 
 
     <script src="/static/js/cars.js"></script>
-    <script type="module" src="/static/js/cars-hero.js"></script>
+    <script src="/static/js/cars-hero.js"></script>
 
 </body>
 
