@@ -180,42 +180,24 @@ func carsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func compareHandler(w http.ResponseWriter, r *http.Request) {
-
 	cars, _, err := loadAPICars(50, 0)
-
 	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to load cars from API",
-			http.StatusInternalServerError,
-		)
-
+		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
 		return
 	}
 
 	carsJSON, err := json.Marshal(cars)
-
 	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to prepare comparison data",
-			http.StatusInternalServerError,
-		)
-
+		http.Error(w, "Unable to prepare comparison data", http.StatusInternalServerError)
 		return
 	}
 
-	renderTemplate(
-		w,
-		"templates/compare.html",
-		CompareData{
-			Cars:     cars,
-			CarsJSON: template.JS(carsJSON),
-		},
-		"Unable to load compare page",
-	)
+	data := CompareData{
+		Cars:     cars,
+		CarsJSON: template.JS(carsJSON),
+	}
+
+	renderTemplate(w, "templates/compare.html", data, "Unable to load compare page")
 }
 
 func compareSpecsHandler(w http.ResponseWriter, r *http.Request) {
