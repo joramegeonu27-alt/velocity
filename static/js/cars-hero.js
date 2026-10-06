@@ -18,7 +18,7 @@ const camera = new THREE.PerspectiveCamera(
     100
 );
 
-camera.position.set(4.4, 2.2, 6.8);
+camera.position.set(4.8, 2.6, 7.4);
 
 const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -31,7 +31,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.15;
+renderer.toneMappingExposure = 1.35;
+renderer.shadowMap.enabled = true;
 
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
@@ -41,7 +42,7 @@ controls.minDistance = 4.2;
 controls.maxDistance = 9.5;
 controls.minPolarAngle = Math.PI * 0.35;
 controls.maxPolarAngle = Math.PI * 0.62;
-controls.target.set(0, 0.6, 0);
+controls.target.set(0, 0.72, 0);
 controls.autoRotate = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 controls.autoRotateSpeed = 0.55;
 
@@ -51,21 +52,22 @@ const keyLight = new THREE.DirectionalLight(0xffffff, 4.5);
 keyLight.position.set(5, 7, 4);
 scene.add(keyLight);
 
-const rimLight = new THREE.PointLight(0xd9793f, 18, 12, 2);
+const rimLight = new THREE.PointLight(0xd9793f, 24, 14, 2);
 rimLight.position.set(-4, 2.8, -2);
 scene.add(rimLight);
 
-const frontLight = new THREE.PointLight(0x8aa9ff, 8, 10, 2);
+const frontLight = new THREE.PointLight(0x8aa9ff, 11, 12, 2);
 frontLight.position.set(3, 1.5, 4);
 scene.add(frontLight);
 
 const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(3.5, 64),
-    new THREE.MeshBasicMaterial({
-        color: 0x000000,
+    new THREE.CircleGeometry(4.2, 64),
+    new THREE.MeshStandardMaterial({
+        color: 0x070707,
+        metalness: 0.7,
+        roughness: 0.28,
         transparent: true,
-        opacity: 0.35,
-        depthWrite: false
+        opacity: 0.78
     })
 );
 
@@ -77,6 +79,8 @@ scene.add(floor);
 const carRoot = new THREE.Group();
 scene.add(carRoot);
 
+let fallbackModel = null;
+
 function finishLoading() {
     if (loaderUI) {
         loaderUI.classList.add("is-hidden");
@@ -85,6 +89,7 @@ function finishLoading() {
 
 function buildFallbackCar() {
     const fallback = new THREE.Group();
+    fallback.name = "ProceduralFallbackCar";
 
     const body = new THREE.Mesh(
         new THREE.BoxGeometry(3.8, 0.65, 1.65),
@@ -111,6 +116,32 @@ function buildFallbackCar() {
 
     cabin.position.set(-0.1, 1.12, 0);
     fallback.add(cabin);
+
+    const windshield = new THREE.Mesh(
+        new THREE.BoxGeometry(1.55, 0.38, 1.38),
+        new THREE.MeshStandardMaterial({
+            color: 0x111923,
+            metalness: 0.25,
+            roughness: 0.08,
+            transparent: true,
+            opacity: 0.78
+        })
+    );
+
+    windshield.position.set(0.28, 1.17, 0);
+    windshield.rotation.z = -0.12;
+    fallback.add(windshield);
+
+    const accentMaterial = new THREE.MeshBasicMaterial({
+        color: 0xd9793f
+    });
+
+    const frontStrip = new THREE.Mesh(
+        new THREE.BoxGeometry(0.08, 0.13, 1.28),
+        accentMaterial
+    );
+    frontStrip.position.set(1.93, 0.62, 0);
+    fallback.add(frontStrip);
 
     const wheelMaterial = new THREE.MeshStandardMaterial({
         color: 0x080808,
@@ -151,6 +182,12 @@ function frameModel(model) {
     carRoot.add(model);
 }
 
+// Put a lightweight procedural car on screen immediately.
+// The detailed GLB is then loaded on top of it, so a slow network
+// can never leave the hero looking empty.
+fallbackModel = buildFallbackCar();
+frameModel(fallbackModel);
+
 const modelURL =
     "https://sceneview.github.io/models/platforms/CarConcept.glb";
 
@@ -174,6 +211,11 @@ gltfLoader.load(
             }
         });
 
+        if (fallbackModel && fallbackModel.parent === carRoot) {
+            carRoot.remove(fallbackModel);
+            fallbackModel = null;
+        }
+
         frameModel(model);
         finishLoading();
     },
@@ -194,8 +236,7 @@ gltfLoader.load(
         }
     },
     function () {
-        console.warn("3D car model could not be loaded. Using fallback.");
-        frameModel(buildFallbackCar());
+        console.warn("3D car model could not be loaded. Keeping procedural fallback.");
         finishLoading();
     }
 );

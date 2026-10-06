@@ -336,13 +336,13 @@
 
 .cars-hero {
     position: relative;
-    min-height: min(860px, 88vh);
+    min-height: min(780px, 88vh);
     overflow: hidden;
     isolation: isolate;
     display: flex;
     align-items: center;
     background:
-        radial-gradient(circle at 72% 45%, rgba(217, 121, 63, 0.13), transparent 24%),
+        radial-gradient(circle at 72% 48%, rgba(217, 121, 63, 0.20), transparent 27%),
         radial-gradient(circle at 82% 70%, rgba(255, 255, 255, 0.05), transparent 30%),
         #050505;
     border-bottom: 1px solid var(--line);
@@ -351,7 +351,7 @@
 .cars-hero-bg {
     position: absolute;
     inset: 0;
-    z-index: -4;
+    z-index: 0;
     background:
         linear-gradient(90deg, rgba(5,5,5,.98) 0%, rgba(5,5,5,.82) 34%, rgba(5,5,5,.28) 68%, rgba(5,5,5,.72) 100%),
         radial-gradient(ellipse at 72% 60%, rgba(217,121,63,.12), transparent 34%);
@@ -361,8 +361,8 @@
     position: absolute;
     inset: auto -10% -28%;
     height: 60%;
-    z-index: -3;
-    opacity: .28;
+    z-index: 0;
+    opacity: .34;
     transform: perspective(700px) rotateX(66deg);
     transform-origin: center top;
     background-image:
@@ -380,7 +380,7 @@
     max-height: 700px;
     right: 3%;
     top: 8%;
-    z-index: -2;
+    z-index: 0;
     border-radius: 50%;
     background: radial-gradient(circle, rgba(217,121,63,.14), transparent 64%);
     filter: blur(18px);
@@ -395,7 +395,7 @@
 #carHeroCanvas {
     position: absolute;
     inset: 0;
-    z-index: -1;
+    z-index: 1;
     width: 100%;
     height: 100%;
     display: block;
@@ -409,18 +409,19 @@
     z-index: 3;
     width: min(1200px, 86%);
     margin: 0 auto;
-    padding-top: 70px;
+    padding-top: 50px;
+    padding-bottom: 70px;
     pointer-events: none;
 }
 
 .cars-hero-content a { pointer-events: auto; }
 
 .cars-hero-copy {
-    max-width: 470px;
-    color: rgba(255,255,255,.58);
+    max-width: 500px;
+    color: rgba(255,255,255,.68);
     line-height: 1.75;
-    font-size: 15px;
-    margin: 22px 0 28px;
+    font-size: 16px;
+    margin: 22px 0 30px;
 }
 
 .cars-hero-actions {
@@ -448,6 +449,7 @@
     letter-spacing: 3px;
     text-transform: uppercase;
     z-index: 4;
+    pointer-events: none;
 }
 
 .cars-hero-loader {
@@ -514,4 +516,80 @@
     .cars-hero-loader { bottom: 20px; right: 7%; }
     .cars-hero-loader small { display: none; }
     .cars-header-search { min-height: 340px; }
+}
+
+
+/* Hero typography and layering polish */
+.cars-hero .cars-eyebrow {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+}
+
+.cars-hero .cars-eyebrow::before {
+    content: "";
+    width: 32px;
+    height: 1px;
+    background: var(--ember);
+    box-shadow: 0 0 12px var(--ember-glow);
+}
+
+.cars-hero .cars-title {
+    font-size: clamp(54px, 7vw, 108px);
+    line-height: .92;
+    max-width: 620px;
+    margin: 0;
+    text-shadow: 0 18px 60px rgba(0,0,0,.55);
+}
+
+.cars-hero-content {
+    pointer-events: none;
+}
+
+.cars-hero-content .cars-hero-copy,
+.cars-hero-content .cars-hero-actions {
+    position: relative;
+    z-index: 5;
+}
+
+.cars-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.52) 34%, transparent 64%),
+        linear-gradient(0deg, rgba(5,5,5,.80) 0%, transparent 25%, rgba(5,5,5,.22) 100%);
+}
+
+.cars-hero-content,
+.cars-hero-meta,
+.cars-hero-loader {
+    z-index: 5;
+}
+
+.cars-hero-loader {
+    z-index: 6;
+}
+
+@media (max-width: 900px) {
+    .cars-hero .cars-title {
+        font-size: clamp(50px, 10vw, 78px);
+    }
+}
+
+@media (max-width: 650px) {
+    .cars-hero .cars-title {
+        font-size: clamp(44px, 14vw, 64px);
+    }
+
+    .cars-hero::after {
+        background:
+            linear-gradient(180deg, rgba(5,5,5,.80) 0%, rgba(5,5,5,.35) 48%, rgba(5,5,5,.86) 100%);
+    }
 }
