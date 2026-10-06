@@ -8,7 +8,7 @@
         "engine": "3.0L Twin-Turbo Inline-6",
         "top_speed": "155 mph",
         "zero_to_sixty": "3.4 seconds",
-        "image": "/static/images/bmw-m4.jpg"
+        "image": "/static/hero-cover.png"
     },
     {
         "id": "porsche-911",
@@ -19,7 +19,7 @@
         "engine": "3.0L Twin-Turbo Flat-6",
         "top_speed": "182 mph",
         "zero_to_sixty": "4.0 seconds",
-        "image": "/static/images/porsche-911.jpg"
+        "image": "/static/hero-cover.png"
     },
     {
         "id": "amg-gt",
@@ -30,6 +30,6 @@
         "engine": "4.0L Twin-Turbo V8",
         "top_speed": "196 mph",
         "zero_to_sixty": "3.1 seconds",
-        "image": "/static/images/amg-gt.jpg"
+        "image": "/static/hero-cover.png"
     }
 ]
