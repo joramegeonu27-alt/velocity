@@ -268,6 +268,75 @@ func compareSpecsHandler(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, specs)
 }
 
+func applySpecifications(car *Car, specs api.VehicleSpecifications) {
+	if horsepower, err := strconv.Atoi(specs.EngineHP); err == nil && horsepower > 0 {
+		car.Horsepower = horsepower
+	}
+	car.Cylinders = specs.Cylinders
+	car.Displacement = specs.DisplacementL
+	car.Seats = specs.Seats
+	car.Doors = specs.Doors
+	car.BodyClass = specs.BodyClass
+	car.EngineConfig = specs.EngineConfig
+	car.Series = specs.Series
+	car.Manufacturer = specs.Manufacturer
+	if specs.FuelPrimary != "" { car.Fuel = specs.FuelPrimary }
+	if specs.DriveType != "" { car.Drivetrain = specs.DriveType }
+	if specs.TransmissionStyle != "" {
+		car.Transmission = specs.TransmissionStyle
+		if specs.TransmissionSpeeds != "" {
+			car.Transmission += " (" + specs.TransmissionSpeeds + "-speed)"
+		}
+	}
+	if specs.DisplacementL != "" && specs.EngineConfig != "" && specs.Cylinders != "" {
+		car.Engine = specs.DisplacementL + "L " + specs.EngineConfig + " " + specs.Cylinders + "cyl"
+	}
+}
+
+func enrichCarFromVIN(car *Car, apiKey string) {
+	if apiKey == "" || len(car.ID) != 17 { return }
+	if specs, err := api.GetSpecifications(car.ID, apiKey); err == nil {
+		applySpecifications(car, specs)
+	}
+	if photos, err := api.GetVehiclePhotos(car.ID, apiKey); err == nil {
+		car.Photos = photos.Photos
+		car.PrimaryImage = photos.PrimaryImage
+		if photos.PrimaryImage != "" { car.Image = photos.PrimaryImage }
+	}
+}
+
+func findCar(id string) (*Car, error) {
+	car, err := findLocalCar(id)
+	if err != nil { return nil, err }
+	if car != nil { return car, nil }
+
+	cars, _, err := loadAPICars(50, 0)
+	if err != nil { return nil, err }
+	for i := range cars {
+		if cars[i].ID == id { return &cars[i], nil }
+	}
+	return nil, nil
+}
+
+func carDetailHandler(w http.ResponseWriter, r *http.Request) {
+	carID := strings.TrimPrefix(r.URL.Path, "/cars/")
+	if carID == "" { http.NotFound(w, r); return }
+
+	car, err := findCar(carID)
+	if err != nil {
+		http.Error(w, "Unable to load car", http.StatusInternalServerError)
+		return
+	}
+	if car == nil { http.NotFound(w, r); return }
+
+	enrichCarFromVIN(car, getAPIKey())
+	renderTemplate(w, "templates/car.html", car, "Unable to load car page")
+}
+
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "templates/about.html", nil, "Unable to load about page")
+}
+
 func loadCars() ([]Car, error) {
 
 	data, err := os.ReadFile(
