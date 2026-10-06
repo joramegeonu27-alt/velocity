@@ -200,6 +200,37 @@ func compareHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "templates/compare.html", data, "Unable to load compare page")
 }
 
+func writeJSON(w http.ResponseWriter, value any) {
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(value); err != nil {
+		http.Error(w, "Unable to encode response", http.StatusInternalServerError)
+	}
+}
+
+func localCarSpecs(car *Car) map[string]string {
+	return map[string]string{
+		"make":                 car.Brand,
+		"model":                car.Model,
+		"year":                 strconv.Itoa(car.Year),
+		"engine_hp":            strconv.Itoa(car.Horsepower),
+		"displacement_l":       car.Displacement,
+		"engine_config":        car.EngineConfig,
+		"cylinders":            car.Cylinders,
+		"fuel_primary":         car.Fuel,
+		"drive_type":           car.Drivetrain,
+		"transmission_style":   car.Transmission,
+		"body_class":           car.BodyClass,
+		"seats":                car.Seats,
+		"doors":                car.Doors,
+		"manufacturer":         car.Manufacturer,
+		"series":               car.Series,
+		"vehicle_type":         "",
+		"plant_country":        "",
+		"transmission_speeds":  "",
+		"gvwr":                "",
+	}
+}
+
 func compareSpecsHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("vin")
 	if id == "" {
@@ -207,19 +238,13 @@ func compareSpecsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if car, err := findLocalCar(id); err == nil && car != nil {
-		response := map[string]string{
-			"make": car.Brand, "model": car.Model, "year": strconv.Itoa(car.Year),
-			"engine_hp": strconv.Itoa(car.Horsepower), "displacement_l": car.Displacement,
-			"engine_config": car.EngineConfig, "cylinders": car.Cylinders,
-			"fuel_primary": car.Fuel, "drive_type": car.Drivetrain,
-			"transmission_style": car.Transmission, "body_class": car.BodyClass,
-			"seats": car.Seats, "doors": car.Doors, "manufacturer": car.Manufacturer,
-			"series": car.Series, "vehicle_type": "", "plant_country": "",
-			"transmission_speeds": "", "gvwr": "",
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(response)
+	car, err := findLocalCar(id)
+	if err != nil {
+		http.Error(w, "Unable to load vehicle", http.StatusInternalServerError)
+		return
+	}
+	if car != nil {
+		writeJSON(w, localCarSpecs(car))
 		return
 	}
 
@@ -240,10 +265,7 @@ func compareSpecsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(specs); err != nil {
-		http.Error(w, "Unable to encode specifications", http.StatusInternalServerError)
-	}
+	writeJSON(w, specs)
 }
 
 func loadCars() ([]Car, error) {
