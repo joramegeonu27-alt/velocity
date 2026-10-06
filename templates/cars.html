@@ -30,40 +30,61 @@
     </header>
 
 
-    <!-- Cars Header -->
-    <section class="cars-header">
+    <!-- Cinematic 3D Cars Hero -->
+    <section class="cars-hero" aria-label="VÉLOCITY interactive car showcase">
+
+        <div class="cars-hero-bg" aria-hidden="true"></div>
+        <div class="cars-hero-grid" aria-hidden="true"></div>
+        <div class="cars-hero-glow" aria-hidden="true"></div>
+
+        <canvas id="carHeroCanvas" aria-label="Interactive 3D concept car"></canvas>
+
+        <div class="cars-hero-content">
+            <p class="cars-eyebrow reveal-in">The Collection</p>
+            <h1 class="fade-text cars-title reveal-in">Explore Cars.</h1>
+            <p class="cars-hero-copy reveal-in">
+                Discover machines engineered around performance, design and precision.
+                Drag to explore the VÉLOCITY concept in 3D.
+            </p>
+
+            <div class="cars-hero-actions reveal-in">
+                <a href="#collection" class="hero-button">View Collection</a>
+                <span class="cars-hero-hint">Drag · Scroll · Explore</span>
+            </div>
+        </div>
+
+        <div class="cars-hero-meta" aria-hidden="true">
+            <span>VÉLOCITY / 03</span>
+            <span>INTERACTIVE SHOWCASE</span>
+            <span>3D MODEL: UNITY FAN / KHRONOS • CC BY 4.0</span>
+        </div>
+
+        <div class="cars-hero-loader" id="carHeroLoader">
+            <span></span>
+            <small>Loading 3D experience</small>
+        </div>
+
+    </section>
+
+    <!-- Cars Header / Search -->
+    <section class="cars-header cars-header-search">
 
         <div class="cars-header-glow" aria-hidden="true"></div>
 
-        <p class="cars-eyebrow reveal-in">The Collection</p>
+        <div class="cars-header-copy">
+            <p class="cars-eyebrow reveal-in">The Collection</p>
+            <h2 class="cars-subtitle reveal-in">Find your machine.</h2>
+            <p class="reveal-in">
+                Search the collection by manufacturer or model, then sort by the numbers that matter.
+            </p>
 
-        <h1 class="fade-text cars-title reveal-in">Explore Cars.</h1>
-
-        <p class="reveal-in">
-            From understated grand tourers to cars built purely to set a lap time,
-            every entry here is verified spec-for-spec — no rounded numbers,
-            no manufacturer marketing copy. Just the car, as it actually performs.
-        </p>
-
-        <!-- Search -->
-        <div class="car-search reveal-in">
-
-            <div class="search-box">
-
-                <span class="search-icon">🔍</span>
-
-                <input
-                    type="text"
-                    id="carSearch"
-                    placeholder="Search cars, brands or models..."
-                >
-
-                <button id="searchButton">
-                    Search
-                </button>
-
+            <div class="car-search reveal-in">
+                <div class="search-box">
+                    <span class="search-icon">⌕</span>
+                    <input type="text" id="carSearch" placeholder="Search cars, brands or models...">
+                    <button id="searchButton">Search</button>
+                </div>
             </div>
-
         </div>
 
     </section>
@@ -121,7 +142,7 @@
 
 
     <!-- Cars Collection -->
-    <section class="cars-collection">
+    <section class="cars-collection" id="collection">
 
         <div class="car-grid" id="carGrid">
 
@@ -210,6 +231,7 @@
 
 
     <script src="/static/js/cars.js"></script>
+    <script type="module" src="/static/js/cars-hero.js"></script>
 
 </body>
 

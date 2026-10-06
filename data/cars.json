@@ -8,7 +8,7 @@
         "engine": "3.0L Twin-Turbo Inline-6",
         "top_speed": "155 mph",
         "zero_to_sixty": "3.4 seconds",
-        "image": "/static/hero-cover.png"
+        "image": "https://autoimage.capitalone.com/stock-media/chrome/2026-BMW-M4-Competition_xDrive-475-cc_2026BMC641955065_01_2100_475.png?height=480&width=640"
     },
     {
         "id": "porsche-911",
@@ -19,7 +19,7 @@
         "engine": "3.0L Twin-Turbo Flat-6",
         "top_speed": "182 mph",
         "zero_to_sixty": "4.0 seconds",
-        "image": "/static/hero-cover.png"
+        "image": "https://pictures.dealer.com/m/manhattanporsche/1350/da9084a0102687e42786afe26c5ab38ex.jpg?imdensity=1&impolicy=downsize_bkpt&w=1024"
     },
     {
         "id": "amg-gt",
@@ -30,6 +30,6 @@
         "engine": "4.0L Twin-Turbo V8",
         "top_speed": "196 mph",
         "zero_to_sixty": "3.1 seconds",
-        "image": "/static/hero-cover.png"
+        "image": "https://www.amarisupercars.com/blobs/stock/1241565/images/d12d5a1d-5fea-4578-8dda-2dba2a1cdd09.jpg?height=1333&width=2000"
     }
 ]
