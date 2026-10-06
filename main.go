@@ -54,10 +54,36 @@ func getAPIKey() string {
 	return strings.TrimSpace(os.Getenv("VEHICLES_API_KEY"))
 }
 
-func loadAPICars(limit int, offset int) ([]Car, int, error) {
-	if limit < 1 { limit = 50 }
-	if limit > 500 { limit = 500 }
-	if offset < 0 { offset = 0 }
+func listingToCar(listing api.Listing) Car {
+	return Car{
+		ID: listing.VIN,
+		Brand: listing.Make,
+		Model: listing.Model,
+		Year: listing.Year,
+		Image: listing.Image,
+		Price: listing.Price,
+		Miles: listing.Miles,
+		Fuel: listing.Fuel,
+		Drivetrain: listing.Drivetrain,
+		Transmission: listing.Transmission,
+		Color: listing.Color,
+		Condition: listing.Condition,
+		Engine: listing.Trim,
+		TopSpeed: "N/A",
+		ZeroToSixty: "N/A",
+	}
+}
+
+func loadAPICars(limit, offset int) ([]Car, int, error) {
+	if limit < 1 {
+		limit = 50
+	}
+	if limit > 500 {
+		limit = 500
+	}
+	if offset < 0 {
+		offset = 0
+	}
 
 	apiKey := getAPIKey()
 	if apiKey == "" {
@@ -72,13 +98,9 @@ func loadAPICars(limit int, offset int) ([]Car, int, error) {
 
 	cars := make([]Car, 0, len(response.Results))
 	for _, listing := range response.Results {
-		cars = append(cars, Car{
-			ID: listing.VIN, Brand: listing.Make, Model: listing.Model, Year: listing.Year,
-			Image: listing.Image, Price: listing.Price, Miles: listing.Miles, Fuel: listing.Fuel,
-			Drivetrain: listing.Drivetrain, Transmission: listing.Transmission, Color: listing.Color,
-			Condition: listing.Condition, Engine: listing.Trim, TopSpeed: "N/A", ZeroToSixty: "N/A",
-		})
+		cars = append(cars, listingToCar(listing))
 	}
+
 	return cars, response.Total, nil
 }
 
@@ -121,56 +143,22 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func carsHandler(w http.ResponseWriter, r *http.Request) {
-
 	page := 1
-
-	pageText := r.URL.Query().Get("page")
-
-	if pageText != "" {
-
-		parsedPage, err := strconv.Atoi(pageText)
-
-		if err == nil {
+	if pageText := r.URL.Query().Get("page"); pageText != "" {
+		if parsedPage, err := strconv.Atoi(pageText); err == nil {
 			page = parsedPage
 		}
 	}
-
 	if page < 1 {
 		page = 1
 	}
 
 	const carsPerPage = 50
-
 	offset := (page - 1) * carsPerPage
 
-	cars, total, err := loadAPICars(
-		carsPerPage,
-		offset,
-	)
-
+	cars, total, err := loadAPICars(carsPerPage, offset)
 	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to load cars",
-			http.StatusInternalServerError,
-		)
-
-		return
-	}
-
-	tmpl, err := template.ParseFiles(
-		"templates/cars.html",
-	)
-
-	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to load cars page",
-			http.StatusInternalServerError,
-		)
-
+		http.Error(w, "Unable to load cars", http.StatusInternalServerError)
 		return
 	}
 
@@ -188,109 +176,7 @@ func carsHandler(w http.ResponseWriter, r *http.Request) {
 		HasPrevious: page > 1,
 	}
 
-	err = tmpl.Execute(w, data)
-
-	if err != nil {
-		fmt.Println("Template error:", err)
-	}
-}
-
-func enrichCarFromVIN(car *Car, apiKey string) {
-	if apiKey == "" || len(car.ID) != 17 {
-		return
-	}
-
-	specs, err := api.GetSpecifications(car.ID, apiKey)
-	if err == nil {
-		applySpecifications(car, specs)
-	}
-
-	photos, err := api.GetVehiclePhotos(car.ID, apiKey)
-	if err == nil {
-		car.Photos = photos.Photos
-		car.PrimaryImage = photos.PrimaryImage
-		if photos.PrimaryImage != "" {
-			car.Image = photos.PrimaryImage
-		}
-	}
-}
-
-func applySpecifications(car *Car, specs api.VehicleSpecifications) {
-	if horsepower, err := strconv.Atoi(specs.EngineHP); err == nil && horsepower > 0 {
-		car.Horsepower = horsepower
-	}
-
-	car.Cylinders = specs.Cylinders
-	car.Displacement = specs.DisplacementL
-	car.Seats = specs.Seats
-	car.Doors = specs.Doors
-	car.BodyClass = specs.BodyClass
-	car.EngineConfig = specs.EngineConfig
-	car.Series = specs.Series
-	car.Manufacturer = specs.Manufacturer
-
-	if specs.FuelPrimary != "" {
-		car.Fuel = specs.FuelPrimary
-	}
-	if specs.DriveType != "" {
-		car.Drivetrain = specs.DriveType
-	}
-	if specs.TransmissionStyle != "" {
-		car.Transmission = specs.TransmissionStyle
-		if specs.TransmissionSpeeds != "" {
-			car.Transmission += " (" + specs.TransmissionSpeeds + "-speed)"
-		}
-	}
-	if specs.DisplacementL != "" && specs.EngineConfig != "" && specs.Cylinders != "" {
-		car.Engine = specs.DisplacementL + "L " + specs.EngineConfig + " " + specs.Cylinders + "cyl"
-	}
-}
-
-func findCar(id string) (*Car, error) {
-	car, err := findLocalCar(id)
-	if err != nil {
-		return nil, err
-	}
-	if car != nil {
-		return car, nil
-	}
-
-	cars, _, err := loadAPICars(50, 0)
-	if err != nil {
-		return nil, err
-	}
-
-	for i := range cars {
-		if cars[i].ID == id {
-			return &cars[i], nil
-		}
-	}
-
-	return nil, nil
-}
-
-func carDetailHandler(w http.ResponseWriter, r *http.Request) {
-	carID := strings.TrimPrefix(r.URL.Path, "/cars/")
-	if carID == "" {
-		http.NotFound(w, r)
-		return
-	}
-
-	car, err := findCar(carID)
-	if err != nil {
-		http.Error(w, "Unable to load car", http.StatusInternalServerError)
-		return
-	}
-	if car == nil {
-		http.NotFound(w, r)
-		return
-	}
-
-	enrichCarFromVIN(car, getAPIKey())
-	renderTemplate(w, "templates/car.html", car, "Unable to load car page")
-}
-func aboutHandler(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, "templates/about.html", nil, "Unable to load about page")
+	renderTemplate(w, "templates/cars.html", data, "Unable to load cars page")
 }
 
 func compareHandler(w http.ResponseWriter, r *http.Request) {
