@@ -104,22 +104,20 @@ func findLocalCar(id string) (*Car, error) {
 	return nil, nil
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-
-	tmpl, err := template.ParseFiles(
-		"templates/index.html",
-	)
-
+func renderTemplate(w http.ResponseWriter, templatePath string, data any, errorMessage string) {
+	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {
-		http.Error(
-			w,
-			"Unable to load page",
-			http.StatusInternalServerError,
-		)
+		http.Error(w, errorMessage, http.StatusInternalServerError)
 		return
 	}
 
-	tmpl.Execute(w, nil)
+	if err := tmpl.Execute(w, data); err != nil {
+		fmt.Println("Template error:", err)
+	}
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "templates/index.html", nil, "Unable to load page")
 }
 
 func carsHandler(w http.ResponseWriter, r *http.Request) {
@@ -293,46 +291,11 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 			if photos.PrimaryImage != "" { selectedCar.Image = photos.PrimaryImage }
 		}
 	}
-	tmpl, err := template.ParseFiles(
-		"templates/car.html",
-	)
-
-	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to load car page",
-			http.StatusInternalServerError,
-		)
-
-		return
-	}
-
-	err = tmpl.Execute(w, selectedCar)
-
-	if err != nil {
-		fmt.Println("Template error:", err)
-	}
+	renderTemplate(w, "templates/car.html", selectedCar, "Unable to load car page")
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
-
-	tmpl, err := template.ParseFiles(
-		"templates/about.html",
-	)
-
-	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to load about page",
-			http.StatusInternalServerError,
-		)
-
-		return
-	}
-
-	tmpl.Execute(w, nil)
+	renderTemplate(w, "templates/about.html", nil, "Unable to load about page")
 }
 
 func compareHandler(w http.ResponseWriter, r *http.Request) {
@@ -363,32 +326,15 @@ func compareHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl, err := template.ParseFiles(
-		"templates/compare.html",
-	)
-
-	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to load compare page",
-			http.StatusInternalServerError,
-		)
-
-		return
-	}
-
-	err = tmpl.Execute(
+	renderTemplate(
 		w,
+		"templates/compare.html",
 		CompareData{
 			Cars:     cars,
 			CarsJSON: template.JS(carsJSON),
 		},
+		"Unable to load compare page",
 	)
-
-	if err != nil {
-		fmt.Println("Template error:", err)
-	}
 }
 
 func compareSpecsHandler(w http.ResponseWriter, r *http.Request) {
