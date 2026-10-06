@@ -1,10 +1,49 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"time"
 )
+
+const requestTimeout = 10 * time.Second
+
+var client = &http.Client{
+	Timeout: requestTimeout,
+}
+
+func doJSON(ctx context.Context, method, url, apiKey string, target any) error {
+	req, err := http.NewRequestWithContext(ctx, method, url, nil)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 2048))
+		if len(body) > 0 {
+			return fmt.Errorf("%s: %s: %s", method, resp.Status, string(body))
+		}
+		return fmt.Errorf("%s: %s", method, resp.Status)
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(target); err != nil {
+		return fmt.Errorf("decode %s response: %w", method, err)
+	}
+
+	return nil
+}
 
 type Vehicle struct {
 	Year         int    `json:"year"`
@@ -25,38 +64,12 @@ type VehicleResponse struct {
 }
 
 func GetVehicle(vin string, apiKey string) (Vehicle, error) {
-	url := fmt.Sprintf(
-		"https://api.vehicles.dev/v1/vehicles/vin/%s",
-		vin,
-	)
-
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return Vehicle{}, err
-	}
-
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-	req.Header.Set("Accept", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return Vehicle{}, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return Vehicle{}, fmt.Errorf(
-			"API returned status: %s",
-			resp.Status,
-		)
-	}
+	url := fmt.Sprintf("https://api.vehicles.dev/v1/vehicles/vin/%s", vin)
 
 	var data VehicleResponse
-
-	err = json.NewDecoder(resp.Body).Decode(&data)
+	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
 	if err != nil {
-		return Vehicle{}, err
+		return Vehicle{}, fmt.Errorf("vehicle lookup failed: %w", err)
 	}
 
 	return data.Vehicle, nil
@@ -92,38 +105,12 @@ type SpecificationsResponse struct {
 }
 
 func GetSpecifications(vin string, apiKey string) (VehicleSpecifications, error) {
-	url := fmt.Sprintf(
-		"https://api.vehicles.dev/v1/vehicles/specifications/%s",
-		vin,
-	)
-
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return VehicleSpecifications{}, err
-	}
-
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-	req.Header.Set("Accept", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return VehicleSpecifications{}, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return VehicleSpecifications{}, fmt.Errorf(
-			"Specifications API returned status: %s",
-			resp.Status,
-		)
-	}
+	url := fmt.Sprintf("https://api.vehicles.dev/v1/vehicles/specifications/%s", vin)
 
 	var data SpecificationsResponse
-
-	err = json.NewDecoder(resp.Body).Decode(&data)
+	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
 	if err != nil {
-		return VehicleSpecifications{}, err
+		return VehicleSpecifications{}, fmt.Errorf("specifications lookup failed: %w", err)
 	}
 
 	return data.Specifications, nil
@@ -155,20 +142,13 @@ type ListingsResponse struct {
 	Results []Listing `json:"results"`
 }
 
-func SearchVehicles(
-	apiKey string,
-	limit int,
-	offset int,
-) (ListingsResponse, error) {
-
+func SearchVehicles(apiKey string, limit int, offset int) (ListingsResponse, error) {
 	if limit < 1 {
 		limit = 50
 	}
-
 	if limit > 500 {
 		limit = 500
 	}
-
 	if offset < 0 {
 		offset = 0
 	}
@@ -179,47 +159,10 @@ func SearchVehicles(
 		offset,
 	)
 
-	req, err := http.NewRequest(
-		"GET",
-		url,
-		nil,
-	)
-
-	if err != nil {
-		return ListingsResponse{}, err
-	}
-
-	req.Header.Set(
-		"Authorization",
-		"Bearer "+apiKey,
-	)
-
-	req.Header.Set(
-		"Accept",
-		"application/json",
-	)
-
-	resp, err := http.DefaultClient.Do(req)
-
-	if err != nil {
-		return ListingsResponse{}, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return ListingsResponse{}, fmt.Errorf(
-			"Listings API returned status: %s",
-			resp.Status,
-		)
-	}
-
 	var data ListingsResponse
-
-	err = json.NewDecoder(resp.Body).Decode(&data)
-
+	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
 	if err != nil {
-		return ListingsResponse{}, err
+		return ListingsResponse{}, fmt.Errorf("listings lookup failed: %w", err)
 	}
 
 	return data, nil
@@ -237,57 +180,13 @@ type VehiclePhotos struct {
 	VIN             string   `json:"vin"`
 }
 
-func GetVehiclePhotos(
-	vin string,
-	apiKey string,
-) (VehiclePhotos, error) {
-
-	url := fmt.Sprintf(
-		"https://api.vehicles.dev/v1/vehicles/photos/%s",
-		vin,
-	)
-
-	req, err := http.NewRequest(
-		"GET",
-		url,
-		nil,
-	)
-
-	if err != nil {
-		return VehiclePhotos{}, err
-	}
-
-	req.Header.Set(
-		"Authorization",
-		"Bearer "+apiKey,
-	)
-
-	req.Header.Set(
-		"Accept",
-		"application/json",
-	)
-
-	resp, err := http.DefaultClient.Do(req)
-
-	if err != nil {
-		return VehiclePhotos{}, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return VehiclePhotos{}, fmt.Errorf(
-			"Photos API returned status: %s",
-			resp.Status,
-		)
-	}
+func GetVehiclePhotos(vin string, apiKey string) (VehiclePhotos, error) {
+	url := fmt.Sprintf("https://api.vehicles.dev/v1/vehicles/photos/%s", vin)
 
 	var data VehiclePhotos
-
-	err = json.NewDecoder(resp.Body).Decode(&data)
-
+	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
 	if err != nil {
-		return VehiclePhotos{}, err
+		return VehiclePhotos{}, fmt.Errorf("photo lookup failed: %w", err)
 	}
 
 	return data, nil
