@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"velocity/api"
 )
@@ -516,18 +517,17 @@ func main() {
 		aboutHandler,
 	)
 
-	fmt.Println(os.Getenv("VEHICLES_API_KEY"))
+	server := &http.Server{
+		Addr:              ":8080",
+		Handler:           nil,
+		ReadHeaderTimeout: 5 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
 
-	fmt.Println(
-		"VÉLOCITY server running on http://localhost:8080",
-	)
+	fmt.Println("VÉLOCITY server running on http://localhost:8080")
 
-	err := http.ListenAndServe(
-		":8080",
-		nil,
-	)
-
-	if err != nil {
-		fmt.Println(err)
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		fmt.Println("Server error:", err)
 	}
 }
