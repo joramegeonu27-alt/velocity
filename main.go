@@ -391,65 +391,48 @@ func compareHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func compareSpecsHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("vin")
+	if id == "" {
+		http.Error(w, "VIN or car ID is required", http.StatusBadRequest)
+		return
+	}
 
-	apiKey := os.Getenv("VEHICLES_API_KEY")
+	if car, err := findLocalCar(id); err == nil && car != nil {
+		response := map[string]string{
+			"make": car.Brand, "model": car.Model, "year": strconv.Itoa(car.Year),
+			"engine_hp": strconv.Itoa(car.Horsepower), "displacement_l": car.Displacement,
+			"engine_config": car.EngineConfig, "cylinders": car.Cylinders,
+			"fuel_primary": car.Fuel, "drive_type": car.Drivetrain,
+			"transmission_style": car.Transmission, "body_class": car.BodyClass,
+			"seats": car.Seats, "doors": car.Doors, "manufacturer": car.Manufacturer,
+			"series": car.Series, "vehicle_type": "", "plant_country": "",
+			"transmission_speeds": "", "gvwr": "",
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(response)
+		return
+	}
 
+	if len(id) != 17 {
+		http.Error(w, "Unknown vehicle", http.StatusNotFound)
+		return
+	}
+
+	apiKey := getAPIKey()
 	if apiKey == "" {
-
-		http.Error(
-			w,
-			"VEHICLES_API_KEY is not set",
-			http.StatusInternalServerError,
-		)
-
+		http.Error(w, "Vehicle API key is not configured", http.StatusServiceUnavailable)
 		return
 	}
 
-	vin := r.URL.Query().Get("vin")
-
-	if vin == "" {
-
-		http.Error(
-			w,
-			"VIN is required",
-			http.StatusBadRequest,
-		)
-
-		return
-	}
-
-	specs, err := api.GetSpecifications(
-		vin,
-		apiKey,
-	)
-
+	specs, err := api.GetSpecifications(id, apiKey)
 	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to get vehicle specifications",
-			http.StatusInternalServerError,
-		)
-
+		http.Error(w, "Unable to get vehicle specifications", http.StatusBadGateway)
 		return
 	}
 
-	w.Header().Set(
-		"Content-Type",
-		"application/json",
-	)
-
-	err = json.NewEncoder(w).Encode(specs)
-
-	if err != nil {
-
-		http.Error(
-			w,
-			"Unable to encode specifications",
-			http.StatusInternalServerError,
-		)
-
-		return
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(specs); err != nil {
+		http.Error(w, "Unable to encode specifications", http.StatusInternalServerError)
 	}
 }
 
