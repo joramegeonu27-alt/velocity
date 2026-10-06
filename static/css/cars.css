@@ -593,3 +593,277 @@
             linear-gradient(180deg, rgba(5,5,5,.80) 0%, rgba(5,5,5,.35) 48%, rgba(5,5,5,.86) 100%);
     }
 }
+
+
+/* =========================================================
+   INTERACTIVE IMAGE HERO
+   Uses a normal car image with CSS 3D depth and pointer motion.
+========================================================= */
+
+.cars-hero {
+    min-height: min(760px, 86vh);
+    align-items: center;
+    background:
+        radial-gradient(circle at 76% 52%, rgba(217,121,63,.18), transparent 28%),
+        radial-gradient(circle at 74% 72%, rgba(255,255,255,.05), transparent 34%),
+        #050505;
+}
+
+.cars-hero-bg {
+    z-index: 0;
+    background:
+        linear-gradient(90deg, rgba(5,5,5,.99) 0%, rgba(5,5,5,.88) 30%, rgba(5,5,5,.35) 58%, rgba(5,5,5,.18) 100%),
+        radial-gradient(ellipse at 75% 55%, rgba(217,121,63,.14), transparent 38%);
+}
+
+.cars-hero-grid {
+    z-index: 1;
+    opacity: .22;
+}
+
+.cars-hero-glow {
+    z-index: 1;
+    right: 5%;
+    top: 13%;
+    width: 48vw;
+    height: 48vw;
+    background: radial-gradient(circle, rgba(217,121,63,.20), transparent 66%);
+}
+
+.cars-hero-stage {
+    position: absolute;
+    z-index: 2;
+    right: 1%;
+    top: 50%;
+    width: min(65vw, 900px);
+    height: min(54vw, 620px);
+    transform: translateY(-50%);
+    perspective: 1400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.cars-hero-orbit {
+    position: absolute;
+    width: 68%;
+    aspect-ratio: 2 / 1;
+    border-radius: 50%;
+    border: 1px solid rgba(217,121,63,.24);
+    transform: rotateX(67deg);
+    box-shadow:
+        0 0 60px rgba(217,121,63,.10),
+        inset 0 0 40px rgba(217,121,63,.05);
+}
+
+.cars-hero-orbit::after {
+    content: "";
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.cars-hero-car {
+    position: relative;
+    z-index: 3;
+    width: min(62vw, 760px);
+    max-width: none;
+    height: auto;
+    object-fit: contain;
+    transform:
+        translate3d(
+            var(--hero-move-x, 0px),
+            var(--hero-move-y, 0px),
+            0
+        )
+        rotateX(var(--hero-rotate-x, 0deg))
+        rotateY(var(--hero-rotate-y, 0deg))
+        rotateZ(-1deg)
+        scale(var(--hero-scale, 1));
+    transform-origin: center center;
+    filter:
+        drop-shadow(0 35px 45px rgba(0,0,0,.70))
+        drop-shadow(0 0 45px rgba(217,121,63,.16))
+        saturate(1.08)
+        contrast(1.04);
+    transition:
+        transform .16s ease-out,
+        filter .4s ease;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.cars-hero-stage::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: 13%;
+    left: 18%;
+    width: 64%;
+    height: 16%;
+    border-radius: 50%;
+    background: rgba(0,0,0,.72);
+    filter: blur(25px);
+    transform: rotate(-2deg);
+}
+
+.cars-hero-stage:hover .cars-hero-car {
+    filter:
+        drop-shadow(0 42px 55px rgba(0,0,0,.76))
+        drop-shadow(0 0 58px rgba(217,121,63,.22))
+        saturate(1.12)
+        contrast(1.06);
+}
+
+.cars-hero-car.is-switching {
+    opacity: 0;
+    transform:
+        translate3d(35px, 10px, 0)
+        rotateY(-5deg)
+        scale(.96);
+}
+
+.cars-hero-content {
+    z-index: 5;
+    width: min(1200px, 86%);
+    padding-top: 35px;
+    padding-bottom: 45px;
+}
+
+.cars-hero .cars-eyebrow,
+.cars-hero .cars-title,
+.cars-hero .cars-hero-copy,
+.cars-hero .cars-hero-hint,
+.cars-hero .cars-hero-meta,
+.cars-hero .cars-hero-meta span {
+    background-color: transparent !important;
+}
+
+.cars-hero .cars-title {
+    font-family: 'Fraunces', var(--display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(58px, 7vw, 104px);
+    line-height: .92;
+    letter-spacing: -2px;
+    color: #fff;
+    background-image: linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        #ffffff 34%,
+        #eeeeee 58%,
+        #8b8b8b 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+}
+
+.cars-hero-copy {
+    max-width: 510px;
+    font-size: 16px;
+    line-height: 1.75;
+    color: rgba(255,255,255,.66);
+    margin: 22px 0 30px;
+}
+
+.cars-hero-actions {
+    position: relative;
+    z-index: 6;
+}
+
+.cars-hero-meta {
+    z-index: 6;
+}
+
+@keyframes heroCarFloat {
+    0%, 100% {
+        margin-top: 0;
+    }
+    50% {
+        margin-top: -10px;
+    }
+}
+
+.cars-hero-car {
+    animation: heroCarFloat 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cars-hero-car {
+        animation: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .cars-hero {
+        min-height: 700px;
+        align-items: flex-start;
+    }
+
+    .cars-hero-stage {
+        right: -8%;
+        top: 58%;
+        width: 78vw;
+        height: 52vw;
+    }
+
+    .cars-hero-car {
+        width: 78vw;
+    }
+
+    .cars-hero-content {
+        width: 90%;
+        padding-top: 80px;
+    }
+
+    .cars-hero .cars-title {
+        font-size: clamp(52px, 10vw, 80px);
+    }
+
+    .cars-hero-copy {
+        max-width: 420px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 650px) {
+    .cars-hero {
+        min-height: 720px;
+    }
+
+    .cars-hero-content {
+        padding-top: 65px;
+    }
+
+    .cars-hero-stage {
+        right: -16%;
+        top: 64%;
+        width: 105vw;
+        height: 60vw;
+    }
+
+    .cars-hero-car {
+        width: 100vw;
+    }
+
+    .cars-hero .cars-title {
+        font-size: clamp(44px, 14vw, 64px);
+    }
+
+    .cars-hero-copy {
+        max-width: 340px;
+        font-size: 13px;
+    }
+
+    .cars-hero-meta {
+        bottom: 18px;
+    }
+
+    .cars-hero-meta span:last-child {
+        display: none;
+    }
+}
