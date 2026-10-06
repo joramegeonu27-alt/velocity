@@ -1,306 +1,84 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
-import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/loaders/GLTFLoader.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js";
+const heroCar = document.getElementById("heroCarImage");
+const heroStage = document.querySelector(".cars-hero-stage");
+const heroSection = document.querySelector(".cars-hero");
 
-const canvas = document.getElementById("carHeroCanvas");
-const loaderUI = document.getElementById("carHeroLoader");
+if (heroCar && heroStage && heroSection) {
+    const cars = [
+        "https://autoimage.capitalone.com/stock-media/chrome/2026-BMW-M4-Competition_xDrive-475-cc_2026BMC641955065_01_2100_475.png?height=900&width=1200",
+        "https://pictures.dealer.com/m/manhattanporsche/1350/da9084a0102687e42786afe26c5ab38ex.jpg?imdensity=1&impolicy=downsize_bkpt&w=1024",
+        "https://www.amarisupercars.com/blobs/stock/1241565/images/d12d5a1d-5fea-4578-8dda-2dba2a1cdd09.jpg?height=1333&width=2000"
+    ];
 
-if (!canvas) {
-    throw new Error("3D hero canvas not found.");
-}
+    let currentCar = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let scrollOffset = 0;
 
-const scene = new THREE.Scene();
-
-const camera = new THREE.PerspectiveCamera(
-    34,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    100
-);
-
-camera.position.set(4.8, 2.6, 7.4);
-
-const renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: true,
-    alpha: true,
-    powerPreference: "high-performance"
-});
-
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.35;
-renderer.shadowMap.enabled = true;
-
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
-controls.dampingFactor = 0.055;
-controls.enablePan = false;
-controls.minDistance = 4.2;
-controls.maxDistance = 9.5;
-controls.minPolarAngle = Math.PI * 0.35;
-controls.maxPolarAngle = Math.PI * 0.62;
-controls.target.set(0, 0.72, 0);
-controls.autoRotate = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-controls.autoRotateSpeed = 0.55;
-
-scene.add(new THREE.HemisphereLight(0xb9c6d8, 0x080808, 2.2));
-
-const keyLight = new THREE.DirectionalLight(0xffffff, 4.5);
-keyLight.position.set(5, 7, 4);
-scene.add(keyLight);
-
-const rimLight = new THREE.PointLight(0xd9793f, 24, 14, 2);
-rimLight.position.set(-4, 2.8, -2);
-scene.add(rimLight);
-
-const frontLight = new THREE.PointLight(0x8aa9ff, 11, 12, 2);
-frontLight.position.set(3, 1.5, 4);
-scene.add(frontLight);
-
-const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(4.2, 64),
-    new THREE.MeshStandardMaterial({
-        color: 0x070707,
-        metalness: 0.7,
-        roughness: 0.28,
-        transparent: true,
-        opacity: 0.78
-    })
-);
-
-floor.rotation.x = -Math.PI / 2;
-floor.position.y = -0.03;
-floor.scale.set(1.55, 0.5, 1);
-scene.add(floor);
-
-const carRoot = new THREE.Group();
-scene.add(carRoot);
-
-let fallbackModel = null;
-
-function finishLoading() {
-    if (loaderUI) {
-        loaderUI.classList.add("is-hidden");
-    }
-}
-
-function buildFallbackCar() {
-    const fallback = new THREE.Group();
-    fallback.name = "ProceduralFallbackCar";
-
-    const body = new THREE.Mesh(
-        new THREE.BoxGeometry(3.8, 0.65, 1.65),
-        new THREE.MeshStandardMaterial({
-            color: 0x191919,
-            metalness: 0.9,
-            roughness: 0.2
-        })
-    );
-
-    body.position.y = 0.58;
-    fallback.add(body);
-
-    const cabin = new THREE.Mesh(
-        new THREE.BoxGeometry(1.9, 0.62, 1.35),
-        new THREE.MeshStandardMaterial({
-            color: 0x080b10,
-            metalness: 0.7,
-            roughness: 0.15,
-            transparent: true,
-            opacity: 0.94
-        })
-    );
-
-    cabin.position.set(-0.1, 1.12, 0);
-    fallback.add(cabin);
-
-    const windshield = new THREE.Mesh(
-        new THREE.BoxGeometry(1.55, 0.38, 1.38),
-        new THREE.MeshStandardMaterial({
-            color: 0x111923,
-            metalness: 0.25,
-            roughness: 0.08,
-            transparent: true,
-            opacity: 0.78
-        })
-    );
-
-    windshield.position.set(0.28, 1.17, 0);
-    windshield.rotation.z = -0.12;
-    fallback.add(windshield);
-
-    const accentMaterial = new THREE.MeshBasicMaterial({
-        color: 0xd9793f
+    heroCar.addEventListener("error", function () {
+        heroCar.src = cars[0];
     });
 
-    const frontStrip = new THREE.Mesh(
-        new THREE.BoxGeometry(0.08, 0.13, 1.28),
-        accentMaterial
-    );
-    frontStrip.position.set(1.93, 0.62, 0);
-    fallback.add(frontStrip);
+    heroStage.addEventListener("pointermove", function (event) {
+        const rect = heroStage.getBoundingClientRect();
 
-    const wheelMaterial = new THREE.MeshStandardMaterial({
-        color: 0x080808,
-        metalness: 0.75,
-        roughness: 0.28
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+        targetX = x * 18;
+        targetY = y * -10;
     });
 
-    [-1.35, 1.35].forEach(function (x) {
-        [-0.84, 0.84].forEach(function (z) {
-            const wheel = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.43, 0.43, 0.26, 32),
-                wheelMaterial
-            );
-
-            wheel.rotation.x = Math.PI / 2;
-            wheel.position.set(x, 0.43, z);
-            fallback.add(wheel);
-        });
+    heroStage.addEventListener("pointerleave", function () {
+        targetX = 0;
+        targetY = 0;
     });
 
-    return fallback;
-}
-
-function frameModel(model) {
-    const box = new THREE.Box3().setFromObject(model);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-
-    model.position.sub(center);
-
-    const maxDimension = Math.max(size.x, size.y, size.z);
-    const targetSize = 5.4;
-    const scale = targetSize / maxDimension;
-
-    model.scale.setScalar(scale);
-    model.position.y = 0.2;
-
-    carRoot.add(model);
-}
-
-// Put a lightweight procedural car on screen immediately.
-// The detailed GLB is then loaded on top of it, so a slow network
-// can never leave the hero looking empty.
-fallbackModel = buildFallbackCar();
-frameModel(fallbackModel);
-
-const modelURL =
-    "https://sceneview.github.io/models/platforms/CarConcept.glb";
-
-const gltfLoader = new GLTFLoader();
-
-gltfLoader.load(
-    modelURL,
-    function (gltf) {
-        const model = gltf.scene;
-
-        model.traverse(function (object) {
-            if (!object.isMesh) {
-                return;
-            }
-
-            object.castShadow = true;
-            object.receiveShadow = true;
-
-            if (object.material) {
-                object.material.envMapIntensity = 1.2;
-            }
-        });
-
-        if (fallbackModel && fallbackModel.parent === carRoot) {
-            carRoot.remove(fallbackModel);
-            fallbackModel = null;
-        }
-
-        frameModel(model);
-        finishLoading();
-    },
-    function (progress) {
-        if (!loaderUI || !progress.total) {
+    heroSection.addEventListener("wheel", function (event) {
+        if (Math.abs(event.deltaY) < 2) {
             return;
         }
 
-        const percent = Math.round(
-            (progress.loaded / progress.total) * 100
-        );
+        const direction = event.deltaY > 0 ? 1 : -1;
 
-        const label = loaderUI.querySelector("small");
+        currentCar = (currentCar + direction + cars.length) % cars.length;
+        heroCar.classList.add("is-switching");
 
-        if (label) {
-            label.textContent =
-                "Loading 3D experience " + percent + "%";
-        }
-    },
-    function () {
-        console.warn("3D car model could not be loaded. Keeping procedural fallback.");
-        finishLoading();
-    }
-);
+        window.setTimeout(function () {
+            heroCar.src = cars[currentCar];
+            heroCar.classList.remove("is-switching");
+        }, 220);
+    }, { passive: true });
 
-let pointerX = 0;
-let pointerY = 0;
+    window.setInterval(function () {
+        currentCar = (currentCar + 1) % cars.length;
+        heroCar.classList.add("is-switching");
 
-window.addEventListener("pointermove", function (event) {
-    pointerX =
-        (event.clientX / window.innerWidth - 0.5) * 2;
+        window.setTimeout(function () {
+            heroCar.src = cars[currentCar];
+            heroCar.classList.remove("is-switching");
+        }, 220);
+    }, 6500);
 
-    pointerY =
-        (event.clientY / window.innerHeight - 0.5) * 2;
-});
+    function animate() {
+        currentX += (targetX - currentX) * 0.08;
+        currentY += (targetY - currentY) * 0.08;
 
-const clock = new THREE.Clock();
+        const parallax = Math.min(Math.max(scrollOffset * 0.08, -18), 18);
 
-function animate() {
-    requestAnimationFrame(animate);
+        heroSection.style.setProperty("--hero-move-x", currentX + "px");
+        heroSection.style.setProperty("--hero-move-y", (currentY + parallax) + "px");
+        heroSection.style.setProperty("--hero-rotate-y", (currentX * 0.22) + "deg");
+        heroSection.style.setProperty("--hero-rotate-x", (currentY * 0.16) + "deg");
+        heroSection.style.setProperty("--hero-scale", "1.02");
 
-    const elapsed = clock.getElapsedTime();
-
-    controls.update();
-
-    if (carRoot.children.length) {
-        carRoot.rotation.x =
-            THREE.MathUtils.lerp(
-                carRoot.rotation.x,
-                pointerY * -0.025,
-                0.035
-            );
-
-        if (!controls.autoRotate) {
-            carRoot.rotation.y =
-                THREE.MathUtils.lerp(
-                    carRoot.rotation.y,
-                    pointerX * 0.12,
-                    0.035
-                );
-        }
-
-        carRoot.position.y =
-            Math.sin(elapsed * 1.2) * 0.035;
+        window.requestAnimationFrame(animate);
     }
 
-    renderer.render(scene, camera);
+    window.addEventListener("scroll", function () {
+        scrollOffset = window.scrollY - heroSection.offsetTop;
+    }, { passive: true });
+
+    animate();
 }
-
-function resize() {
-    camera.aspect =
-        window.innerWidth / window.innerHeight;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setPixelRatio(
-        Math.min(window.devicePixelRatio, 1.8)
-    );
-
-    renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
-    );
-}
-
-window.addEventListener("resize", resize);
-
-animate();
