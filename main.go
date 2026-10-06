@@ -195,105 +195,100 @@ func carsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func enrichCarFromVIN(car *Car, apiKey string) {
+	if apiKey == "" || len(car.ID) != 17 {
+		return
+	}
+
+	specs, err := api.GetSpecifications(car.ID, apiKey)
+	if err == nil {
+		applySpecifications(car, specs)
+	}
+
+	photos, err := api.GetVehiclePhotos(car.ID, apiKey)
+	if err == nil {
+		car.Photos = photos.Photos
+		car.PrimaryImage = photos.PrimaryImage
+		if photos.PrimaryImage != "" {
+			car.Image = photos.PrimaryImage
+		}
+	}
+}
+
+func applySpecifications(car *Car, specs api.VehicleSpecifications) {
+	if horsepower, err := strconv.Atoi(specs.EngineHP); err == nil && horsepower > 0 {
+		car.Horsepower = horsepower
+	}
+
+	car.Cylinders = specs.Cylinders
+	car.Displacement = specs.DisplacementL
+	car.Seats = specs.Seats
+	car.Doors = specs.Doors
+	car.BodyClass = specs.BodyClass
+	car.EngineConfig = specs.EngineConfig
+	car.Series = specs.Series
+	car.Manufacturer = specs.Manufacturer
+
+	if specs.FuelPrimary != "" {
+		car.Fuel = specs.FuelPrimary
+	}
+	if specs.DriveType != "" {
+		car.Drivetrain = specs.DriveType
+	}
+	if specs.TransmissionStyle != "" {
+		car.Transmission = specs.TransmissionStyle
+		if specs.TransmissionSpeeds != "" {
+			car.Transmission += " (" + specs.TransmissionSpeeds + "-speed)"
+		}
+	}
+	if specs.DisplacementL != "" && specs.EngineConfig != "" && specs.Cylinders != "" {
+		car.Engine = specs.DisplacementL + "L " + specs.EngineConfig + " " + specs.Cylinders + "cyl"
+	}
+}
+
+func findCar(id string) (*Car, error) {
+	car, err := findLocalCar(id)
+	if err != nil {
+		return nil, err
+	}
+	if car != nil {
+		return car, nil
+	}
+
+	cars, _, err := loadAPICars(50, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range cars {
+		if cars[i].ID == id {
+			return &cars[i], nil
+		}
+	}
+
+	return nil, nil
+}
+
 func carDetailHandler(w http.ResponseWriter, r *http.Request) {
-
-	carID := strings.TrimPrefix(
-		r.URL.Path,
-		"/cars/",
-	)
-
+	carID := strings.TrimPrefix(r.URL.Path, "/cars/")
 	if carID == "" {
 		http.NotFound(w, r)
 		return
 	}
 
-	apiKey := getAPIKey()
-
-	selectedCar, err := findLocalCar(carID)
+	car, err := findCar(carID)
 	if err != nil {
-		http.Error(w, "Unable to load car catalogue", http.StatusInternalServerError)
+		http.Error(w, "Unable to load car", http.StatusInternalServerError)
 		return
 	}
-	if selectedCar == nil {
-		cars, _, loadErr := loadAPICars(50, 0)
-		if loadErr != nil { http.Error(w, "Unable to load cars", http.StatusInternalServerError); return }
-		for i := range cars {
-			if cars[i].ID == carID { selectedCar = &cars[i]; break }
-		}
+	if car == nil {
+		http.NotFound(w, r)
+		return
 	}
-	if selectedCar == nil { http.NotFound(w, r); return }
 
-	if apiKey != "" && len(selectedCar.ID) == 17 {
-		specs, err := api.GetSpecifications(
-			selectedCar.ID,
-			apiKey,
-		)
-
-		if err == nil {
-
-			selectedCar.Horsepower, _ = strconv.Atoi(
-			specs.EngineHP,
-		)
-
-			selectedCar.Cylinders = specs.Cylinders
-			selectedCar.Displacement = specs.DisplacementL
-			selectedCar.Seats = specs.Seats
-			selectedCar.Doors = specs.Doors
-			selectedCar.BodyClass = specs.BodyClass
-			selectedCar.EngineConfig = specs.EngineConfig
-			selectedCar.Series = specs.Series
-			selectedCar.Manufacturer = specs.Manufacturer
-
-			if specs.FuelPrimary != "" {
-				selectedCar.Fuel = specs.FuelPrimary
-		}
-
-			if specs.DriveType != "" {
-				selectedCar.Drivetrain = specs.DriveType
-		}
-
-			if specs.TransmissionStyle != "" {
-
-					selectedCar.Transmission =
-				specs.TransmissionStyle
-
-				if specs.TransmissionSpeeds != "" {
-
-				selectedCar.Transmission =
-					specs.TransmissionStyle +
-						" (" +
-						specs.TransmissionSpeeds +
-						"-speed)"
-			}
-		}
-
-			if specs.DisplacementL != "" &&
-			specs.EngineConfig != "" &&
-			specs.Cylinders != "" {
-
-				selectedCar.Engine =
-				specs.DisplacementL +
-					"L " +
-						specs.EngineConfig +
-						" " +
-						specs.Cylinders +
-						"cyl"
-		}
-		}
-
-		photos, err := api.GetVehiclePhotos(
-		selectedCar.ID,
-		apiKey,
-	)
-		if err == nil {
-			selectedCar.Photos = photos.Photos
-			selectedCar.PrimaryImage = photos.PrimaryImage
-			if photos.PrimaryImage != "" { selectedCar.Image = photos.PrimaryImage }
-		}
-	}
-	renderTemplate(w, "templates/car.html", selectedCar, "Unable to load car page")
+	enrichCarFromVIN(car, getAPIKey())
+	renderTemplate(w, "templates/car.html", car, "Unable to load car page")
 }
-
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "templates/about.html", nil, "Unable to load about page")
 }
