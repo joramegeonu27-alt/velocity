@@ -210,32 +210,22 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	apiKey := getAPIKey()
 
-	cars, _, err := loadAPICars(50, 0)
-
+	selectedCar, err := findLocalCar(carID)
 	if err != nil {
-		http.Error(
-			w,
-			"Unable to load cars",
-			http.StatusInternalServerError,
-		)
+		http.Error(w, "Unable to load car catalogue", http.StatusInternalServerError)
 		return
 	}
-
-	var selectedCar *Car
-
-	for i := range cars {
-
-		if cars[i].ID == carID {
-
-			selectedCar = &cars[i]
-
-			break
+	if selectedCar == nil {
+		cars, _, loadErr := loadAPICars(50, 0)
+		if loadErr != nil { http.Error(w, "Unable to load cars", http.StatusInternalServerError); return }
+		for i := range cars {
+			if cars[i].ID == carID { selectedCar = &cars[i]; break }
 		}
 	}
+	if selectedCar == nil { http.NotFound(w, r); return }
 
-	if selectedCar == nil {
-		http.NotFound(w, r)
-		return
+	if apiKey == "" || len(selectedCar.ID) != 17 {
+		goto renderDetail
 	}
 
 	specs, err := api.GetSpecifications(
@@ -299,17 +289,13 @@ func carDetailHandler(w http.ResponseWriter, r *http.Request) {
 		selectedCar.ID,
 		apiKey,
 	)
-
 	if err == nil {
-
 		selectedCar.Photos = photos.Photos
 		selectedCar.PrimaryImage = photos.PrimaryImage
-
-		if photos.PrimaryImage != "" {
-			selectedCar.Image = photos.PrimaryImage
-		}
+		if photos.PrimaryImage != "" { selectedCar.Image = photos.PrimaryImage }
 	}
 
+renderDetail:
 	tmpl, err := template.ParseFiles(
 		"templates/car.html",
 	)
@@ -353,19 +339,6 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func compareHandler(w http.ResponseWriter, r *http.Request) {
-
-	apiKey := os.Getenv("VEHICLES_API_KEY")
-
-	if apiKey == "" {
-
-		http.Error(
-			w,
-			"VEHICLES_API_KEY is not set",
-			http.StatusInternalServerError,
-		)
-
-		return
-	}
 
 	cars, _, err := loadAPICars(50, 0)
 
