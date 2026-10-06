@@ -375,17 +375,6 @@ func main() {
 		),
 	)
 
-	imgFiles := http.FileServer(
-		http.Dir("images"),
-	)
-
-	http.Handle(
-		"/images/",
-		http.StripPrefix(
-			"/images/",
-			imgFiles,
-		),
-	)
 
 	http.HandleFunc(
 		"/",
