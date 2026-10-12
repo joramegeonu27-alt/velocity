@@ -31,6 +31,7 @@ If the key is not set, or the Vehicles.dev listings service fails, the site uses
 
 - **Cars page loads only the three sample vehicles:** the API key may be missing/invalid, or the listings endpoint may be unavailable. Check the terminal where `go run .` is running.
 - **401 Unauthorized:** create/verify a valid key in the Vehicles.dev dashboard and set `VEHICLES_API_KEY` again.
+- **402 Payment Required:** check whether your Vehicles.dev plan has credits or included calls remaining for the listings endpoint.
 - **503 Service Unavailable:** the API's listings upstream may be down temporarily. The app retries short 503 failures and then falls back to `data/cars.json`.
 - **Images fail to load:** the page uses remote demo images, which can change or block hotlinking. Failed card images fall back to `/static/hero-cover.png`.
 
