@@ -94,6 +94,7 @@ func loadAPICars(limit, offset int) ([]Car, int, error) {
 
 	apiKey := getAPIKey()
 	if apiKey == "" {
+		fmt.Println("VEHICLES_API_KEY is not set; using local catalogue")
 		return loadLocalPage(limit, offset)
 	}
 
