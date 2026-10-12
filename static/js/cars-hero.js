@@ -20,7 +20,6 @@
     let currentY = 0;
     let scrollOffset = 0;
     let lastSwitch = 0;
-    let fallbackUsed = false;
 
     function showCar(index) {
         currentCar = (index + cars.length) % cars.length;
@@ -32,8 +31,7 @@
     }
 
     heroCar.addEventListener("error", () => {
-        if (heroCar.src.endsWith(fallbackImage) || fallbackUsed) return;
-        fallbackUsed = true;
+        if (heroCar.getAttribute("src") === fallbackImage || heroCar.src.endsWith(fallbackImage)) return;
         heroCar.src = fallbackImage;
     });
 
