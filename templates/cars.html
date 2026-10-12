@@ -171,7 +171,7 @@
                         src="{{.Image}}"
                         alt="{{.Brand}} {{.Model}}"
                         loading="lazy"
-                        onerror="this.onerror=null; this.src='https://commons.wikimedia.org/wiki/Special:Redirect/file/2024_Porsche_911_992_Carrera.jpg?width=1200';"
+                        onerror="this.onerror=null; this.src='/static/hero-cover.png';"
                     >
 
                 </div>
@@ -184,7 +184,7 @@
                     <h3>{{.Model}}</h3>
 
                     <span>
-                        {{.Horsepower}} HP • {{.Engine}}
+                        {{if .Horsepower}}{{.Horsepower}} HP{{else}}Power data unavailable{{end}} • {{if .Engine}}{{.Engine}}{{else}}Specifications pending{{end}}
                     </span>
 
 
