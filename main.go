@@ -54,13 +54,20 @@ func getAPIKey() string {
 	return strings.TrimSpace(os.Getenv("VEHICLES_API_KEY"))
 }
 
+func listingImage(imageURL string) string {
+	if strings.TrimSpace(imageURL) == "" {
+		return "/static/hero-cover.png"
+	}
+	return imageURL
+}
+
 func listingToCar(listing api.Listing) Car {
 	return Car{
 		ID: listing.VIN,
 		Brand: listing.Make,
 		Model: listing.Model,
 		Year: listing.Year,
-		Image: listing.Image,
+		Image: listingImage(listing.Image),
 		Price: listing.Price,
 		Miles: listing.Miles,
 		Fuel: listing.Fuel,
@@ -410,7 +417,7 @@ func main() {
 		Addr:              ":8080",
 		Handler:           nil,
 		ReadHeaderTimeout: 5 * time.Second,
-		WriteTimeout:      15 * time.Second,
+		WriteTimeout:      30 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
 
