@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
-const requestTimeout = 10 * time.Second
+const requestTimeout = 20 * time.Second
 
 var client = &http.Client{
 	Timeout: requestTimeout,
@@ -159,13 +160,23 @@ func SearchVehicles(apiKey string, limit int, offset int) (ListingsResponse, err
 		offset,
 	)
 
-	var data ListingsResponse
-	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
-	if err != nil {
-		return ListingsResponse{}, fmt.Errorf("listings lookup failed: %w", err)
+	// Listings can temporarily return 503 when their upstream data service is unavailable.
+	// Retry only that temporary failure; other errors (such as invalid credentials) need action.
+	var lastErr error
+	for attempt := 0; attempt < 3; attempt++ {
+		var data ListingsResponse
+		err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
+		if err == nil {
+			return data, nil
+		}
+		lastErr = err
+		if !strings.Contains(err.Error(), "503 Service Unavailable") || attempt == 2 {
+			break
+		}
+		time.Sleep(time.Duration(250*(1<<attempt)) * time.Millisecond)
 	}
 
-	return data, nil
+	return ListingsResponse{}, fmt.Errorf("listings lookup failed: %w", lastErr)
 }
 
 type VehiclePhotos struct {
