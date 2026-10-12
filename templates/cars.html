@@ -184,7 +184,7 @@
                     <h3>{{.Model}}</h3>
 
                     <span>
-                        {{.Horsepower}} HP • {{.Engine}}
+                        {{if .Horsepower}}{{.Horsepower}} HP{{else}}Power data unavailable{{end}} • {{if .Engine}}{{.Engine}}{{else}}Specifications pending{{end}}
                     </span>
 
 
