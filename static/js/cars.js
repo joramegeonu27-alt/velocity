@@ -193,24 +193,32 @@
         card.style.transitionDelay = prefersReducedMotion ? "0ms" : (index % 6) * 70 + "ms";
     });
 
-    const revealObserver = new IntersectionObserver(
-        function (entries) {
-
+    if ("IntersectionObserver" in window) {
+        const revealObserver = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
-
                 if (entry.isIntersecting) {
                     entry.target.classList.add("is-visible");
                     revealObserver.unobserve(entry.target);
                 }
-
             });
+        }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
 
-        },
-        { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
-    );
+        carCards.forEach(function (card) {
+            revealObserver.observe(card);
+        });
+    } else {
+        carCards.forEach(function (card) {
+            card.classList.add("is-visible");
+        });
+    }
 
-    carCards.forEach(function (card) {
-        revealObserver.observe(card);
+    // Keep broken remote car images from leaving empty cards or repeatedly failing.
+    document.querySelectorAll(".car-image img").forEach(function (image) {
+        image.addEventListener("error", function () {
+            if (image.dataset.fallbackApplied === "true") return;
+            image.dataset.fallbackApplied = "true";
+            image.src = "/static/hero-cover.png";
+        });
     });
 
 })();
