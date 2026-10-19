@@ -38,7 +38,7 @@ func doJSON(ctx context.Context, method, url, apiKey string, target any) error {
 		return fmt.Errorf("%s: %s", method, resp.Status)
 	}
 
-	if err := json.NewDecoder(resp.Body).Decode(target); err != nil {
+	if err := json.NewDecoder(io.LimitReader(resp.Body, 4<<20)).Decode(target); err != nil {
 		return fmt.Errorf("decode %s response: %w", method, err)
 	}
 
@@ -64,10 +64,14 @@ type VehicleResponse struct {
 }
 
 func GetVehicle(vin string, apiKey string) (Vehicle, error) {
+	return GetVehicleContext(context.Background(), vin, apiKey)
+}
+
+func GetVehicleContext(ctx context.Context, vin string, apiKey string) (Vehicle, error) {
 	url := fmt.Sprintf("https://api.vehicles.dev/v1/vehicles/vin/%s", vin)
 
 	var data VehicleResponse
-	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
+	err := doJSON(ctx, http.MethodGet, url, apiKey, &data)
 	if err != nil {
 		return Vehicle{}, fmt.Errorf("vehicle lookup failed: %w", err)
 	}
@@ -105,10 +109,14 @@ type SpecificationsResponse struct {
 }
 
 func GetSpecifications(vin string, apiKey string) (VehicleSpecifications, error) {
+	return GetSpecificationsContext(context.Background(), vin, apiKey)
+}
+
+func GetSpecificationsContext(ctx context.Context, vin string, apiKey string) (VehicleSpecifications, error) {
 	url := fmt.Sprintf("https://api.vehicles.dev/v1/vehicles/specifications/%s", vin)
 
 	var data SpecificationsResponse
-	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
+	err := doJSON(ctx, http.MethodGet, url, apiKey, &data)
 	if err != nil {
 		return VehicleSpecifications{}, fmt.Errorf("specifications lookup failed: %w", err)
 	}
@@ -143,6 +151,10 @@ type ListingsResponse struct {
 }
 
 func SearchVehicles(apiKey string, limit int, offset int) (ListingsResponse, error) {
+	return SearchVehiclesContext(context.Background(), apiKey, limit, offset)
+}
+
+func SearchVehiclesContext(ctx context.Context, apiKey string, limit int, offset int) (ListingsResponse, error) {
 	if limit < 1 {
 		limit = 50
 	}
@@ -160,7 +172,7 @@ func SearchVehicles(apiKey string, limit int, offset int) (ListingsResponse, err
 	)
 
 	var data ListingsResponse
-	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
+	err := doJSON(ctx, http.MethodGet, url, apiKey, &data)
 	if err != nil {
 		return ListingsResponse{}, fmt.Errorf("listings lookup failed: %w", err)
 	}
@@ -181,10 +193,14 @@ type VehiclePhotos struct {
 }
 
 func GetVehiclePhotos(vin string, apiKey string) (VehiclePhotos, error) {
+	return GetVehiclePhotosContext(context.Background(), vin, apiKey)
+}
+
+func GetVehiclePhotosContext(ctx context.Context, vin string, apiKey string) (VehiclePhotos, error) {
 	url := fmt.Sprintf("https://api.vehicles.dev/v1/vehicles/photos/%s", vin)
 
 	var data VehiclePhotos
-	err := doJSON(context.Background(), http.MethodGet, url, apiKey, &data)
+	err := doJSON(ctx, http.MethodGet, url, apiKey, &data)
 	if err != nil {
 		return VehiclePhotos{}, fmt.Errorf("photo lookup failed: %w", err)
 	}

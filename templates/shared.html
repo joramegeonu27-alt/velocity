@@ -1,0 +1,39 @@
+{{define "nav"}}
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="siteHeader">
+  <div class="shell nav-wrap">
+    <a href="/" class="brand" aria-label="Vélocity home"><span class="brand-mark" aria-hidden="true">V<span class="brand-dot">.</span></span><span class="brand-name">VÉLOCITY<small>AUTOMOTIVE CULTURE</small></span></a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-controls="mainNav" aria-expanded="false"><span></span><span></span></button>
+    <nav class="nav-links" id="mainNav" aria-label="Primary navigation">
+      <a href="/" {{if eq .Active "home"}}aria-current="page"{{end}}>Home</a>
+      <a href="/cars" {{if eq .Active "cars"}}aria-current="page"{{end}}>Collection</a>
+      <a href="/compare" {{if eq .Active "compare"}}aria-current="page"{{end}}>Compare</a>
+      <a href="/about" {{if eq .Active "about"}}aria-current="page"{{end}}>Our story</a>
+      <a class="nav-action" href="/cars">Explore cars <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
+{{end}}
+{{define "footer"}}
+<footer class="site-footer">
+  <div class="shell footer-top">
+    <div><span class="eyebrow">The next chapter starts here</span><h2>Make the drive<br><em>unforgettable.</em></h2></div>
+    <a class="button button-primary" href="/cars">Explore the collection <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="shell footer-bottom">
+    <div class="footer-brand">VÉLOCITY<span class="brand-dot">.</span><small>AN EXPERIENCE IN MOTION</small></div>
+    <nav aria-label="Footer navigation"><a href="/">Home</a><a href="/cars">Collection</a><a href="/compare">Compare</a><a href="/about">About</a></nav>
+    <span>© 2026 VÉLOCITY. Crafted for the drive.</span>
+  </div>
+</footer>
+{{end}}
+{{define "carcard"}}
+<article class="vehicle-card" data-id="{{.ID}}">
+  <a class="vehicle-photo" href="/cars/{{.ID}}" aria-label="Explore {{.Brand}} {{.Model}}">
+    <img src="{{if .Image}}{{.Image}}{{else}}/static/images/car-fallback.svg{{end}}" data-fallback="/static/images/car-fallback.svg" alt="{{.Brand}} {{.Model}}" loading="lazy" decoding="async">
+    <span class="vehicle-photo-overlay"></span><span class="photo-index">{{.Year}} / {{.Brand}}</span><span class="photo-arrow" aria-hidden="true">↗</span>
+  </a>
+  <div class="vehicle-info"><div><p class="eyebrow small">{{.Brand}}</p><h3><a href="/cars/{{.ID}}">{{.Model}}</a></h3></div><button class="favorite-btn" type="button" data-favorite="{{.ID}}" aria-label="Save {{.Brand}} {{.Model}}" aria-pressed="false" title="Save to favorites"><span aria-hidden="true">♡</span></button></div>
+  <div class="vehicle-meta"><span><small>POWER</small><strong>{{power .Horsepower}}</strong></span><span><small>0–60 MPH</small><strong>{{speed .ZeroToSixty}}</strong></span><span><small>TOP SPEED</small><strong>{{speed .TopSpeed}}</strong></span></div>
+</article>
+{{end}}
