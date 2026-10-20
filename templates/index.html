@@ -15,6 +15,8 @@
   <script defer src="/static/js/home-motion.js"></script>
 
   <link rel="stylesheet" href="/static/css/velocity-premium.css">
+  <link rel="stylesheet" href="/static/css/home-video.css">
+  <script defer src="/static/js/home-video.js"></script>
 </head>
 <body class="page-home">
 {{template "nav" .}}
@@ -28,11 +30,31 @@
 <main id="main">
   <!-- CINEMATIC HERO -->
   <section class="home-hero" aria-labelledby="heroTitle" id="top">
-    <div class="hero-image" role="img" aria-label="Performance coupe beside a coastal road at dusk"></div>
+    <!-- Frame from the uploaded film remains visible if autoplay is unavailable. -->
+    <div class="hero-image" aria-hidden="true"></div>
+    <video
+      id="homeHeroVideo"
+      class="home-hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/static/images/home-hero-poster.jpg"
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <source src="/static/videos/home-hero.mp4" type="video/mp4">
+    </video>
     <div class="hero-vignette"></div>
     <div class="hero-rule" aria-hidden="true"></div>
     <div class="hero-light-pass" aria-hidden="true"></div>
     <div class="hero-grid-lines" aria-hidden="true"></div>
+    <button class="home-hero-video-toggle" id="homeHeroVideoToggle" type="button"
+            aria-label="Pause background video" aria-pressed="false" hidden>
+      <span class="home-hero-video-icon" aria-hidden="true">Ⅱ</span>
+      <span class="home-hero-video-label">Pause film</span>
+    </button>
 
     <div class="shell home-hero-inner">
       <div class="hero-copy">

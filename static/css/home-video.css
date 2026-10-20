@@ -1,0 +1,86 @@
+/* VÉLOCITY — HOMEPAGE CINEMATIC FILM / isolated extension.
+   The headline, original homepage layout and collection video are unchanged. */
+.page-home .home-hero { isolation: isolate; background: #050708; }
+
+/* The homepage fallback is a still from the uploaded video (not the old hero image).
+   Other pages may continue using the original shared static/hero-cover.png. */
+.page-home .hero-image {
+  background: url('/static/images/home-hero-poster.jpg') center center / cover no-repeat;
+}
+
+.page-home .home-hero-video {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+  pointer-events: none;
+  filter: brightness(.97) saturate(.97);
+  transition: opacity 1.25s cubic-bezier(.22,1,.36,1);
+}
+.page-home .home-hero.hero-video-playing .home-hero-video { opacity: 1; }
+
+/* Vignette is intentionally in front of the moving background and
+   behind the unchanged page typography. Make film legible on all devices. */
+.page-home .hero-vignette {
+  background:
+    linear-gradient(90deg, rgba(2,5,8,.91) 0%, rgba(3,6,9,.82) 24%, rgba(4,7,10,.43) 53%, rgba(2,5,8,.08) 100%),
+    linear-gradient(0deg, rgba(2,5,8,.90), transparent 31%, rgba(2,5,8,.32));
+}
+
+/* Small, unobtrusive, keyboard-accessible play/pause control. */
+.page-home .home-hero-video-toggle {
+  position: absolute;
+  top: 118px;
+  right: max(32px, calc((100% - 1320px)/2));
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 14px;
+  border: 1px solid rgba(241,216,194,.35);
+  border-radius: 100px;
+  background: rgba(8,12,16,.42);
+  color: #eee6dc;
+  font: 600 10px/1.2 var(--body, sans-serif);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  -webkit-backdrop-filter: blur(14px) saturate(115%);
+  backdrop-filter: blur(14px) saturate(115%);
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+  transition: border-color .25s, background .25s, transform .25s;
+}
+.page-home .home-hero-video-toggle[hidden] { display: none !important; }
+.page-home .home-hero-video-toggle:hover {
+  border-color: #e6bd95;
+  background: rgba(35,26,22,.76);
+  transform: translateY(-2px);
+}
+.page-home .home-hero-video-toggle:focus-visible {
+  outline: 2px solid #e6bd95;
+  outline-offset: 4px;
+}
+.page-home .home-hero-video-icon { font-size: 13px; color: #e6bd95; }
+@media (max-width:820px) {
+  .page-home .home-hero-video-toggle { right: 32px; top: 103px; }
+  .page-home .home-hero-video { object-position: 55% center; }
+}
+@media (max-width:600px) {
+  .page-home .home-hero-video-toggle { top: 93px; right: 19px; padding: 10px 12px; }
+  .page-home .home-hero-video-label { display: none; }
+  .page-home .home-hero-video { object-position: 61% center; }
+  .page-home .hero-vignette {
+    background:
+      linear-gradient(90deg,rgba(2,5,8,.90),rgba(2,5,8,.76) 55%,rgba(2,5,8,.42)),
+      linear-gradient(0deg,rgba(2,5,8,.94),transparent 42%,rgba(2,5,8,.22));
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .page-home .home-hero-video { opacity: 0 !important; transition: none !important; }
+  .page-home .home-hero-video-toggle { display: none !important; }
+}
