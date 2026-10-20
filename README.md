@@ -4,7 +4,8 @@ VÉLOCITY is a responsive automotive discovery experience built with **Go**, Go'
 
 ## What's included
 
-- Premium editorial landing page using the bundled `static/hero-cover.png` hero photograph.
+- Expanded luxury homepage with uppercase kinetic headline, animated welcome beacon, cinematic lighting, parallax-style imagery, moving editorial ticker, longer story sections and interactive spotlight/tilt experience cards.
+- The original bundled `static/hero-cover.png` remains the **top hero only**. Lower editorial panels use different Unsplash car photography, with a bundled custom `static/images/featured-exotic.svg` fallback if images are blocked.
 - Curated vehicle collection, server-side search, marque filter, sorting and pagination.
 - Responsive grid/list layout (saved in the browser).
 - Vehicle detail pages with performance and technical specifications.
@@ -70,8 +71,9 @@ velocity/
 ├── data/cars.json       # Curated offline catalogue
 ├── static/
 │   ├── css/style.css    # Unified responsive design system
-│   ├── js/              # Shared site, collection and comparison logic
-│   ├── images/          # SVG fallback and favicon
+│   ├── css/home-premium.css # Homepage-only luxury styling and motion
+│   ├── js/              # Shared scripts + home-motion.js for light, headline and card interactions
+│   ├── images/          # SVG fallbacks, custom second car artwork and favicon
 │   └── hero-cover.png   # Existing project hero photograph
 ├── templates/           # Shared components and five page templates
 ├── main.go              # Routes, filtering, API fallback, template rendering
@@ -86,3 +88,16 @@ velocity/
 - Favorites live in `localStorage` on each browser; they are not synchronized across devices.
 - To customize the showcase, edit `data/cars.json`, or replace photo URLs with local files under `static/images/`.
 - This is an automotive *discovery* experience, not a checkout, booking, or dealership website.
+
+## Customize the luxury homepage
+
+- **Headline, Welcome animation, and copy:** `templates/index.html`
+- **Color, typography, animations, images, spacing:** `static/css/home-premium.css`
+- **Cursor light, title hover, interactive experience cards:** `static/js/home-motion.js`
+- **Top hero image:** `static/hero-cover.png`
+- **Second large photo:** `.statement-car-photo` in `templates/index.html`; this deliberately does **not** reuse the top hero image.
+- **Offline image fallback:** `static/images/featured-exotic.svg`, an original vector illustration created for this edition.
+
+The lower large photo and some catalogue photos load from Unsplash over the internet. If the image request fails, the lower image switches to the bundled local illustration. They are intentionally separate from the top-hero photo. Remote images should be downloaded/licensed and optimized into local files before production if you need fully offline photo reliability.
+
+Animations respect `prefers-reduced-motion`, and hover-only effects are disabled on touch devices. No audio is played by the visual beacon. The homepage CSS/JS is kept separate so the non-home pages keep their working layout and features.

@@ -18,7 +18,7 @@ func request(t *testing.T, method, path string) *httptest.ResponseRecorder {
 
 func TestPublicPagesRender(t *testing.T) {
 	cases := []struct{ path, text string }{
-		{"/", "For the love"},
+		{"/", "BEYOND SPEED."},
 		{"/cars", "collection."},
 		{"/cars/bmw-m4", "M4 Competition"},
 		{"/compare", "Choose the"},
@@ -124,5 +124,55 @@ func TestFilteringLogic(t *testing.T) {
 	}
 	if got := filterAndSort(input, "", "", "name"); got[0].ID != "b" {
 		t.Errorf("name sort result %v", got)
+	}
+}
+
+func TestPremiumHomepageAndAssets(t *testing.T) {
+	response := request(t, http.MethodGet, "/")
+	if response.Code != http.StatusOK {
+		t.Fatalf("homepage status = %d", response.Code)
+	}
+	body := response.Body.String()
+	for _, expected := range []string{
+		"WELCOME TO THE EXTRAORDINARY",
+		"BEYOND SPEED.", "BEYOND ORDINARY.", "AUTOMOTIVE EXCELLENCE.",
+		"signal-beacon",
+		"03 / THE EXPERIENCE",
+		"home-motion.js",
+		"home-premium.css",
+		"featured-exotic.svg",
+		"THE FINER DETAILS",
+		"THE ROAD",
+	} {
+		if !strings.Contains(body, expected) {
+			t.Errorf("homepage missing %q", expected)
+		}
+	}
+	for _, asset := range []string{
+		"/static/css/home-premium.css",
+		"/static/js/home-motion.js",
+		"/static/images/featured-exotic.svg",
+	} {
+		if assetResponse := request(t, http.MethodGet, asset); assetResponse.Code != http.StatusOK {
+			t.Errorf("%s status = %d", asset, assetResponse.Code)
+		}
+	}
+}
+
+func TestPremiumCollectionVideoAndAssets(t *testing.T) {
+	response := request(t, http.MethodGet, "/cars")
+	if response.Code != http.StatusOK {
+		t.Fatalf("collection status = %d", response.Code)
+	}
+	for _, expected := range []string{"collectionHeroVideo", "/static/videos/collection-hero.mp4", "velocity-premium.css", "brandSelect", "sortSelect", "vehicleGrid"} {
+		if !strings.Contains(response.Body.String(), expected) {
+			t.Errorf("collection missing %q", expected)
+		}
+	}
+	for _, asset := range []string{"/static/videos/collection-hero.mp4", "/static/images/collection-poster.jpg", "/static/css/velocity-premium.css", "/static/js/cars.js"} {
+		result := request(t, http.MethodGet, asset)
+		if result.Code != http.StatusOK {
+			t.Errorf("asset %q status = %d", asset, result.Code)
+		}
 	}
 }
