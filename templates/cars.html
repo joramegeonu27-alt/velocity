@@ -1,4 +1,4 @@
-
+{{define "cars.html"}}
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,15 +7,14 @@
   <meta name="theme-color" content="#080b0e">
   <meta name="description" content="Discover the Vélocity automotive collection. Explore extraordinary performance cars, compare specifications and find your next obsession.">
   <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
-  <title>{{ title }}</title>
+  <title>{{.Title}}</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="stylesheet" href="/static/css/velocity-premium.css">
-  <link rel="stylesheet" href="/static/css/velocity-next.css">
   <script defer src="/static/js/site.js"></script>
   <script defer src="/static/js/cars.js"></script>
 </head>
 <body class="page-cars">
-  {% include 'partials/nav.html' %}
+  {{template "nav" .}}
   <main id="main">
     <!-- A separate, cinematic COLLECTION hero. Homepage assets are untouched. -->
     <section class="inner-hero catalogue-hero" aria-labelledby="collectionTitle">
@@ -40,14 +39,6 @@
       </div>
     </section>
 
-    <div class="collection-signature" aria-label="Collection highlights">
-      <div class="shell collection-signature-inner">
-        <span>THE VÉLOCITY EDIT</span>
-        <span class="collection-signature-separator" aria-hidden="true"></span>
-        <span>DESIGN <b>×</b> PERFORMANCE <b>×</b> CHARACTER</span>
-        <span class="collection-signature-index">EST. MMXXVI &nbsp; / &nbsp; ALWAYS IN MOTION</span>
-      </div>
-    </div>
     <section class="section catalogue-section" id="collection">
       <div class="shell">
         <div class="catalogue-intro">
@@ -56,7 +47,7 @@
             <h2 class="section-title">The <em>collection.</em></h2>
             <p class="catalogue-intro-description">Find the machine that moves you. Refine the details, explore the design, and follow your curiosity.</p>
           </div>
-          <span class="count-pill"><span class="count-live-dot" aria-hidden="true"></span>{{ total_cars }} VEHICLES FOUND</span>
+          <span class="count-pill">{{.TotalCars}} VEHICLES FOUND</span>
         </div>
 
         <form class="catalogue-form" action="/cars" method="get" role="search">
@@ -68,25 +59,25 @@
             <label for="searchCars">Search the collection</label>
             <div class="field-input">
               <span class="search-glyph" aria-hidden="true">⌕</span>
-              <input id="searchCars" name="q" type="search" value="{{ query }}" maxlength="80" placeholder="Search by model, marque, engine…" autocomplete="off">
+              <input id="searchCars" name="q" type="search" value="{{.Query}}" maxlength="80" placeholder="Search by model, marque, engine…" autocomplete="off">
             </div>
           </div>
           <div class="field">
             <label for="brandSelect">Marque</label>
             <select id="brandSelect" name="brand">
               <option value="">All marques</option>
-              {% for brand_option in brands %}
-                <option value="{{ brand_option }}" {% if brand == brand_option %}selected{% endif %}>{{ brand_option }}</option>
-              {% endfor %}
+              {{range .Brands}}
+                <option value="{{.}}" {{if eq $.Brand .}}selected{{end}}>{{.}}</option>
+              {{end}}
             </select>
           </div>
           <div class="field">
             <label for="sortSelect">Order by</label>
             <select id="sortSelect" name="sort">
-              <option value="featured" {% if sort == "featured" %}selected{% endif %}>Featured</option>
-              <option value="power" {% if sort == "power" %}selected{% endif %}>Highest power</option>
-              <option value="year" {% if sort == "year" %}selected{% endif %}>Newest year</option>
-              <option value="name" {% if sort == "name" %}selected{% endif %}>A — Z</option>
+              <option value="featured" {{if eq .Sort "featured"}}selected{{end}}>Featured</option>
+              <option value="power" {{if eq .Sort "power"}}selected{{end}}>Highest power</option>
+              <option value="year" {{if eq .Sort "year"}}selected{{end}}>Newest year</option>
+              <option value="name" {{if eq .Sort "name"}}selected{{end}}>A — Z</option>
             </select>
           </div>
           <button class="button button-primary filter-submit" type="submit">APPLY FILTERS <span aria-hidden="true">↗</span></button>
@@ -94,67 +85,35 @@
         </form>
 
         <div class="collection-toolbar">
-          <p>{% if total_cars %}SHOWING {{ from_index }}—{{ to_index }} OF {{ total_cars }}{% else %}NO MATCHES FOUND{% endif %} <span class="toolbar-source">· {{ source_label }}</span></p>
+          <p>{{if .TotalCars}}SHOWING {{.From}}—{{.To}} OF {{.TotalCars}}{{else}}NO MATCHES FOUND{{end}} <span class="toolbar-source">· {{.SourceLabel}}</span></p>
           <div class="view-switch" aria-label="Collection display">
             <button type="button" class="view-switch-button active" data-view="grid" aria-pressed="true" aria-label="Grid layout" title="Grid layout">▦</button>
             <button type="button" class="view-switch-button" data-view="list" aria-pressed="false" aria-label="List layout" title="List layout">☷</button>
           </div>
         </div>
 
-        {% if cars %}
+        {{if .Cars}}
           <div class="vehicle-grid catalogue-grid" id="vehicleGrid">
-            {% for car in cars %}
-              {% include 'partials/carcard.html' %}
-            {% endfor %}
+            {{range .Cars}}
+              {{template "carcard" .}}
+            {{end}}
           </div>
-        {% else %}
+        {{else}}
           <div class="empty-state">
             <span aria-hidden="true">⌕</span>
             <h3>No vehicles found.</h3>
             <p>Try a different search or reset the filters to explore the full collection.</p>
             <a class="button button-outline" href="/cars">VIEW THE FULL COLLECTION ↗</a>
           </div>
-        {% endif %}
+        {{end}}
 
-        {% if total_pages > 1 %}
+        {{if gt .TotalPages 1}}
           <nav class="pagination" aria-label="Collection pages">
-            {% if prev_url %}<a href="{{ prev_url }}" rel="prev">← PREVIOUS</a>{% else %}<span></span>{% endif %}
-            <span>PAGE {{ page }} / {{ total_pages }}</span>
-            {% if next_url %}<a href="{{ next_url }}" rel="next">NEXT →</a>{% else %}<span></span>{% endif %}
+            {{if .PrevURL}}<a href="{{.PrevURL}}" rel="prev">← PREVIOUS</a>{{else}}<span></span>{{end}}
+            <span>PAGE {{.Page}} / {{.TotalPages}}</span>
+            {{if .NextURL}}<a href="{{.NextURL}}" rel="next">NEXT →</a>{{else}}<span></span>{{end}}
           </nav>
-        {% endif %}
-
-        <section class="directory-panel" id="vehicle-directory" aria-labelledby="directory-title">
-          <div class="directory-glow" aria-hidden="true"></div>
-          <div class="directory-topline"><span><span class="directory-pulse"></span> LIVE VEHICLE DIRECTORY</span><span class="directory-source">POWERED BY NHTSA VPIC <span aria-hidden="true">↗</span></span></div>
-          <div class="directory-content">
-            <div class="directory-intro">
-              <div class="directory-intro-copy">
-                <p class="eyebrow">03 / EXTENDED DIRECTORY</p>
-                <h2 id="directory-title">Beyond the <em>ordinary.</em></h2>
-                <p class="directory-lead">Discover more makes and models, beyond our curated collection. Search the public vehicle directory and find your next fascination.</p>
-              </div>
-              <div class="directory-monogram" aria-hidden="true"><span>V</span><small>THE MOTOR DIRECTORY</small></div>
-            </div>
-            <form class="directory-panel-form" action="/cars#vehicle-directory" method="get" role="search" aria-label="Find additional vehicle models">
-              <div class="directory-field directory-field-make"><label for="directoryMake">01 <span>MANUFACTURER</span></label><input id="directoryMake" name="directory_make" value="{{ directory_make }}" required maxlength="60" placeholder="e.g. BMW, Porsche, Mercedes-Benz" autocomplete="off"></div>
-              <div class="directory-field directory-field-year"><label for="directoryYear">02 <span>MODEL YEAR</span> <small>OPTIONAL</small></label><input id="directoryYear" name="directory_year" value="{{ directory_year }}" type="number" min="1980" max="2030" placeholder="e.g. 2024" inputmode="numeric"></div>
-              <button class="directory-search-button" type="submit"><span>EXPLORE MODELS</span><span class="directory-arrow" aria-hidden="true">↗</span></button>
-            </form>
-            <div class="directory-form-footer"><span><span class="directory-form-dot"></span> OPEN VEHICLE DATA · NO ACCOUNT REQUIRED</span><a href="/discover">ADVANCED DISCOVERY <span aria-hidden="true">↗</span></a></div>
-            {% if directory_error %}<p class="directory-error" role="alert">{{ directory_error }}</p>{% endif %}
-            {% if directory_make and not directory_error %}
-              <div class="directory-result-heading"><div><p class="eyebrow">YOUR RESULTS</p><h3>{{ directory_results|length }} models discovered</h3></div><span>NHTSA VPIC DIRECTORY</span></div>
-              {% if directory_results %}<div class="directory-list">
-                {% for entry in directory_results %}<article class="directory-list-item"><p class="directory-badge">MODEL {{ '%02d'|format(loop.index) }} {% if entry.year %}· {{ entry.year }} QUERY{% else %}· ALL YEARS{% endif %}</p>
-                <h4>{{ entry.make }} <em>{{ entry.model }}</em></h4><p>Directory entry · Photos and performance data pending.</p><span class="directory-card-corner" aria-hidden="true">↗</span></article>{% endfor %}
-              </div>{% else %}<p class="directory-empty">No matching models returned. Try another manufacturer or remove the year.</p>{% endif %}
-            {% endif %}
-          </div>
-          <div class="directory-bottomline"><span>01 / DISCOVER THE POSSIBILITIES</span><p>A year-scoped directory result indicates an NHTSA API match, not independent verification of the model’s production year or trim. Photos and specifications require separate verified sources.</p></div>
-        </section>
-
-        <div class="collection-note"><span class="note-marker">↗</span><p>Looking for a different make or model? <a href="/discover" style="color:#e0bb83;text-decoration:underline">Explore the free NHTSA vehicle directory</a> while we expand our verified photo and specification sources.</p></div>
+        {{end}}
 
         <div class="collection-note">
           <span class="note-marker">i</span>
@@ -163,7 +122,7 @@
       </div>
     </section>
   </main>
-  {% include 'partials/footer.html' %}
+  {{template "footer" .}}
 </body>
 </html>
-
+{{end}}

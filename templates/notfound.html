@@ -1,7 +1,6 @@
-
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b0e10"><link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg"><title>{{ title }}</title><link rel="stylesheet" href="/static/css/style.css"><script defer src="/static/js/site.js"></script>
+{{define "notfound.html"}}
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b0e10"><link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg"><title>{{.Title}}</title><link rel="stylesheet" href="/static/css/style.css"><script defer src="/static/js/site.js"></script>
   <link rel="stylesheet" href="/static/css/velocity-premium.css">
-  <link rel="stylesheet" href="/static/css/velocity-next.css">
 </head>
-<body>{% include 'partials/nav.html' %}<main id="main" class="error-page"><div class="shell"><p class="eyebrow">OFF THE MAP / 404</p><h1>Wrong turn.<br><em>Better roads ahead.</em></h1><p>We couldn't find the page you were looking for. The collection is just around the corner.</p><div><a href="/" class="button button-outline">Back to home ↗</a><a href="/cars" class="button button-primary">Explore the collection ↗</a></div></div></main>{% include 'partials/footer.html' %}</body></html>
-
+<body>{{template "nav" .}}<main id="main" class="error-page"><div class="shell"><p class="eyebrow">OFF THE MAP / 404</p><h1>Wrong turn.<br><em>Better roads ahead.</em></h1><p>We couldn't find the page you were looking for. The collection is just around the corner.</p><div><a href="/" class="button button-outline">Back to home ↗</a><a href="/cars" class="button button-primary">Explore the collection ↗</a></div></div></main>{{template "footer" .}}</body></html>
+{{end}}
