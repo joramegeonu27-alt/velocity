@@ -1,0 +1,15 @@
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="siteHeader">
+  <div class="shell nav-wrap">
+    <a href="/" class="brand" aria-label="Vélocity home"><span class="brand-mark" aria-hidden="true">V<span class="brand-dot">.</span></span><span class="brand-name">VÉLOCITY<small>AUTOMOTIVE CULTURE</small></span></a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-controls="mainNav" aria-expanded="false"><span></span><span></span></button>
+    <nav class="nav-links" id="mainNav" aria-label="Primary navigation">
+      <a href="/" {% if active == "home" %}aria-current="page"{% endif %}>Home</a>
+      <a href="/cars" {% if active == "cars" %}aria-current="page"{% endif %}>Collection</a>
+      <a href="/compare" {% if active == "compare" %}aria-current="page"{% endif %}>Compare</a>
+      <a href="/about" {% if active == "about" %}aria-current="page"{% endif %}>Our story</a>
+      <a class="nav-action" href="/cars">Explore cars <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
+<div class="reading-progress" id="readingProgress" aria-hidden="true"></div>

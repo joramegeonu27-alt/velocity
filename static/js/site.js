@@ -46,6 +46,9 @@
     const icon = button.querySelector("span");
     if (icon) icon.textContent = active ? "♥" : "♡";
     button.title = active ? "Remove from favorites" : "Save to favorites";
+    const name = button.dataset.favoriteName || button.getAttribute('aria-label')?.replace(/^(Save|Remove) /, '').replace(/ from favorites$/, '') || 'vehicle';
+    button.dataset.favoriteName = name;
+    button.setAttribute('aria-label', active ? `Remove ${name} from favorites` : `Save ${name}`);
   }
   document.querySelectorAll("[data-favorite]").forEach(button => {
     reflectFavorite(button);
@@ -56,6 +59,24 @@
       document.querySelectorAll(`[data-favorite="${CSS.escape(id)}"]`).forEach(reflectFavorite);
     });
   });
+  // Subtle global scroll indicator. Disabled for reduced-motion users.
+  const progress = document.getElementById('readingProgress');
+  if (progress) {
+    const updateProgress = () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.transform = `scaleX(${total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0})`;
+    };
+    window.addEventListener('scroll', updateProgress, {passive:true});
+    window.addEventListener('resize', updateProgress, {passive:true});
+    updateProgress();
+  }
+  const backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    const showTop = () => backToTop.classList.toggle('is-visible', window.scrollY > 650);
+    window.addEventListener('scroll', showTop, {passive:true});
+    backToTop.addEventListener('click', () => window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}));
+    showTop();
+  }
   if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
     document.documentElement.classList.add("js-ready");
     const observer = new IntersectionObserver(entries => {

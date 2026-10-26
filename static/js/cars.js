@@ -1,95 +1,62 @@
-
-/* Velocity collection: preserve server filtering and the grid/list switch.
-   The collection hero video has no visible pause/play button. */
+/* VÉLOCITY collection — persistent grid/list view and accessible hero-film control. */
 (() => {
-  "use strict";
+  'use strict';
+  const grid = document.getElementById('vehicleGrid');
+  const buttons = [...document.querySelectorAll('[data-view]')];
+  const storageKey = 'velocity:view:v1';
 
-  const grid = document.getElementById("vehicleGrid");
-  const viewButtons = document.querySelectorAll("[data-view]");
-
-  // Preserve the grid/list view switch.
-  if (grid && viewButtons.length) {
-    const setView = mode => {
-      const list = mode === "list";
-
-      grid.classList.toggle("list-view", list);
-
-      viewButtons.forEach(button => {
-        const selected =
-          button.dataset.view === (list ? "list" : "grid");
-
-        button.classList.toggle("active", selected);
-
-        button.setAttribute(
-          "aria-pressed",
-          String(selected)
-        );
-      });
-
-      try {
-        localStorage.setItem(
-          "velocity:view:v1",
-          list ? "list" : "grid"
-        );
-      } catch {
-        // Private browsing may disable local storage.
-      }
-    };
-
-    let initialView = "grid";
-
-    try {
-      initialView =
-        localStorage.getItem("velocity:view:v1") || "grid";
-    } catch {
-      // Grid remains the default.
-    }
-
-    setView(initialView);
-
-    viewButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        setView(button.dataset.view);
-      });
+  function setView(value) {
+    const mode = value === 'list' ? 'list' : 'grid';
+    grid?.classList.toggle('list-view', mode === 'list');
+    buttons.forEach(button => {
+      const active = button.dataset.view === mode;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
     });
+    try { localStorage.setItem(storageKey, mode); } catch { /* private mode */ }
+  }
+  if (grid && buttons.length) {
+    let saved = 'grid';
+    try { saved = localStorage.getItem(storageKey) || saved; } catch { /* grid default */ }
+    setView(saved);
+    buttons.forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
   }
 
-  // Play the collection hero video without a toggle button.
-  const video = document.getElementById("collectionHeroVideo");
+  const video = document.getElementById('collectionHeroVideo');
+  const toggle = document.getElementById('collectionVideoToggle');
+  if (!video || !toggle) return;
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const saveData = Boolean(navigator.connection?.saveData);
+  let pausedByUser = false;
+  let allowed = !motion.matches && !saveData;
 
-  if (!video) return;
-
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  );
-
-  const updateMotionPreference = () => {
-    if (reduceMotion.matches) {
-      video.pause();
-    } else if (!document.hidden) {
-      const playRequest = video.play();
-
-      if (
-        playRequest &&
-        typeof playRequest.catch === "function"
-      ) {
-        playRequest.catch(() => {});
-      }
-    }
-  };
-
-  reduceMotion.addEventListener?.(
-    "change",
-    updateMotionPreference
-  );
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      video.pause();
-    } else {
-      updateMotionPreference();
-    }
+  function paint() {
+    const playing = allowed && !video.paused && !video.ended;
+    toggle.hidden = !allowed || Boolean(video.error);
+    toggle.setAttribute('aria-pressed', String(!playing));
+    toggle.setAttribute('aria-label', playing ? 'Pause background video' : 'Play background video');
+    toggle.querySelector('.collection-video-toggle-icon').textContent = playing ? 'Ⅱ' : '▶';
+    toggle.querySelector('.collection-video-toggle-label').textContent = playing ? 'PAUSE FILM' : 'PLAY FILM';
+  }
+  function play() {
+    if (!allowed || pausedByUser || document.hidden) return;
+    const promise = video.play();
+    if (promise?.catch) promise.catch(paint);
+  }
+  toggle.addEventListener('click', () => {
+    if (video.paused) { pausedByUser = false; play(); }
+    else { pausedByUser = true; video.pause(); }
+    paint();
   });
-
-  updateMotionPreference();
+  ['playing', 'pause', 'loadeddata', 'error'].forEach(event => video.addEventListener(event, paint));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); else play(); });
+  const preferenceChange = () => {
+    allowed = !motion.matches && !saveData;
+    if (!allowed) { video.pause(); video.autoplay = false; }
+    else play();
+    paint();
+  };
+  if (motion.addEventListener) motion.addEventListener('change', preferenceChange);
+  else if (motion.addListener) motion.addListener(preferenceChange);
+  preferenceChange();
 })();
