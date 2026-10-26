@@ -21,7 +21,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from api import vehicles
+from api import vehicles, nhtsa
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_FILE = BASE_DIR / "data" / "cars.json"
@@ -312,13 +312,26 @@ def cars_page(request: Request):
             params["sort"] = order
         return f"/cars?{urlencode(params)}#collection"
 
+    directory_make = request.query_params.get("directory_make", "").strip()[:60]
+    directory_year = request.query_params.get("directory_year", "").strip()[:10]
+    directory_results = []
+    directory_error = ""
+    if directory_make:
+        try:
+            year_number = int(directory_year) if directory_year else None
+            directory_results = nhtsa.models(directory_make, year_number)[:100]
+        except (ValueError, nhtsa.NHTSAError) as exc:
+            directory_error = str(exc)
+
     return page(request, "cars.html", title="The collection — VÉLOCITY", active="cars",
                 cars=matches[start:end], brands=brands, query=query, brand=brand, sort=order,
                 page=current_page, total_pages=total_pages, total_cars=total,
                 from_index=start + 1 if total else 0, to_index=end,
                 prev_url=page_url(current_page - 1) if current_page > 1 else "",
                 next_url=page_url(current_page + 1) if current_page < total_pages else "",
-                source_label=source)
+                source_label=source, directory_make=directory_make,
+                directory_year=directory_year, directory_results=directory_results,
+                directory_error=directory_error)
 
 
 @app.api_route("/cars/{car_id}", methods=["GET", "HEAD"], response_class=HTMLResponse)
@@ -364,6 +377,36 @@ def comparison_specs(vin: str = ""):
     except vehicles.VehicleAPIError:
         raise HTTPException(status_code=502, detail="Vehicle specifications unavailable") from None
     return JSONResponse(specs, headers={"Cache-Control": "public, max-age=120"})
+
+
+@app.api_route("/discover", methods=["GET", "HEAD"], response_class=HTMLResponse)
+def discover_page(request: Request):
+    make = request.query_params.get("make", "").strip()[:60]
+    year_text = request.query_params.get("year", "").strip()
+    results = []
+    error = ""
+    if make:
+        try:
+            year = int(year_text) if year_text else None
+            results = nhtsa.models(make, year)[:300]
+        except (ValueError, nhtsa.NHTSAError) as exc:
+            error = str(exc)
+    return page(request, "discover.html", title="Discover more vehicles — VÉLOCITY",
+                active="cars", make=make, selected_year=year_text,
+                results=results, error=error)
+
+
+@app.get("/api/nhtsa/models")
+def nhtsa_models(make: str = "", year: str = ""):
+    try:
+        year_number = int(year) if year else None
+        results = nhtsa.models(make, year_number)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from None
+    except nhtsa.NHTSAError:
+        raise HTTPException(status_code=503, detail="Vehicle directory temporarily unavailable") from None
+    return JSONResponse({"results": results, "source": "NHTSA vPIC", "count": len(results)},
+                        headers={"Cache-Control": "public, max-age=3600"})
 
 
 @app.api_route("/healthz", methods=["GET", "HEAD"])

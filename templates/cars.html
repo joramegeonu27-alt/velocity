@@ -124,6 +124,38 @@
           </nav>
         {% endif %}
 
+        <section class="directory-panel" id="vehicle-directory" aria-labelledby="directory-title">
+          <div class="directory-glow" aria-hidden="true"></div>
+          <div class="directory-topline"><span><span class="directory-pulse"></span> LIVE VEHICLE DIRECTORY</span><span class="directory-source">POWERED BY NHTSA VPIC <span aria-hidden="true">↗</span></span></div>
+          <div class="directory-content">
+            <div class="directory-intro">
+              <div class="directory-intro-copy">
+                <p class="eyebrow">03 / EXTENDED DIRECTORY</p>
+                <h2 id="directory-title">Beyond the <em>ordinary.</em></h2>
+                <p class="directory-lead">Discover more makes and models, beyond our curated collection. Search the public vehicle directory and find your next fascination.</p>
+              </div>
+              <div class="directory-monogram" aria-hidden="true"><span>V</span><small>THE MOTOR DIRECTORY</small></div>
+            </div>
+            <form class="directory-panel-form" action="/cars#vehicle-directory" method="get" role="search" aria-label="Find additional vehicle models">
+              <div class="directory-field directory-field-make"><label for="directoryMake">01 <span>MANUFACTURER</span></label><input id="directoryMake" name="directory_make" value="{{ directory_make }}" required maxlength="60" placeholder="e.g. BMW, Porsche, Mercedes-Benz" autocomplete="off"></div>
+              <div class="directory-field directory-field-year"><label for="directoryYear">02 <span>MODEL YEAR</span> <small>OPTIONAL</small></label><input id="directoryYear" name="directory_year" value="{{ directory_year }}" type="number" min="1980" max="2030" placeholder="e.g. 2024" inputmode="numeric"></div>
+              <button class="directory-search-button" type="submit"><span>EXPLORE MODELS</span><span class="directory-arrow" aria-hidden="true">↗</span></button>
+            </form>
+            <div class="directory-form-footer"><span><span class="directory-form-dot"></span> OPEN VEHICLE DATA · NO ACCOUNT REQUIRED</span><a href="/discover">ADVANCED DISCOVERY <span aria-hidden="true">↗</span></a></div>
+            {% if directory_error %}<p class="directory-error" role="alert">{{ directory_error }}</p>{% endif %}
+            {% if directory_make and not directory_error %}
+              <div class="directory-result-heading"><div><p class="eyebrow">YOUR RESULTS</p><h3>{{ directory_results|length }} models discovered</h3></div><span>NHTSA VPIC DIRECTORY</span></div>
+              {% if directory_results %}<div class="directory-list">
+                {% for entry in directory_results %}<article class="directory-list-item"><p class="directory-badge">MODEL {{ '%02d'|format(loop.index) }} {% if entry.year %}· {{ entry.year }} QUERY{% else %}· ALL YEARS{% endif %}</p>
+                <h4>{{ entry.make }} <em>{{ entry.model }}</em></h4><p>Directory entry · Photos and performance data pending.</p><span class="directory-card-corner" aria-hidden="true">↗</span></article>{% endfor %}
+              </div>{% else %}<p class="directory-empty">No matching models returned. Try another manufacturer or remove the year.</p>{% endif %}
+            {% endif %}
+          </div>
+          <div class="directory-bottomline"><span>01 / DISCOVER THE POSSIBILITIES</span><p>A year-scoped directory result indicates an NHTSA API match, not independent verification of the model’s production year or trim. Photos and specifications require separate verified sources.</p></div>
+        </section>
+
+        <div class="collection-note"><span class="note-marker">↗</span><p>Looking for a different make or model? <a href="/discover" style="color:#e0bb83;text-decoration:underline">Explore the free NHTSA vehicle directory</a> while we expand our verified photo and specification sources.</p></div>
+
         <div class="collection-note">
           <span class="note-marker">i</span>
           <p>Vélocity is a discovery experience. Curated vehicle details are illustrative and may vary by model year, configuration and market. Contact a manufacturer or dealer to verify specifications.</p>

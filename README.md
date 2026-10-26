@@ -94,3 +94,12 @@ velocity/
 - Keep `VEHICLES_API_KEY` private. The browser must not receive this key.
 - The included Python server is designed for local development. For public deployment, run Uvicorn behind an HTTPS reverse proxy / hosting platform and configure production monitoring.
 - The migration ZIP intentionally excludes the Go binaries and `.git/` data. Your original ZIP remains an untouched copy of the Go implementation.
+
+## Free NHTSA make/model directory (new)
+
+Visit `http://localhost:8080/discover`, or click the link at the bottom of the collection page. Enter a make, such as `BMW`, optionally with a model year, to retrieve known models from NHTSA's free public vPIC API. No key is required. For JSON clients, call `GET /api/nhtsa/models?make=BMW&year=2024`.
+
+- This is **directory discovery**, not full photo/spec integration. NHTSA doesn't provide model photography or full horsepower/acceleration data.
+- The original curated collection and comparison continue functioning as before. Directory entries aren't automatically added to comparison until matching reliable specs and licensed photos are implemented.
+- Responses are cached in process for 24 hours; requests time out and yield a friendly error rather than crashing the site. NHTSA rate limits can apply.
+- Optional paid/free-tier photo and specs providers can be integrated later, after keys and image licensing are confirmed. Do not commit keys or a `.env` file.
