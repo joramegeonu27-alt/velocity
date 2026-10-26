@@ -162,3 +162,60 @@ def test_vin_and_remote_specifications(client, monkeypatch):
     assert response.status_code == 200 and response.json()["engine_hp"] == "430"
     monkeypatch.setattr(vehicles, "get_specifications", lambda vin, key: (_ for _ in ()).throw(vehicles.VehicleAPIError()))
     assert client.get("/api/compare/specs?vin=JH4KA4650MC000000").status_code == 502
+
+
+def test_discover_page_loads():
+    from fastapi.testclient import TestClient
+    from app import app
+    response = TestClient(app).get('/discover')
+    assert response.status_code == 200
+    assert 'Discover' in response.text
+
+
+def test_nhtsa_models_validation():
+    from fastapi.testclient import TestClient
+    from app import app
+    response = TestClient(app).get('/api/nhtsa/models?make=BMW&year=1800')
+    assert response.status_code == 400
+
+
+def test_discover_renders_mock_data(monkeypatch):
+    from fastapi.testclient import TestClient
+    import api.nhtsa as nhtsa
+    from app import app
+    monkeypatch.setattr(nhtsa, 'models', lambda make, year: [{'make': 'BMW', 'model': 'M4', 'year': 2024}])
+    response = TestClient(app).get('/discover?make=BMW&year=2024')
+    assert response.status_code == 200
+    assert 'M4' in response.text
+    response = TestClient(app).get('/api/nhtsa/models?make=BMW&year=2024')
+    assert response.status_code == 200
+    assert response.json()['count'] == 1
+
+
+def test_collection_directory_lookup_is_distinct_from_curated_cards(client, monkeypatch):
+    from api import nhtsa
+    monkeypatch.setattr(nhtsa, "models", lambda make, year: [{"make": "BMW", "model": "M4", "year": year}])
+    response = client.get("/cars?directory_make=BMW&directory_year=2024")
+    assert response.status_code == 200
+    assert "2024 QUERY" in response.text
+    assert "not independent verification of the model" in response.text
+    assert len(BeautifulSoup(response.text, "html.parser").select(".vehicle-card")) == 6
+    assert len(BeautifulSoup(response.text, "html.parser").select(".directory-list-item")) == 1
+
+def test_collection_directory_validation_and_outage(client, monkeypatch):
+    from api import nhtsa
+    assert "Year must be" in client.get("/cars?directory_make=BMW&directory_year=1700").text
+    def outage(*args, **kwargs):
+        raise nhtsa.NHTSAError("Temporary outage")
+    monkeypatch.setattr(nhtsa, "models", outage)
+    result = client.get("/cars?directory_make=BMW")
+    assert result.status_code == 200
+    assert "Temporary outage" in result.text
+    assert "BMW" in result.text
+
+def test_discover_does_not_claim_year_is_verified(client, monkeypatch):
+    from api import nhtsa
+    monkeypatch.setattr(nhtsa, "models", lambda make, year: [{"make": make, "model": "128i", "year": year}])
+    html = client.get("/discover?make=BMW&year=2024").text
+    assert "2024 QUERY" in html
+    assert "not independent production-year verification" in html

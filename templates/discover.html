@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080b0e"><title>{{ title }}</title>
+<link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+<link rel="stylesheet" href="/static/css/style.css"><link rel="stylesheet" href="/static/css/velocity-premium.css"><link rel="stylesheet" href="/static/css/velocity-next.css"><link rel="stylesheet" href="/static/css/discover.css">
+<script defer src="/static/js/site.js"></script></head>
+<body class="page-cars">{% include 'partials/nav.html' %}
+<main id="main"><section class="discover-hero"><div class="shell"><p class="eyebrow">VÉLOCITY / EXPANDED DIRECTORY</p><h1>Discover <em>more.</em></h1><p>Explore makes and models from the free NHTSA vehicle directory. Find a model before we add detailed specs and licensed photographs.</p></div></section>
+<section class="section"><div class="shell"><form class="discover-form" action="/discover" method="get" role="search"><div><label for="make">Manufacturer</label><input id="make" name="make" placeholder="Try BMW, Toyota or Ferrari" value="{{ make }}" required maxlength="60"></div><div><label for="year">Model year (optional)</label><input id="year" name="year" inputmode="numeric" type="number" min="1980" max="2030" placeholder="2024" value="{{ selected_year }}"></div><button type="submit" class="button button-primary">FIND MODELS ↗</button></form>
+{% if error %}<p role="alert" class="discover-alert">{{ error }}. Your curated <a href="/cars">collection</a> remains available.</p>{% endif %}
+{% if make and not error %}<div class="discover-results-head"><div><p class="eyebrow">NHTSA vPIC / SEARCH RESULTS</p><h2>{{ results|length }} models found</h2></div><a href="/cars">← BACK TO COLLECTION</a></div>
+{% if results %}<div class="discover-grid">{% for car in results %}<article class="discover-card"><div class="discover-card-tag">NHTSA DIRECTORY · {% if car.year %}{{ car.year }} QUERY{% else %}ALL YEARS{% endif %}</div><h3>{{ car.make }} <em>{{ car.model }}</em></h3><p>Returned by the NHTSA directory{% if car.year %} for a {{ car.year }} model-year query{% endif %}. This is not independent production-year verification. Photos and performance specs are unavailable.</p></article>{% endfor %}</div>
+{% else %}<p class="discover-empty">No matching models returned. Try another manufacturer or remove the year filter.</p>{% endif %}{% endif %}
+<div class="discover-note"><strong>About this directory</strong><p>NHTSA vPIC supplies vehicle make/model records, not stock photographs or guaranteed performance specifications. Year-scoped entries reflect the API query, not independent production-year or trim verification. Entries are informational, not live sale listings. We never invent photos, trims or horsepower.</p></div></div></section></main>{% include 'partials/footer.html' %}</body></html>
