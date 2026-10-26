@@ -1,8 +1,0 @@
-<article class="vehicle-card" data-id="{{ car.id }}">
-  <a class="vehicle-photo" href="/cars/{{ car.id }}" aria-label="Explore {{ car.brand }} {{ car.model }}">
-    <img src="{% if car.image %}{{ car.image }}{% else %}/static/images/car-fallback.svg{% endif %}" data-fallback="/static/images/car-fallback.svg" alt="{{ car.brand }} {{ car.model }}" loading="lazy" decoding="async">
-    <span class="vehicle-photo-overlay"></span><span class="photo-index">{{ car.year }} / {{ car.brand }}</span><span class="photo-arrow" aria-hidden="true">↗</span>
-  </a>
-  <div class="vehicle-info"><div><p class="eyebrow small">{{ car.brand }}</p><h3><a href="/cars/{{ car.id }}">{{ car.model }}</a></h3></div><button class="favorite-btn" type="button" data-favorite="{{ car.id }}" aria-label="Save {{ car.brand }} {{ car.model }}" aria-pressed="false" title="Save to favorites"><span aria-hidden="true">♡</span></button></div>
-  <div class="vehicle-meta"><span><small>POWER</small><strong>{{ power(car.horsepower) }}</strong></span><span><small>0–60 MPH</small><strong>{{ speed(car.zero_to_sixty) }}</strong></span><span><small>TOP SPEED</small><strong>{{ speed(car.top_speed) }}</strong></span></div>
-</article>

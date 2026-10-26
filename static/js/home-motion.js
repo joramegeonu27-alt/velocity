@@ -5,7 +5,7 @@
   if (!document.body.classList.contains('page-home')) return;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const coarse = window.matchMedia('(pointer: coarse)').matches;
-  const title = document.querySelector('.luxury-refined-title');
+  const title = document.querySelector('.hero-title');
   const kicker = document.querySelector('.kicker-text');
 
   if (!reduce && kicker) {

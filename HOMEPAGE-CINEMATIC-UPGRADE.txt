@@ -1,0 +1,41 @@
+VÉLOCITY — HOMEPAGE HERO VIDEO FROM YOUR UPLOADED CINEMATIC.MP4
+==============================================================
+
+This update uses the video you uploaded, not the earlier Pexels clip.
+Your footage is QHD 2560 x 1440, ~5 seconds, H.264. We kept the
+original video quality (stream copy), removed the audio and moved the
+MP4 playback index to the start for faster website loading.
+
+UPDATED HOMEPAGE-ONLY FILES:
+  templates/index.html                 homepage hero video source + poster
+  static/css/home-video.css            video styling + matching fallback
+  static/js/home-video.js              play/pause, reduced motion, data saver
+  static/videos/home-hero.mp4          your uploaded video, audio removed
+  static/images/home-hero-poster.jpg   matching still from your video
+
+DO NOT DELETE YOUR WORKING VELOCITY FOLDER.
+
+QUICK INSTALL (UPDATE-ONLY ZIP, recommended):
+  1. Make a backup of your current velocity folder.
+  2. Extract this ZIP. Inside it, find the velocity folder.
+  3. Copy the files INSIDE the extracted velocity folder into the same
+     locations in your WORKING velocity folder. Overwrite matching files.
+  4. Keep your original .git directory and all other files.
+  5. Open the project in a terminal, run:
+        go test ./...
+        go run .
+  6. Open http://localhost:8080/ (hard refresh: Ctrl+Shift+R).
+  7. Confirm /cars still plays your DIFFERENT Lamborghini collection video.
+
+FULL WEBSITE ZIP:
+  Includes the existing working Velocity site plus the five changes above.
+  It does NOT include your own hidden .git folder or any local secrets.
+  Use as a separate test copy if you prefer not to overwrite working files.
+
+The original static/hero-cover.png remains in the full site for other
+pages. It is no longer the homepage hero fallback image.
+
+The homepage's exact 'BEYOND SPEED. BEYOND ORDINARY.' headline and
+existing sections are preserved. The collection video is unchanged.
+Autoplay is muted/looped. Reduced-motion and data-saver users see the
+static poster instead. Play/pause control remains available.

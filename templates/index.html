@@ -1,5 +1,5 @@
 
-
+{{define "index.html"}}
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#07090b">
   <meta name="description" content="Vélocity — an invitation to extraordinary automotive design. Explore icons of the road, compare performance, and discover the art of the drive.">
   <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
-  <title>{{ title }}</title>
+  <title>{{.Title}}</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="stylesheet" href="/static/css/home-premium.css">
   <script defer src="/static/js/site.js"></script>
@@ -16,11 +16,10 @@
 
   <link rel="stylesheet" href="/static/css/velocity-premium.css">
   <link rel="stylesheet" href="/static/css/home-video.css">
-  <link rel="stylesheet" href="/static/css/velocity-next.css">
   <script defer src="/static/js/home-video.js"></script>
 </head>
 <body class="page-home">
-{% include 'partials/nav.html' %}
+{{template "nav" .}}
 
 <div class="home-ambient" aria-hidden="true">
   <span class="ambient-glow ambient-glow-one"></span>
@@ -140,11 +139,11 @@
       </div>
 
       <div class="vehicle-grid">
-        {% for car in featured %}
-          {% include 'partials/carcard.html' %}
-        {% else %}
+        {{range .Featured}}
+          {{template "carcard" .}}
+        {{else}}
           <p>The collection will return shortly.</p>
-        {% endfor %}
+        {{end}}
       </div>
 
       <div class="section-footnote">
@@ -373,7 +372,7 @@
   </section>
 </main>
 
-{% include 'partials/footer.html' %}
+{{template "footer" .}}
 </body>
 </html>
-
+{{end}}
