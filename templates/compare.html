@@ -1,13 +1,56 @@
 {{define "compare.html"}}
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b0e10"><link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg"><meta name="description" content="Compare up to three performance vehicles side by side with Vélocity."><title>{{.Title}}</title><link rel="stylesheet" href="/static/css/style.css"><script defer src="/static/js/site.js"></script><script defer src="/static/js/compare.js"></script>
-  <link rel="stylesheet" href="/static/css/velocity-premium.css">
-</head>
-<body class="page-compare">{{template "nav" .}}<main id="main">
-  <section class="inner-hero comparison-hero"><div class="shell inner-hero-content"><p class="eyebrow">02 / SIDE BY SIDE</p><h1>Find your<br><em>perfect match.</em></h1><p>Different personalities. One clear perspective. Choose up to three machines and see what sets each apart.</p></div><div class="hero-corner">PRECISION / PERSPECTIVE</div></section>
-  <section class="section compare-section"><div class="shell"><div class="section-top"><div><p class="eyebrow">STEP 01 / CURATE YOUR GARAGE</p><h2 class="section-title">Choose the <em>contenders.</em></h2><p class="section-subtitle">Select two or three vehicles to compare.</p></div><span class="count-pill" id="selectedCounter" aria-live="polite">0 / 3 SELECTED</span></div>
-  <div class="picker-grid" id="pickerGrid">{{range .Cars}}<button type="button" class="picker-card" data-id="{{.ID}}" data-brand="{{.Brand}}" data-model="{{.Model}}" data-year="{{.Year}}" data-hp="{{.Horsepower}}" data-engine="{{.Engine}}" data-speed="{{.TopSpeed}}" data-accel="{{.ZeroToSixty}}" data-fuel="{{.Fuel}}" data-transmission="{{.Transmission}}" data-drivetrain="{{.Drivetrain}}" aria-pressed="false"><span class="picker-photo"><img src="{{if .Image}}{{.Image}}{{else}}/static/images/car-fallback.svg{{end}}" data-fallback="/static/images/car-fallback.svg" loading="lazy" alt=""><span class="picker-check" aria-hidden="true">+</span></span><span class="picker-copy"><small>{{.Brand}} / {{.Year}}</small><strong>{{.Model}}</strong></span></button>{{else}}<p>Cars are unavailable right now.</p>{{end}}</div>
-  <div class="compare-controls"><p class="inline-status" id="pickerStatus" role="status">Choose at least two cars to start comparing.</p><div><button type="button" class="button button-outline" id="clearSelection">Clear selection</button><button type="button" class="button button-primary" id="compareNow" disabled>Compare selected ↗</button></div></div>
-  <div class="compare-result" id="compareResult" hidden><div class="section-top"><div><p class="eyebrow">STEP 02 / THE DETAILS</p><h2 class="section-title">Side by <em>side.</em></h2></div><button type="button" class="text-link share-button" id="shareComparison">Copy comparison link ↗</button></div><div class="compare-table-scroller"><table class="comparison-table"><caption class="sr-only">Comparison of selected vehicle specifications</caption><thead><tr id="compareHead"><th scope="col">SPECIFICATION</th></tr></thead><tbody id="compareBody"></tbody></table></div><p class="collection-note">Figures depend on model year and configuration. “Not listed” means the source did not provide that specification.</p></div>
-  </div></section>
-</main>{{template "footer" .}}</body></html>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09090b">
+<meta name="description" content="VÉLOCITY Compare Studio — explore up to three vehicles, uncover real specification differences and find your driving priorities.">
+<title>{{.Title}}</title><link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+<link rel="stylesheet" href="/static/css/style.css"><link rel="stylesheet" href="/static/css/velocity-premium.css"><link rel="stylesheet" href="/static/css/compare-studio.css?v=20261027"><link rel="stylesheet" href="/static/css/compare-glass.css?v=20261028-refined">
+<script defer src="/static/js/site.js"></script><script defer src="/static/js/compare-studio.js?v=20261027"></script><script defer src="/static/js/compare-glass.js?v=20261028-refined"></script>
+</head><body class="page-compare page-compare-studio">{{template "nav" .}}
+<main id="main">
+<section class="vc-hero vc-duel-hero" aria-labelledby="duel-heading">
+  <div class="vc-editorial-top shell">
+    <span>VÉLOCITY <i aria-hidden="true">/</i> VERSUS STUDIO</span>
+    <span>04 &nbsp;—&nbsp; THE COMPARISON SERIES</span>
+  </div>
+  <div class="vc-editorial-media">
+    <img src="/static/images/compare-rivals.webp" alt="Black Mercedes-AMG facing a white Lexus in a copper-lit studio" width="1983" height="793" fetchpriority="high">
+    <div class="vc-editorial-title">
+      <p>THE MATCHUP BEGINS HERE</p>
+      <h1 id="duel-heading">LET THE <em>BEST WIN.</em></h1>
+      <span>TWO MACHINES. ONE DECISION.</span>
+    </div>
+  </div>
+  <div class="shell vc-editorial-footer">
+    <div class="vc-editorial-note">
+      <span>01 &nbsp;/&nbsp; CHOOSE YOUR CONTENDERS</span>
+      <p>Put the details side by side. Find the edge in performance, technology and everyday capability.</p>
+    </div>
+    <div class="vc-editorial-actions">
+      <a class="vc-button vc-primary" href="#studio">BUILD A COMPARISON <span aria-hidden="true">↗</span></a>
+      <a class="vc-editorial-link" href="#trending">EXPLORE MATCHUPS <span aria-hidden="true">↓</span></a>
+    </div>
+  </div>
+</section>
+<section class="vc-section vc-choose shell" id="studio"><div class="vc-rail"><span>01 / BUILD YOUR LINEUP</span><span>SELECT UP TO THREE VEHICLES</span></div>
+<div class="vc-section-head"><div><p class="vc-eyebrow">YOUR GARAGE / REIMAGINED</p><h2>Pick your <em>contenders.</em></h2><p>Choose the contenders from VÉLOCITY's curated collection, select two or three cars, then explore exactly which details stand out.</p></div><span class="vc-count" id="selectedCounter" aria-live="polite">0 / 3 SELECTED</span></div>
+<div class="vc-searchbar"><label class="vc-searchwide"><span class="vc-field-label">FIND A VEHICLE / AUTOCOMPLETE</span><input id="vehicleSearch" type="search" list="vehicleSuggestions" autocomplete="off" placeholder="Search BMW M4, Porsche, 2025…" maxlength="90"><datalist id="vehicleSuggestions"></datalist></label>
+<label><span class="vc-field-label">MANUFACTURER</span><select id="brandFilter"><option value="">All marques</option></select></label><label><span class="vc-field-label">MODEL YEAR</span><select id="yearFilter"><option value="">All years</option></select></label><label><span class="vc-field-label">TRIM / VERSION</span><input type="search" id="trimFilter" placeholder="e.g. Competition" maxlength="65"></label></div>
+<div class="vc-picker-head"><span id="pickerCount" aria-live="polite">Loading your garage…</span><button type="button" id="resetFilters" class="vc-text-button">CLEAR FILTERS ↗</button></div>
+<div class="vc-picker-grid" id="pickerGrid" aria-label="Available vehicles"><div class="vc-loading"><span></span><span></span><span></span></div></div>
+<div class="vc-pick-footer"><p id="pickerStatus" role="status" aria-live="polite">Select at least two vehicles to compare.</p><div><button type="button" class="vc-button vc-secondary" id="clearSelection">CLEAR SELECTION</button><button type="button" class="vc-button vc-primary" id="compareNow" disabled>ENTER THE STUDIO ↗</button></div></div>
+<div class="vc-external-discovery"><div><p class="vc-eyebrow">BEYOND THE CURATED GARAGE</p><h3>Know the model. Find the machine.</h3><p>Explore manufacturer/model/year records or decode a 17-character VIN. Model-only research has limited specifications; VIN lookups show only what is available.</p></div>
+<div class="vc-external-inputs"><label>MANUFACTURER<input id="researchMake" list="researchMakes" placeholder="e.g. Toyota" maxlength="70"><datalist id="researchMakes"></datalist></label><label>MODEL YEAR<input id="researchYear" type="number" min="1996" max="2030" value="2024"></label><button type="button" class="vc-button vc-secondary" id="researchModelsButton">FIND MODELS ↗</button><label>MODEL<input id="researchModel" list="researchModelsList" placeholder="Select or type model"><datalist id="researchModelsList"></datalist></label><button type="button" class="vc-button vc-secondary" id="addResearchButton">ADD MODEL ↗</button>
+<label class="vc-vin-field">SPECIFIC VEHICLE VIN<input id="compareVIN" maxlength="17" placeholder="17-character VIN"></label><button type="button" class="vc-button vc-secondary" id="addVINButton">DECODE + ADD ↗</button></div><p id="externalStatus" class="vc-external-status" role="status" aria-live="polite">Public model records may not include engine, power, equipment, or performance figures.</p>
+</div></section>
+<section class="vc-section vc-studio" id="compareResult" hidden><div class="shell"><div class="vc-rail"><span>02 / HEAD-TO-HEAD</span><span>YOUR PERSONAL AUTOMOTIVE STUDIO</span></div><div class="vc-section-head"><div><p class="vc-eyebrow">THE MATCHUP</p><h2>Numbers meet <em>instinct.</em></h2><p>Detailed data, clear gaps, and a perspective you can trust.</p></div><div class="vc-result-actions"><button type="button" id="swapVehicles" class="vc-icon-button">⇄ SWAP ORDER</button><button type="button" id="saveComparison" class="vc-icon-button">♡ SAVE</button><button type="button" id="shareComparison" class="vc-icon-button">↗ SHARE</button><button type="button" id="exportComparison" class="vc-icon-button">↓ PDF</button></div></div>
+<div class="vc-battle" id="battleStage" aria-label="Selected vehicles showcase"></div>
+<div class="vc-table-control"><div><label class="vc-switch"><input id="differenceOnly" type="checkbox"><span>SHOW DIFFERENCES ONLY</span></label><label class="vc-switch"><input id="highlightBest" type="checkbox" checked><span>HIGHLIGHT ADVANTAGES</span></label></div><div><label for="unitToggle">MEASUREMENTS</label><select id="unitToggle"><option value="imperial">MPH / IN / LB</option><option value="metric">KM/H / CM / KG</option></select></div></div>
+<div class="vc-table-wrap" tabindex="0" aria-label="Scrollable comparison specification table"><table class="vc-table" id="comparisonTable"><caption class="sr-only">Side-by-side vehicle specifications</caption><thead id="compareHead"></thead><tbody id="compareBody"></tbody></table></div>
+<p class="vc-disclaimer">— means information was not supplied. VÉLOCITY's curated showroom figures are illustrative, not manufacturer-verified for each trim. A model record alone cannot confirm a particular configuration. Only available, comparable measurements are highlighted. Shared links may contain VINs when VIN-decoded vehicles are selected.</p>
+<div class="vc-analytics"><article class="vc-panel"><p class="vc-eyebrow">03 / PERFORMANCE LAB</p><h3>The power <em>picture.</em></h3><p class="vc-panel-lead">Recorded performance values for your exact selected entries.</p><div id="performanceBars" class="vc-bars"></div></article><article class="vc-panel"><p class="vc-eyebrow">04 / DYNAMIC SIGNATURE</p><h3>See the <em>shape.</em></h3><p class="vc-panel-lead">A relative three-axis radar, shown only when enough comparable data exists.</p><div id="radarPanel" class="vc-radar"></div></article></div>
+<article class="vc-intelligence vc-panel"><div class="vc-intel-heading"><div><p class="vc-eyebrow">05 / VÉLOCITY INTELLIGENCE</p><h3>Decide with <em>clarity.</em></h3><p>Evidence-based observations—not a made-up winner.</p></div><label>WHAT MATTERS TO YOU?<select id="prioritySelect"><option value="power">Maximum horsepower</option><option value="accel">Fastest 0–60 mph</option><option value="speed">Highest top speed</option><option value="year">Latest model year</option></select></label></div><div id="insightCards" class="vc-insights"></div><p class="vc-disclaimer">These insights compare available figures only. Performance, safety and equipment depend on specification and model year. No unsupported specifications are inferred.</p></article>
+</div></section>
+<section class="vc-section shell vc-history" id="trending"><div class="vc-rail"><span>06 / YOUR COMPARISON ARCHIVE</span><span>FIND YOUR NEXT RIVALRY</span></div><div class="vc-section-head"><div><p class="vc-eyebrow">KEEP THE CONVERSATION GOING</p><h2>Iconic <em>matchups.</em></h2><p>Try curated rivalries or return to a comparison saved on this device.</p></div></div><div class="vc-trending" id="trendingGrid"><button type="button" data-match="bmw-m4,porsche-911">01 / M4 COMPETITION <em>VS</em> 911 CARRERA <b>↗</b></button><button type="button" data-match="amg-gt,audi-rs7">02 / GT 63 <em>VS</em> RS 7 <b>↗</b></button><button type="button" data-match="lamborghini-revuelto,ferrari-roma">03 / REVUELTO <em>VS</em> ROMA <b>↗</b></button></div><div class="vc-saved-head"><h3>Saved &amp; recently compared</h3><button id="clearHistory" type="button" class="vc-text-button">CLEAR HISTORY</button></div><div id="historyList" class="vc-history-list"><p>No comparisons saved yet.</p></div></section>
+<section class="vc-end"><div class="shell"><p class="vc-eyebrow">THE NEXT MATCHUP IS YOURS.</p><h2>THE DETAILS<br><em>MAKE THE DIFFERENCE.</em></h2><a href="#studio" class="vc-button vc-primary">BUILD ANOTHER MATCHUP ↗</a></div></section>
+</main>{{template "footer" .}}<div id="compareToast" class="vc-toast" role="status" aria-live="polite" hidden></div></body></html>
 {{end}}

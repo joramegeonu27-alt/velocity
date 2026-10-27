@@ -79,3 +79,15 @@ const progress=()=>{const span=document.documentElement.scrollHeight-innerHeight
 if('IntersectionObserver'in window&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const observer=new IntersectionObserver(items=>items.forEach(item=>{if(item.isIntersecting){item.target.classList.add('visible');observer.unobserve(item.target)}}),{threshold:0.06});document.querySelectorAll('[data-reveal]').forEach(n=>observer.observe(n))}else document.querySelectorAll('[data-reveal]').forEach(n=>n.classList.add('visible'));
 sidebar();renderGarage();loadMakes();
 })();
+
+/* VIN demonstration chips, kept independent from the VIN form handler. */
+document.addEventListener('click', (event) => {
+  const sample = event.target.closest('[data-demo-vin]');
+  if (!sample) return;
+  const input = document.getElementById('vinInput');
+  if (!input) return;
+  input.value = sample.dataset.demoVin;
+  input.dispatchEvent(new Event('input', {bubbles:true}));
+  document.getElementById('vinForm')?.scrollIntoView({behavior:'smooth', block:'center'});
+  input.focus({preventScroll:true});
+});

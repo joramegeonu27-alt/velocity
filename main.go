@@ -472,6 +472,27 @@ func compareHandler(w http.ResponseWriter, r *http.Request) {
 	render(w, "compare.html", PageData{Active: "compare", Title: "Compare vehicles — VÉLOCITY", Cars: cars})
 }
 
+// The comparison studio uses the same catalogue as Collection: no invented
+// vehicle data and no need to expose a provider or API credentials to browsers.
+func compareCatalogueHandler(w http.ResponseWriter, r *http.Request) {
+	if !allowGet(w, r) {
+		return
+	}
+	if r.URL.Path != "/api/compare/catalogue" {
+		pageNotFound(w, r)
+		return
+	}
+	cars, _, err := catalogue(r)
+	if err != nil {
+		http.Error(w, "Vehicle collection unavailable", http.StatusServiceUnavailable)
+		return
+	}
+	if cars == nil {
+		cars = []Car{}
+	}
+	writeJSON(w, cars)
+}
+
 func localSpecs(car *Car) map[string]string {
 	hp := ""
 	if car.Horsepower > 0 {
@@ -562,6 +583,7 @@ func routes() http.Handler {
 	mux.HandleFunc("/api/discovery/rating", discovery.ratingHandler)
 	mux.HandleFunc("/compare", compareHandler)
 	mux.HandleFunc("/api/compare/specs", compareSpecsHandler)
+	mux.HandleFunc("/api/compare/catalogue", compareCatalogueHandler)
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if !allowGet(w, r) {
 			return

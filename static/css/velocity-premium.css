@@ -504,3 +504,9 @@
   .page-cars .catalogue-grid .vehicle-card,
   .site-header .nav-links > a::after {transition:none!important;}
 }
+
+/* Branded wordmark supplied by VÉLOCITY. One unified navbar on all pages. */
+.site-header .brand.brand-graphic{display:flex;align-items:center;flex:0 1 auto;min-width:0;gap:0}
+.site-header .velocity-nav-logo{display:block;width:clamp(176px,20vw,247px);height:auto;max-height:66px;object-fit:contain;object-position:left center;filter:drop-shadow(0 0 12px rgba(216,139,87,.12))}
+@media(max-width:1100px){.site-header .velocity-nav-logo{width:190px}}
+@media(max-width:600px){.site-header .velocity-nav-logo{width:178px;max-height:58px}}
