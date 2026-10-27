@@ -52,24 +52,26 @@ type Car struct {
 }
 
 type PageData struct {
-	Active      string
-	Title       string
-	Description string
-	Featured    []Car
-	Cars        []Car
-	Car         *Car
-	Brands      []string
-	Query       string
-	Brand       string
-	Sort        string
-	Page        int
-	TotalPages  int
-	TotalCars   int
-	From        int
-	To          int
-	PrevURL     string
-	NextURL     string
-	SourceLabel string
+	// Only trusted, repository-owned CSS is supplied to this field.
+	DiscoveryCSS template.CSS
+	Active       string
+	Title        string
+	Description  string
+	Featured     []Car
+	Cars         []Car
+	Car          *Car
+	Brands       []string
+	Query        string
+	Brand        string
+	Sort         string
+	Page         int
+	TotalPages   int
+	TotalCars    int
+	From         int
+	To           int
+	PrevURL      string
+	NextURL      string
+	SourceLabel  string
 }
 
 func apiKey() string { return strings.TrimSpace(os.Getenv("VEHICLES_API_KEY")) }
@@ -551,10 +553,14 @@ func routes() http.Handler {
 	mux.HandleFunc("/cars", carsHandler)
 	mux.HandleFunc("/cars/", carDetailHandler)
 	mux.HandleFunc("/about", aboutHandler)
-	mux.HandleFunc("/compare", compareHandler)
-	mux.HandleFunc("/discover", discoverHandler)
-	mux.HandleFunc("/api/nhtsa/makes", nhtsa.makesHandler)
+	mux.HandleFunc("/discover", discoverPremiumHandler)
 	mux.HandleFunc("/api/nhtsa/models", nhtsa.modelsHandler)
+	mux.HandleFunc("/api/nhtsa/makes", nhtsa.makesHandler)
+	mux.HandleFunc("/api/discovery/vin", discovery.vinHandler)
+	mux.HandleFunc("/api/discovery/recalls", discovery.recallsHandler)
+	mux.HandleFunc("/api/discovery/safety", discovery.safetyHandler)
+	mux.HandleFunc("/api/discovery/rating", discovery.ratingHandler)
+	mux.HandleFunc("/compare", compareHandler)
 	mux.HandleFunc("/api/compare/specs", compareSpecsHandler)
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if !allowGet(w, r) {

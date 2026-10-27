@@ -1,0 +1,88 @@
+{{define "discover.html"}}
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0b0c"><meta name="description" content="VÉLOCITY Discovery — an intelligent way to explore automotive makers, models, vehicle specifications, VIN research and safety insights.">
+<title>{{.Title}}</title><link rel="icon" href="/static/images/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/style.css"><link rel="stylesheet" href="/static/css/velocity-premium.css">
+<link rel="stylesheet" href="/static/css/discover-premium.css?v=20261027-fix2">
+<!-- Critical page styling is embedded from the same CSS file at Go build time.
+     This prevents the Discovery layout from falling apart when a CSS URL is stale. -->
+<style id="velocity-discovery-styles">{{.DiscoveryCSS}}</style>
+<script src="/static/js/site.js" defer></script><script src="/static/js/discover-premium.js?v=20261027-fix2" defer></script>
+</head>
+<body class="page-discover">
+{{template "nav" .}}
+<div class="discover-scroll-line" id="discoverScrollLine" aria-hidden="true"></div>
+<main id="main">
+ <section class="dx-hero dx-hero-cinematic" id="top" aria-labelledby="dxTitle">
+   <!-- Decorative background: no normal-flow <img> element, so the photo can never
+        push the copy onto a separate part of the page if a stylesheet fails. -->
+   <div class="dx-hero-photo" aria-hidden="true"></div>
+   <div class="dx-hero-atmosphere" aria-hidden="true"></div><div class="dx-grid-glow" aria-hidden="true"></div>
+   <div class="shell dx-hero-grid">
+      <div class="dx-hero-photo-label" aria-hidden="true"><span class="dx-photo-line"></span><span>THE ART OF ARRIVAL<br><b>AFTER DARK / 001</b></span></div>
+      <div class="dx-hero-copy">
+        <p class="dx-eyebrow"><span class="dx-status-light"></span> THE NEXT CHAPTER / 03 — VÉLOCITY DISCOVERY</p>
+        <h1 id="dxTitle">CURIOSITY<br>HAS <em>NO</em><br><span>REDLINE.</span></h1>
+        <p class="dx-lead">More than a car search. A universe of makers, machines, stories and the intelligence behind every badge.</p>
+        <div class="dx-hero-actions"><a href="#explore" class="dx-btn dx-btn-gold">Enter discovery <span aria-hidden="true">↗</span></a><a class="dx-text-link" href="#intelligence">Vehicle intelligence <span aria-hidden="true">↓</span></a></div>
+        <div class="dx-hero-proof"><span><b>01 /</b> EXPLORE</span><span><b>02 /</b> INVESTIGATE</span><span><b>03 /</b> UNDERSTAND</span></div>
+      </div>
+
+   </div>
+   <div class="shell dx-hero-bottom"><span>PRECISION OVER NOISE</span><span>AN AUTOMOTIVE UNIVERSE / EST. 2026</span><a href="#explore">SCROLL TO EXPLORE ↓</a></div>
+ </section>
+ <div class="dx-ticker" aria-hidden="true"><div class="dx-ticker-track">DISCOVER THE UNEXPECTED <i>✳</i> ENGINEERED FOR THE CURIOUS <i>✳</i> BUILT FOR THE DRIVE <i>✳</i> DISCOVER THE UNEXPECTED <i>✳</i> ENGINEERED FOR THE CURIOUS <i>✳</i> BUILT FOR THE DRIVE <i>✳</i></div></div>
+ <section class="dx-section shell" id="explore">
+   <div class="dx-section-rail" data-reveal><span>01 / DISCOVERY ENGINE</span><span>YOUR NEXT OBSESSION STARTS HERE</span></div>
+   <div class="dx-section-heading" data-reveal><div><p class="dx-kicker">THE SEARCH, REIMAGINED</p><h2>Find your <em>frequency.</em></h2><p>Choose a manufacturer, explore real model records, and open a research dossier for deeper insights.</p></div><span class="dx-section-stamp">D / 001</span></div>
+   <div class="dx-search-card" data-reveal>
+     <div class="dx-card-topline"><span><i class="dx-live"></i> VÉLOCITY DISCOVERY</span><span>RESEARCH / LIVE</span></div>
+     <form id="discoveryForm" novalidate>
+       <div class="dx-search-grid">
+         <label class="dx-field dx-make"><span>01 / MANUFACTURER <small>REQUIRED</small></span><input id="makeInput" list="makeSuggestions" placeholder="Start typing a manufacturer…" autocomplete="off" spellcheck="false" maxlength="70" required><datalist id="makeSuggestions"></datalist></label>
+         <label class="dx-field"><span>02 / MODEL YEAR <small>OPTIONAL</small></span><input id="yearInput" type="number" inputmode="numeric" min="1996" placeholder="Any year"></label>
+         <label class="dx-field"><span>03 / MODEL NAME <small>OPTIONAL</small></span><input id="modelInput" list="modelSuggestions" type="search" placeholder="e.g. M3, Corolla…" autocomplete="off"><datalist id="modelSuggestions"></datalist></label>
+         <button type="submit" class="dx-btn dx-search-submit" id="submitSearch"><span>EXPLORE MODELS</span><span aria-hidden="true">↗</span></button>
+       </div>
+       <div class="dx-form-footer"><p id="makeHelp" role="status" aria-live="polite">Loading manufacturers…</p><div class="dx-years"><button type="button" data-year="">Any year</button><button type="button" data-year="2024">2024</button><button type="button" data-year="2025">2025</button><button type="button" data-year="2026">2026</button></div></div>
+     </form>
+     <div class="dx-picks"><div><span>EDITOR'S QUICK SEARCHES</span><small>Explore these makers</small></div><div class="dx-chip-row" id="quickPicks"><button type="button" data-make="Porsche">Porsche ↗</button><button type="button" data-make="BMW">BMW ↗</button><button type="button" data-make="Toyota">Toyota ↗</button><button type="button" data-make="Mercedes-Benz">Mercedes-Benz ↗</button><button type="button" data-make="Lamborghini">Lamborghini ↗</button><button type="button" data-make="Honda">Honda ↗</button></div></div>
+   </div>
+   <div class="dx-discovery-columns">
+     <div class="dx-results" id="resultsSection">
+       <div class="dx-results-head"><div><p class="dx-kicker">LIVE RESEARCH / 01</p><h3 id="resultsTitle">The open road awaits<span>.</span></h3><p id="resultsSummary" role="status" aria-live="polite">Start with a manufacturer to reveal its vehicle models.</p></div><div class="dx-count"><b id="modelCount">—</b><small>MODELS</small></div></div>
+       <div class="dx-toolbar" id="resultTools" hidden><label class="dx-tool-search"><span class="sr-only">Filter models</span><input type="search" id="modelFilter" placeholder="Filter discovered models…"></label><label class="dx-tool-sort"><span class="sr-only">Sort models</span><select id="sortModels"><option value="az">A to Z</option><option value="za">Z to A</option></select></label><button id="savedOnly" class="dx-small-btn" type="button" aria-pressed="false">♡ Saved <span id="savedCount">0</span></button><button id="shareSearch" class="dx-small-btn" type="button">↗ Share</button><button id="exportCSV" class="dx-small-btn" type="button">↓ CSV</button></div>
+       <div id="emptyState" class="dx-empty"><span class="dx-empty-mark">✳</span><h4>No limits. Just possibilities.</h4><p>Search a brand to explore officially recorded model names.</p></div>
+       <div id="modelGrid" class="dx-model-grid" aria-label="Model research results" hidden></div>
+       <div id="moreRow" class="dx-more-row" hidden><button type="button" id="showMore" class="dx-small-btn">Load more research cards ↓</button><small id="displayedCount"></small></div>
+     </div>
+     <aside class="dx-research-side" aria-label="Discovery suggestions">
+       <div class="dx-side-card dx-featured" data-reveal><p class="dx-kicker">THE EDITORIAL SPOTLIGHT</p><span class="dx-featured-number">001 / THE BLUEPRINT</span><h3>PORSCHE<br><em>911.</em></h3><p>Some model names transcend generations. Open its research record to see what you can discover.</p><button type="button" class="dx-featured-button" id="featuredButton">Research the 911 <span>↗</span></button><small>EDITOR'S PICK · NOT A VEHICLE LISTING</small></div>
+       <div class="dx-side-card" data-reveal><p class="dx-kicker">FOR YOU / BASED ON THIS DEVICE</p><h3>Your next turn.</h3><p class="dx-side-sub">Searches you've explored and recommendations inspired by them.</p><div id="recommendations" class="dx-recommendations"><p class="dx-muted">Your recommendations appear after your first search.</p></div><button type="button" class="dx-side-link" id="randomDiscovery">Surprise me with a model ↗</button></div>
+       <div class="dx-side-card" data-reveal><p class="dx-kicker">YOUR RECENT JOURNEYS</p><h3>Pick up the trail.</h3><div id="recentSearches"><p class="dx-muted">No searches yet on this device.</p></div></div>
+     </aside>
+   </div>
+ </section>
+ <section class="dx-intelligence" id="intelligence"><div class="shell dx-intel-inner">
+   <div class="dx-section-rail" data-reveal><span>02 / VEHICLE INTELLIGENCE</span><span>THE DETAILS MAKE THE DIFFERENCE</span></div>
+   <div class="dx-intel-head" data-reveal><div><p class="dx-kicker">GO DEEPER THAN THE BADGE</p><h2>Every detail.<br><em>Decoded.</em></h2><p>Unlock specifications from a specific vehicle identification number. Explore its body, fuel, transmission and drivetrain—when reported in its vehicle record.</p></div><div class="dx-vin-watermark" aria-hidden="true">VIN<span>17</span></div></div>
+   <div class="dx-vin-box" data-reveal>
+     <div class="dx-card-topline"><span><i class="dx-live"></i> VEHICLE SPECIFICATIONS</span><span>VIN LOOKUP / INDIVIDUAL VEHICLE</span></div>
+     <form id="vinForm"><label for="vinInput">17-CHARACTER VEHICLE IDENTIFICATION NUMBER</label><div class="dx-vin-input-row"><input id="vinInput" name="vin" maxlength="17" minlength="17" required placeholder="Enter a 17-character VIN" autocomplete="off" spellcheck="false"><button type="submit" class="dx-btn dx-btn-gold" id="vinSubmit">DECODE VEHICLE ↗</button></div><p class="dx-caption">Vehicle specifications depend on the specific VIN. We do not infer performance, drivetrain or equipment from a model name.</p></form>
+     <div id="vinLoading" class="dx-loading-row" hidden>Reading vehicle intelligence…</div><div id="vinError" class="dx-error" role="alert" hidden></div><div id="vinResult" class="dx-vin-result" hidden></div>
+   </div>
+   <div class="dx-garage-head"><div><p class="dx-kicker">YOUR DECODED RESEARCH</p><h3>The intelligence garage.</h3><p>Saved VIN lookups stay on this device. Filter only known, decoded specifications.</p></div><button class="dx-side-link" type="button" id="clearGarage">Clear saved research ↗</button></div>
+   <div class="dx-advanced" id="advancedFilters"><label>BODY TYPE<select id="bodyFilter"><option value="">All body types</option></select></label><label>FUEL TYPE<select id="fuelFilter"><option value="">All fuels</option></select></label><label>TRANSMISSION<select id="transmissionFilter"><option value="">All transmissions</option></select></label><label>DRIVETRAIN<select id="drivetrainFilter"><option value="">All drivetrains</option></select></label></div>
+   <div id="garageGrid" class="dx-garage-grid"><div class="dx-garage-empty">Decode a VIN to unlock verified specification filters.</div></div>
+ </div></section>
+ <section class="dx-stories shell" id="culture"><div class="dx-section-rail" data-reveal><span>03 / THE BIGGER PICTURE</span><span>RESEARCH IS A LOVE LANGUAGE</span></div><div class="dx-culture-grid" data-reveal><div><p class="dx-kicker">AUTOMOTIVE CULTURE</p><h2>THE MACHINES<br>CHANGE.<br><em>THE OBSESSION<br>DOESN'T.</em></h2></div><div><p class="dx-stories-intro">A brief journey through defining chapters in automotive innovation. Discover the past, then research what drives the next generation.</p><div class="dx-timeline"><div><time>1886</time><span>The motorcar era begins with Benz's patented automobile.</span></div><div><time>1908</time><span>The Ford Model T enters production, changing mass mobility.</span></div><div><time>1997</time><span>The Toyota Prius debuts in Japan, helping popularize hybrid power.</span></div><div><time>2010s</time><span>Electric vehicles become a growing part of mainstream car culture.</span></div><div><time>NOW</time><span>The era of software, electrification and connected vehicle intelligence.</span></div></div></div></div></section>
+ <section class="dx-end"><div class="shell"><p class="dx-kicker">BEYOND ORDINARY.</p><h2>DON'T JUST ADMIRE IT.<br><em>UNDERSTAND IT.</em></h2><a class="dx-btn dx-btn-gold" href="#explore">BACK TO DISCOVERY ↗</a></div></section>
+</main>
+{{template "footer" .}}
+<div class="dx-source-note shell">Vehicle reference data and safety information sourced from the <a href="https://www.nhtsa.gov/nhtsa-datasets-and-apis" rel="noopener noreferrer" target="_blank">U.S. National Highway Traffic Safety Administration</a>. VIN records, ratings and recalls may be incomplete or unavailable. Always verify critical information independently.</div>
+<dialog id="quickView" class="dx-modal" aria-labelledby="modalTitle"><button type="button" class="dx-modal-close" id="modalClose" aria-label="Close details">×</button><div class="dx-modal-content"><span class="dx-kicker">VÉLOCITY / VEHICLE INTELLIGENCE</span><h2 id="modalTitle">Vehicle dossier</h2><p id="modalSubtitle" class="dx-muted">Vehicle research</p><div class="dx-modal-tabs" role="tablist" aria-label="Research information"><button id="tabSummary" type="button" data-panel="summary" aria-selected="true">OVERVIEW</button><button type="button" data-panel="safety" aria-selected="false">SAFETY</button><button type="button" data-panel="recalls" aria-selected="false">RECALLS</button></div><div id="modalContent" class="dx-modal-body" role="status" aria-live="polite"></div></div></dialog>
+<div id="dxToast" class="dx-toast" role="status" aria-live="polite" hidden></div>
+</body></html>
+{{end}}

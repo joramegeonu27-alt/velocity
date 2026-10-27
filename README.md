@@ -5,7 +5,7 @@ VÉLOCITY is a responsive automotive discovery experience built with **Go**, Go'
 ## What's included
 
 - Expanded luxury homepage with uppercase kinetic headline, animated welcome beacon, cinematic lighting, parallax-style imagery, moving editorial ticker, longer story sections and interactive spotlight/tilt experience cards.
-- The original bundled `static/hero-cover.png` remains the **top hero only**. Lower editorial panels use different Unsplash car photography, with a bundled custom `static/images/featured-exotic.svg` fallback if images are blocked.
+- The bundled `static/hero-cover.png` is available as a fallback background asset. Lower editorial panels use different Unsplash car photography, with a bundled custom `static/images/featured-exotic.svg` fallback if images are blocked.
 - Curated vehicle collection, server-side search, marque filter, sorting and pagination.
 - Responsive grid/list layout (saved in the browser).
 - Vehicle detail pages with performance and technical specifications.
@@ -101,3 +101,18 @@ velocity/
 The lower large photo and some catalogue photos load from Unsplash over the internet. If the image request fails, the lower image switches to the bundled local illustration. They are intentionally separate from the top-hero photo. Remote images should be downloaded/licensed and optimized into local files before production if you need fully offline photo reliability.
 
 Animations respect `prefers-reduced-motion`, and hover-only effects are disabled on touch devices. No audio is played by the visual beacon. The homepage CSS/JS is kept separate so the non-home pages keep their working layout and features.
+
+
+## NHTSA Discovery (premium upgrade)
+
+- `/discover` — cinema-inspired interactive research page with its own responsive navigation.
+- `/api/nhtsa/makes` — car manufacturers from NHTSA vPIC.
+- `/api/nhtsa/models?make=Toyota&year=2024` — official make/model naming data.
+- Quick manufacturer presets, optional year, name filtering, sorting, favorites stored locally,
+  shareable searches and CSV export. The API service caches successful results for 24 hours.
+- `static/css/discover-premium.css`, `static/js/discover-premium.js` and
+  `templates/discover.html` contain the page's visual experience.
+- Photographs under `static/images/discover-*.jpg` when the builder could retrieve them.
+
+The NHTSA data does not include photos, prices or individual vehicle listings.
+To run: `go test ./...` then `go run .`, and open `http://localhost:8080/discover`.
