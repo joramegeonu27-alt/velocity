@@ -552,6 +552,9 @@ func routes() http.Handler {
 	mux.HandleFunc("/cars/", carDetailHandler)
 	mux.HandleFunc("/about", aboutHandler)
 	mux.HandleFunc("/compare", compareHandler)
+	mux.HandleFunc("/discover", discoverHandler)
+	mux.HandleFunc("/api/nhtsa/makes", nhtsa.makesHandler)
+	mux.HandleFunc("/api/nhtsa/models", nhtsa.modelsHandler)
 	mux.HandleFunc("/api/compare/specs", compareSpecsHandler)
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if !allowGet(w, r) {
