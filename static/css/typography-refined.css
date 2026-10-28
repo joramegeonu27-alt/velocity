@@ -1,0 +1,32 @@
+/* VÉLOCITY / UPRIGHT EDITORIAL TYPE / 2026
+   Designed for: clear hierarchy, capitalized primary headings, zero slanted headlines.
+   Visual changes only; does not touch application logic or vehicle data. */
+:root {--velocity-title-family: 'Manrope', Arial, sans-serif;}
+body :is(h1,h2,h3,h4,h5,h6),
+body :is(h1,h2,h3,h4,h5,h6) :is(span,em,strong,i) {
+  font-style: normal !important;
+  font-family: var(--velocity-title-family) !important;
+}
+body :is(h1,h2,h3,h4,h5,h6) {
+  text-transform: uppercase;
+  font-weight: 760 !important;
+  font-synthesis: none;
+  text-wrap: balance;
+}
+body :is(h1,h2,h3,h4,h5,h6) em {
+  font-style: normal !important;
+  font-weight: inherit !important;
+}
+/* Quotes and accent words should be upright too, including the page footer. */
+body em,body i:not([aria-hidden]) {font-style:normal !important;}
+body .se-opening-quote em, body .site-footer em {font-style:normal!important;}
+body .nav-links a {font-weight:700; font-style:normal;}
+body .site-header .nav-links a {text-transform:capitalize;}
+/* Prevent widely spaced labels from becoming pseudo-headlines on mobile. */
+@media (max-width:600px){
+ body :is(h1,h2,h3,h4) {overflow-wrap:normal;word-break:normal;}
+}
+/* Long uppercase footer display words should remain within small screens. */
+@media(max-width:600px){
+ body .site-footer h2 {font-size:clamp(27px,7.6vw,38px) !important;line-height:1.15;letter-spacing:-.045em;}
+}

@@ -1,377 +1,205 @@
-
 {{define "index.html"}}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#07090b">
-  <meta name="description" content="Vélocity — an invitation to extraordinary automotive design. Explore icons of the road, compare performance, and discover the art of the drive.">
+  <meta name="theme-color" content="#0b0a09">
+  <meta name="description" content="VÉLOCITY is an editorial home for extraordinary automotive design, discovery, performance, and the stories behind the machines.">
   <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
   <title>{{.Title}}</title>
+  <link rel="preload" as="image" href="/static/images/home-rivals-poster.jpg" fetchpriority="high">
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="stylesheet" href="/static/css/home-premium.css">
+  <link rel="stylesheet" href="/static/css/velocity-premium.css">
+  <link rel="stylesheet" href="/static/css/typography-refined.css?v=1">
+  <link rel="stylesheet" href="/static/css/home-editorial.css?v=20261028-hero2">
   <script defer src="/static/js/site.js"></script>
   <script defer src="/static/js/home-motion.js"></script>
-
-  <link rel="stylesheet" href="/static/css/velocity-premium.css">
-  <link rel="stylesheet" href="/static/css/home-video.css">
-  <script defer src="/static/js/home-video.js"></script>
+  <script defer src="/static/js/home-editorial.js?v=20261028-hero2"></script>
 </head>
 <body class="page-home">
 {{template "nav" .}}
+<main id="main" class="vh-main">
 
-<div class="home-ambient" aria-hidden="true">
-  <span class="ambient-glow ambient-glow-one"></span>
-  <span class="ambient-glow ambient-glow-two"></span>
-  <span class="ambient-pointer"></span>
-</div>
-
-<main id="main">
-  <!-- CINEMATIC HERO -->
-  <section class="home-hero" aria-labelledby="heroTitle" id="top">
-    <!-- Frame from the uploaded film remains visible if autoplay is unavailable. -->
-    <div class="hero-image" aria-hidden="true"></div>
-    <video
-      id="homeHeroVideo"
-      class="home-hero-video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="metadata"
-      poster="/static/images/home-hero-poster.jpg"
-      aria-hidden="true"
-      tabindex="-1"
-    >
-      <source src="/static/videos/home-hero.mp4" type="video/mp4">
+  <!-- Cinematic motion hero. The only graduated shade is on the left where the copy sits. -->
+  <section class="vh-hero vh-hero-film" aria-labelledby="heroTitle" id="top">
+    <video class="vh-hero-video" id="velocityHeroVideo" autoplay muted playsinline loop preload="metadata"
+           poster="/static/images/home-rivals-poster.jpg"
+           aria-label="Performance cars driving through a sunlit city street">
+      <source src="/static/videos/home-rivals-hero.mp4" type="video/mp4">
     </video>
-    <div class="hero-vignette"></div>
-    <div class="hero-rule" aria-hidden="true"></div>
-    <div class="hero-light-pass" aria-hidden="true"></div>
-    <div class="hero-grid-lines" aria-hidden="true"></div>
-    <button class="home-hero-video-toggle" id="homeHeroVideoToggle" type="button"
-            aria-label="Pause background video" aria-pressed="false" hidden>
-      <span class="home-hero-video-icon" aria-hidden="true">Ⅱ</span>
-      <span class="home-hero-video-label">Pause film</span>
-    </button>
-
-    <div class="shell home-hero-inner">
-      <div class="hero-copy">
-        <p class="eyebrow hero-eyebrow">
-          <span class="signal-beacon" aria-hidden="true">
-            <i></i><i></i><i></i>
-          </span>
-          <span class="hero-kicker" aria-label="Welcome to the extraordinary">
-            <span class="kicker-text" aria-hidden="true">WELCOME TO THE EXTRAORDINARY</span>
-          </span>
-        </p>
-
-        <h1 id="heroTitle" class="luxury-refined-title" aria-label="Beyond speed. Beyond ordinary. Experience the future of automotive excellence.">
-          <span class="luxury-refined-line">BEYOND SPEED.</span>
-          <span class="luxury-refined-line luxury-refined-gold">BEYOND ORDINARY.</span>
-          <span class="luxury-refined-divider" aria-hidden="true"></span>
-          <span class="luxury-refined-caption">EXPERIENCE THE FUTURE OF</span>
-          <span class="luxury-refined-caption luxury-refined-caption-gold">AUTOMOTIVE EXCELLENCE.</span>
-        </h1>
-
-        <p class="hero-text">
-          Some journeys are about arriving. The unforgettable ones are about everything
-          you feel along the way. Welcome to a world driven by passion, precision and possibility.
-        </p>
-
-        <div class="hero-actions">
-          <a class="button button-primary hero-cta" href="/cars">
-            Discover the collection <span aria-hidden="true">↗</span>
-          </a>
-          <a class="text-link" href="#philosophy">
-            The Vélocity perspective <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-
-        <div class="hero-signature">
-          <span class="hero-signature-line" aria-hidden="true"></span>
-          NOT MADE TO STAND STILL.
+    <div class="vh-hero-left-shade" aria-hidden="true"></div>
+    <div class="vh-hero-ambient" aria-hidden="true"></div>
+    <div class="vh-hero-copy">
+      <div class="vh-hero-copy-inner">
+        <p class="vh-eyebrow"><span class="signal-beacon" aria-hidden="true"></span> WELCOME TO THE EXTRAORDINARY <span class="vh-intro-count">/ 001</span></p>
+        <h1 id="heroTitle">BEYOND SPEED.<br><span>BEYOND ORDINARY.</span></h1>
+        <div class="vh-gold-rule" aria-hidden="true"></div>
+        <p class="vh-hero-strap">AUTOMOTIVE EXCELLENCE.</p>
+        <p class="vh-lead">More than cars. An appreciation of design, performance and every detail that makes the drive unforgettable.</p>
+        <div class="vh-actions">
+          <a class="vh-button" href="/cars">EXPLORE THE COLLECTION <span aria-hidden="true">↗</span></a>
+          <a class="vh-quiet-link" href="/discover">ENTER DISCOVERY <span aria-hidden="true">↗</span></a>
         </div>
       </div>
-
-      <div class="hero-rail">
-        <span>001 / THE ART OF MOTION</span>
-        <span class="hero-rail-line"></span>
-        <a href="#featured" aria-label="Scroll down to the featured vehicles">
-          SCROLL TO EXPLORE <span aria-hidden="true">↓</span>
-        </a>
-      </div>
+      <div class="vh-hero-meta"><span>VÉLOCITY / AUTOMOTIVE CULTURE</span><span>EST. 2026</span></div>
     </div>
-
-    <div class="hero-bottom-bar">
-      <span>FEEL EVERYTHING</span>
-      <span>DESIGN × PERFORMANCE × EMOTION</span>
-      <span>EST. 2026</span>
+    <div class="vh-hero-controls">
+      <span class="vh-hero-running" id="heroPlaybackStatus">FILM / PLAYING</span>
+      <button type="button" id="velocityHeroVideoToggle" aria-label="Pause hero film" aria-pressed="false">PAUSE <span aria-hidden="true">Ⅱ</span></button>
+      <a href="#featured" class="vh-hero-down">SCROLL TO EXPLORE ↓</a>
     </div>
   </section>
 
-  <!-- MOVING BRAND BANNER -->
-  <div class="motion-marquee" aria-label="Driven by emotion, defined by precision, designed for the extraordinary">
-    <div class="motion-marquee-track" aria-hidden="true">
-      <span>DRIVEN BY EMOTION <b>✦</b> DEFINED BY PRECISION <b>✦</b> DESIGNED TO MOVE YOU <b>✦</b> NEVER ORDINARY <b>✦</b></span>
-      <span>DRIVEN BY EMOTION <b>✦</b> DEFINED BY PRECISION <b>✦</b> DESIGNED TO MOVE YOU <b>✦</b> NEVER ORDINARY <b>✦</b></span>
-    </div>
+  <div class="vh-caption-band" aria-label="VÉLOCITY editorial pillars">
+    <span>DESIGN</span><span class="vh-caption-dot" aria-hidden="true">✦</span>
+    <span>PERFORMANCE</span><span class="vh-caption-dot" aria-hidden="true">✦</span>
+    <span>CULTURE</span><span class="vh-caption-dot" aria-hidden="true">✦</span>
+    <span>DISCOVERY</span>
   </div>
 
-  <!-- FEATURED COLLECTION -->
-  <section class="section section-featured home-dark-section" id="featured">
+  <section class="vh-featured" id="featured" aria-labelledby="vhFeaturedHeading">
     <div class="shell">
-      <div class="home-section-heading reveal">
-        <div>
-          <p class="eyebrow">01 / THE COLLECTION</p>
-          <h2 class="section-title">THE ART OF<br><em>THE AUTOMOBILE.</em></h2>
-          <p class="section-subtitle">
-            Curated performance. Unmistakable character. Machines with a presence
-            you can feel long before you turn the key.
-          </p>
-        </div>
-        <div class="section-heading-aside">
-          <span class="quiet-overline">HANDPICKED EXCELLENCE</span>
-          <span class="hairline"></span>
-          <a href="/cars" class="text-link">View the entire collection ↗</a>
-        </div>
+      <div class="vh-section-header vh-reveal">
+        <div><p class="vh-index">01 / THE COLLECTION</p><h2 id="vhFeaturedHeading">THE MACHINES<br>THAT MATTER.</h2></div>
+        <div class="vh-section-side"><p>Selected for their presence, performance, and individual character. Never just another specification sheet.</p><a href="/cars" class="vh-text-action">EXPLORE ALL CARS <span aria-hidden="true">↗</span></a></div>
       </div>
-
-      <div class="vehicle-grid">
+      <div class="vehicle-grid vh-vehicle-grid">
         {{range .Featured}}
           {{template "carcard" .}}
         {{else}}
           <p>The collection will return shortly.</p>
         {{end}}
       </div>
-
-      <div class="section-footnote">
-        <span>01 — 03 / SELECTED MACHINES</span>
-        <span>EDITORIAL SPECIFICATIONS · NOT LIVE DEALER INVENTORY</span>
-      </div>
+      <div class="vh-footnote"><span>01 — 03 / SELECTED MACHINES</span><span>EDITORIAL EXAMPLES · DETAILS MAY VARY</span></div>
     </div>
   </section>
 
-  <!-- PHILOSOPHY -->
-  <section class="home-intro-section home-dark-section" id="philosophy">
-    <div class="shell intro-layout">
-      <div class="intro-index reveal">
-        <span class="eyebrow">02 / OUR PHILOSOPHY</span>
-        <span class="intro-index-large" aria-hidden="true">V<span>.</span></span>
-        <p>THE ROAD IS NOT SIMPLY<br>A PLACE. IT IS A FEELING.</p>
-      </div>
 
-      <div class="intro-story reveal">
-        <span class="overline-muted">BEYOND THE ORDINARY</span>
-        <h2 class="editorial-heading">
-          NOT EVERYTHING<br>
-          THAT <i>MOVES</i> YOU<br>
-          HAS TO MOVE FAST.
-        </h2>
-        <p>
-          We believe remarkable cars are more than technical achievements.
-          They are stories written in metal, light and motion.
-          A beautifully judged line. An engine with a voice of its own.
-          A cabin that makes the outside world disappear.
-        </p>
-        <p>
-          Vélocity is a place to appreciate the complete picture — from the engineering
-          that inspires confidence to the details that stir something deeper.
-          Because the most memorable drive is never just about the destination.
-        </p>
-        <a class="underlined-action" href="/about">Explore our point of view ↗</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- CINEMATIC SHOWCASE -->
-  <section class="home-showcase" aria-labelledby="showcaseTitle">
-    <div class="showcase-backdrop" aria-hidden="true"></div>
-    <div class="shell showcase-layout">
-      <div class="showcase-topline">
-        <span>DESIGN FEATURE / 001</span>
-        <span>WHEN THE ROAD BECOMES ART</span>
-      </div>
-
-      <div class="showcase-copy reveal">
-        <p class="eyebrow">A NEW PERSPECTIVE</p>
-        <h2 id="showcaseTitle">THE THRILL<br>OF <em>WHAT'S NEXT.</em></h2>
-        <p>
-          Beyond the numbers is the extraordinary: a flash of light across sculpted
-          bodywork, a perfect apex, a moment when machine and instinct become one.
-        </p>
-        <a href="/cars" class="button button-outline">
-          Meet the machines <span aria-hidden="true">↗</span>
-        </a>
-      </div>
-
-      <div class="showcase-bottomline">
-        <span>BUILT TO STIR THE SENSES</span>
-        <span>001 — 003</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- PREMIUM EXPERIENCE CARDS -->
-  <section class="section experience-section home-dark-section" id="experience">
+  <section class="vh-atelier" id="atelier" aria-labelledby="atelierTitle">
     <div class="shell">
-      <div class="home-section-heading reveal">
-        <div>
-          <p class="eyebrow">03 / THE EXPERIENCE</p>
-          <h2 class="section-title">A WORLD BUILT<br><em>AROUND THE DRIVE.</em></h2>
-          <p class="section-subtitle">
-            Three ways to go deeper. One shared love for everything automotive.
-          </p>
+      <div class="vh-section-header vh-reveal"><div><p class="vh-index">02 / INSIDE THE GARAGE</p><h2 id="atelierTitle">EVERY MACHINE.<br>A DIFFERENT MINDSET.</h2></div><div class="vh-section-side"><p>Move between a few featured machines. See the details we actually have, then open the full vehicle profile.</p></div></div>
+      <div class="vh-atelier-layout vh-reveal">
+        <div class="vh-atelier-tabs" role="tablist" aria-label="Selected vehicle profiles">
+        {{range $index, $car := .Featured}}
+          <button class="vh-atelier-tab" type="button" role="tab" id="atelier-tab-{{$index}}" aria-controls="atelier-panel-{{$index}}" aria-selected="{{if eq $index 0}}true{{else}}false{{end}}" tabindex="{{if eq $index 0}}0{{else}}-1{{end}}" data-atelier-tab="{{$index}}">
+            <span class="vh-atelier-index" aria-hidden="true"></span><span><small>{{$car.Brand}} · {{$car.Year}}</small><strong>{{$car.Model}}</strong></span><span aria-hidden="true">↗</span>
+          </button>
+        {{end}}
         </div>
-        <div class="section-heading-aside">
-          <span class="quiet-overline">EXPLORE BEYOND THE SURFACE</span>
-          <span class="hairline"></span>
-          <span class="quiet-overline">HOVER TO DISCOVER ↗</span>
+        <div class="vh-atelier-panels">
+        {{range $index, $car := .Featured}}
+          <article class="vh-atelier-panel" id="atelier-panel-{{$index}}" role="tabpanel" aria-labelledby="atelier-tab-{{$index}}" {{if ne $index 0}}hidden{{end}}>
+            <div class="vh-atelier-photo"><img src="{{if $car.Image}}{{$car.Image}}{{else}}/static/images/car-fallback.svg{{end}}" data-fallback="/static/images/car-fallback.svg" alt="{{$car.Brand}} {{$car.Model}}" loading="lazy"><span>CURATED / VEHICLE PROFILE</span></div>
+            <div class="vh-atelier-panel-foot"><div><small>THE MACHINE</small><h3>{{$car.Brand}} {{$car.Model}}</h3></div><div class="vh-atelier-facts"><span><small>MODEL YEAR</small><b>{{$car.Year}}</b></span><span><small>POWER</small><b>{{power $car.Horsepower}}</b></span><span><small>ENGINE</small><b>{{if $car.Engine}}{{$car.Engine}}{{else}}—{{end}}</b></span></div></div>
+            <a class="vh-text-action" href="/cars/{{$car.ID}}">EXPLORE THIS VEHICLE <span aria-hidden="true">↗</span></a>
+          </article>
+        {{end}}
         </div>
       </div>
+      <p class="vh-atelier-note">CURATED SHOWROOM EXAMPLES · VALUES VARY BY TRIM AND MARKET. NO MANUFACTURER VERIFICATION IMPLIED.</p>
+    </div>
+  </section>
 
-      <div class="experience-grid modern-experience-grid">
-        <a class="experience-card spotlight-card" href="/cars" data-spotlight>
-          <span class="experience-card-shimmer" aria-hidden="true"></span>
-          <span class="experience-number">01 <span>/</span> DISCOVER</span>
-          <span class="experience-symbol" aria-hidden="true">↗</span>
-          <div class="experience-card-content">
-            <span class="experience-tag">THE COLLECTION</span>
-            <h3>FIND YOUR<br><em>NEXT OBSESSION.</em></h3>
-            <p>Explore a handpicked world of sculpted silhouettes, breathtaking performance and machines with unmistakable presence.</p>
-          </div>
-          <span class="experience-link">EXPLORE THE COLLECTION <span>↗</span></span>
-        </a>
-
-        <a class="experience-card spotlight-card" href="/compare" data-spotlight>
-          <span class="experience-card-shimmer" aria-hidden="true"></span>
-          <span class="experience-number">02 <span>/</span> COMPARE</span>
-          <span class="experience-symbol" aria-hidden="true">≍</span>
-          <div class="experience-card-content">
-            <span class="experience-tag">THE DETAILS</span>
-            <h3>PRECISION<br><em>MEETS PASSION.</em></h3>
-            <p>Put the finer points side by side. Discover how the character of every car is revealed through design, data and engineering.</p>
-          </div>
-          <span class="experience-link">COMPARE THE MACHINES <span>↗</span></span>
-        </a>
-
-        <a class="experience-card spotlight-card" href="/about" data-spotlight>
-          <span class="experience-card-shimmer" aria-hidden="true"></span>
-          <span class="experience-number">03 <span>/</span> EXPERIENCE</span>
-          <span class="experience-symbol" aria-hidden="true">✳</span>
-          <div class="experience-card-content">
-            <span class="experience-tag">THE VÉLOCITY STORY</span>
-            <h3>MORE THAN<br><em>THE JOURNEY.</em></h3>
-            <p>Follow the curiosity, culture and craft that turn exceptional automobiles into something truly unforgettable.</p>
-          </div>
-          <span class="experience-link">DISCOVER THE PHILOSOPHY <span>↗</span></span>
-        </a>
+  <section class="vh-photo-story" id="philosophy" aria-labelledby="vhStoryHeading">
+    <figure class="vh-photo-story-image vh-reveal">
+      <img src="/static/images/home-motion-car.webp" width="1300" height="1950" loading="lazy" decoding="async" alt="Black Lamborghini driving along an open road at dusk">
+      <figcaption>02 / THE ROAD</figcaption>
+    </figure>
+    <div class="vh-photo-story-copy vh-reveal">
+      <div class="vh-copy-width">
+        <p class="vh-index">03 / THE PERSPECTIVE</p>
+        <h2 id="vhStoryHeading">THE ROAD<br>IS A FEELING.</h2>
+        <p class="vh-large-copy">There is a difference between getting somewhere and remembering how it felt to arrive.</p>
+        <p>At VÉLOCITY, we look beyond speed alone. We believe the finest cars pair precise engineering with a personality that stays with you long after the drive is over.</p>
+        <a class="vh-text-action" href="/about">THE STORY BEHIND VÉLOCITY <span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
 
-  <!-- CRAFTSMANSHIP -->
-  <section class="craft-section home-dark-section" aria-labelledby="craftTitle">
+  <section class="vh-film" aria-labelledby="vhFilmHeading" id="film">
+    <div class="shell vh-film-frame">
+      <div class="vh-film-copy vh-reveal">
+        <p class="vh-index">04 / THE ART OF MOTION</p>
+        <h2 id="vhFilmHeading">MOTION<br>HAS A<br>LANGUAGE.</h2>
+        <p>Some stories are best told in motion. From the smallest detail to the pure rush of performance, every moment has a rhythm of its own.</p>
+        <div class="vh-film-foot"><span class="vh-film-dash" aria-hidden="true"></span><span>THE CINEMATIC EDITION</span></div>
+        <a class="vh-text-action" href="/discover">EXPLORE VEHICLE DISCOVERY <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="vh-film-visual vh-reveal">
+        <video id="homeEditorialVideo" muted autoplay loop playsinline preload="metadata" poster="/static/images/home-film-poster.jpg" aria-label="Short aerial film of a performance car moving through tyre smoke in a parking area">
+          <source src="/static/videos/home-editorial-film.mp4" type="video/mp4">
+        </video>
+        <div class="vh-film-overlay"><span>FRAME 002 / IN MOTION</span><button type="button" id="homeEditorialVideoToggle" aria-label="Pause film" aria-pressed="false">PAUSE FILM <span aria-hidden="true">Ⅱ</span></button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vh-experience" id="experience" aria-labelledby="vhExperienceTitle">
     <div class="shell">
-      <div class="craft-top">
-        <p class="eyebrow">04 / THE FINER DETAILS</p>
-        <span>AN OBSESSION WITH THE EXCEPTIONAL</span>
+      <div class="vh-section-header vh-reveal">
+        <div><p class="vh-index">05 / THE EXPERIENCE</p><h2 id="vhExperienceTitle">CURIOUS BY<br>DESIGN.</h2></div>
+        <div class="vh-section-side"><p>Go deeper into the cars, the stories, and the intelligence behind the badge.</p></div>
       </div>
+      <nav class="vh-paths" aria-label="Explore VÉLOCITY features">
+        <a href="/discover" class="vh-path"><span class="vh-path-num">01</span><span class="vh-path-content"><strong>DISCOVERY</strong><small>Explore manufacturers, models, and vehicle intelligence.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
+        <a href="/cars" class="vh-path"><span class="vh-path-num">02</span><span class="vh-path-content"><strong>THE COLLECTION</strong><small>Discover a considered selection of remarkable machines.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
+        <a href="/compare" class="vh-path"><span class="vh-path-num">03</span><span class="vh-path-content"><strong>COMPARE</strong><small>See how different cars measure up, side by side.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
+        <a href="/about" class="vh-path"><span class="vh-path-num">04</span><span class="vh-path-content"><strong>OUR STORY</strong><small>Meet the ideas, curiosity, and passion behind VÉLOCITY.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </section>
 
-      <div class="craft-grid">
-        <div class="craft-copy reveal">
-          <h2 id="craftTitle">EVERY CURVE<br>HAS A <em>STORY.</em></h2>
-          <p>
-            There is a reason some cars stay with you long after the engine falls silent.
-            It lives in the balance between form and purpose; the careful decisions
-            you may never notice, but always feel.
-          </p>
-          <p>
-            From purposeful aerodynamics and thoughtful interiors to the pursuit of a
-            perfectly connected drive, true luxury is about the way every detail comes together.
-          </p>
-          <a class="underlined-action" href="/cars">Find your next icon ↗</a>
+
+  <section class="vh-direction" id="direction" aria-labelledby="directionHeading">
+    <div class="shell vh-direction-layout">
+      <div class="vh-direction-intro vh-reveal"><p class="vh-index">06 / CHOOSE YOUR PATH</p><h2 id="directionHeading">HOW FAR<br>DO YOU WANT<br>TO GO?</h2><p>Whatever draws you to a machine, there's a way to explore it. Follow the part of the story that matters to you.</p></div>
+      <div class="vh-direction-module vh-reveal">
+        <div class="vh-direction-choices" role="tablist" aria-label="Explore a VÉLOCITY experience">
+          <button type="button" role="tab" id="path-tab-discover" aria-controls="path-panel-discover" aria-selected="true" tabindex="0" data-vh-path="discover">01 &nbsp; DISCOVER</button>
+          <button type="button" role="tab" id="path-tab-intelligence" aria-controls="path-panel-intelligence" aria-selected="false" tabindex="-1" data-vh-path="intelligence">02 &nbsp; DECODE</button>
+          <button type="button" role="tab" id="path-tab-compare" aria-controls="path-panel-compare" aria-selected="false" tabindex="-1" data-vh-path="compare">03 &nbsp; COMPARE</button>
         </div>
-
-        <div class="craft-visual">
-          <div class="craft-visual-glow" aria-hidden="true"></div>
-          <span class="craft-watermark" aria-hidden="true">V.</span>
-          <div class="craft-caption">
-            <span>THE PURSUIT OF PERFECTION</span>
-            <span>VÉLOCITY / 2026</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="craft-values">
-        <article class="reveal">
-          <span>01 — AESTHETICS</span>
-          <h3>Beauty with intent.</h3>
-          <p>Bold enough to stop you. Considered enough to stay with you.</p>
-        </article>
-        <article class="reveal">
-          <span>02 — ENGINEERING</span>
-          <h3>Purpose in every detail.</h3>
-          <p>Craft and precision working together to create a distinct character.</p>
-        </article>
-        <article class="reveal">
-          <span>03 — CONNECTION</span>
-          <h3>Emotion at the wheel.</h3>
-          <p>Where movement becomes memory, and the road feels limitless.</p>
-        </article>
+        <div class="vh-direction-panel" id="path-panel-discover" role="tabpanel" aria-labelledby="path-tab-discover"><span>EXPLORE THE UNKNOWN / 01</span><h3>THE NEXT FAVOURITE STARTS WITH A QUESTION.</h3><p>Search real manufacturer and model records. Follow your curiosity before you make a decision.</p><a class="vh-text-action" href="/discover">OPEN DISCOVERY <span>↗</span></a></div>
+        <div class="vh-direction-panel" id="path-panel-intelligence" role="tabpanel" aria-labelledby="path-tab-intelligence" hidden><span>KNOW THE DETAILS / 02</span><h3>KNOW THE MACHINE. BEYOND THE BADGE.</h3><p>Decode a vehicle VIN to explore available specifications, manufacturing details and safety information.</p><a class="vh-text-action" href="/discover#intelligence">GO TO VEHICLE INTELLIGENCE <span>↗</span></a></div>
+        <div class="vh-direction-panel" id="path-panel-compare" role="tabpanel" aria-labelledby="path-tab-compare" hidden><span>SEE THE DIFFERENCE / 03</span><h3>DIFFERENT MACHINES. ONE CLEAR PERSPECTIVE.</h3><p>Put up to three vehicles side by side, compare the data available, and find the differences that matter to you.</p><a class="vh-text-action" href="/compare">ENTER THE COMPARE STUDIO <span>↗</span></a></div>
+        <div class="vh-direction-bottom"><span>VÉLOCITY / EXPERIENCES</span><span id="vhPathCounter">01 — 03</span></div>
       </div>
     </div>
   </section>
 
-  <!-- SECOND VEHICLE PHOTO -->
-  <section class="statement-banner home-premium-statement" aria-labelledby="statementTitle">
-    <div class="statement-backdrop" aria-hidden="true"></div>
-    <img class="statement-car-photo"
-         src="https://images.unsplash.com/photo-1592198084033-aade902d1aae?auto=format&amp;fit=crop&amp;w=2000&amp;q=85"
-         data-fallback="/static/images/featured-exotic.svg"
-         alt=""
-         loading="lazy"
-         decoding="async">
-
-    <div class="statement-shade" aria-hidden="true"></div>
-    <div class="statement-moving-light" aria-hidden="true"></div>
-
-    <div class="shell statement-content reveal">
-      <p class="eyebrow">05 / YOUR NEXT CHAPTER</p>
-      <h2 id="statementTitle">THE ROAD<br>IS <em>CALLING.</em></h2>
-      <p class="statement-paragraph">
-        There will always be another road, another turn and another machine
-        that reminds you why you fell in love with driving in the first place.
-      </p>
-      <a class="button button-primary" href="/compare">
-        Find your kind of extraordinary <span aria-hidden="true">↗</span>
-      </a>
-      <div class="statement-photo-note">
-        ANOTHER MACHINE. ANOTHER PERSPECTIVE. ENDLESS POSSIBILITY.
+  <section class="vh-legacy" aria-labelledby="vhLegacyHeading">
+    <div class="vh-legacy-copy vh-reveal">
+      <div class="vh-copy-width">
+        <p class="vh-index">07 / THE FINER DETAILS</p>
+        <h2 id="vhLegacyHeading">DESIGNED<br>TO ENDURE.</h2>
+        <p class="vh-large-copy">Every era leaves its mark. True character is never out of date.</p>
+        <p>From classic forms to tomorrow's technologies, the automobile carries a remarkable legacy. We celebrate the craftsmanship, conviction, and thought that bring every generation to life.</p>
+        <a class="vh-text-action" href="/about">READ OUR STORY <span aria-hidden="true">↗</span></a>
       </div>
     </div>
+    <figure class="vh-legacy-image vh-reveal">
+      <img src="/static/images/home-classic.webp" width="1300" height="1625" loading="lazy" decoding="async" alt="Classic black luxury car outside an illuminated building in warm evening light">
+      <figcaption>03 / TIMELESS FORM</figcaption>
+    </figure>
   </section>
 
-  <!-- CLOSING SECTION -->
-  <section class="closing-note home-dark-section">
-    <div class="shell closing-note-grid">
-      <div>
-        <span class="eyebrow">THE SPIRIT OF VÉLOCITY</span>
-        <h2 class="reveal">GOOD ROADS.<br><em>GREAT STORIES.</em></h2>
-      </div>
-      <div class="closing-note-copy reveal">
-        <p>
-          The vehicles we admire have one thing in common: they make us look twice,
-          dream bigger and appreciate the journey itself. Whether you're here to explore,
-          compare or simply admire, there is always something worth discovering.
-        </p>
-        <a href="/cars" class="underlined-action">Keep exploring ↗</a>
-      </div>
+
+  <section class="vh-manifesto" aria-labelledby="manifestoHeading">
+    <div class="shell vh-manifesto-layout vh-reveal"><p class="vh-index">08 / THE VÉLOCITY STANDARD</p><h2 id="manifestoHeading">FORM.<br>FUNCTION.<br><span>FEELING.</span></h2><div><p>Beautiful machines deserve an experience that feels just as considered. From the first impression to the finest specification, we bring the whole picture into focus.</p><a class="vh-text-action" href="/about">WHAT WE BELIEVE <span aria-hidden="true">↗</span></a></div></div>
+  </section>
+
+  <section class="vh-finale" aria-labelledby="vhFinaleHeading">
+    <div class="shell vh-finale-inner vh-reveal">
+      <p class="vh-index">THE NEXT CHAPTER IS YOURS</p>
+      <h2 id="vhFinaleHeading">EVERY DETAIL.<br>EVERY MACHINE.<br>EVERY STORY.</h2>
+      <p>Explore what moves you. Understand what sets it apart.</p>
+      <a href="/discover" class="vh-button">START EXPLORING <span aria-hidden="true">↗</span></a>
+      <img src="/static/images/featured-exotic.svg" class="vh-finale-mark" width="32" height="32" alt="" loading="lazy" aria-hidden="true">
     </div>
   </section>
 </main>
-
 {{template "footer" .}}
 </body>
 </html>

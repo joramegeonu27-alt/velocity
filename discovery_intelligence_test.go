@@ -63,11 +63,11 @@ func TestIntelligenceDisallowsPost(t *testing.T) {
 		t.Fatalf("POST should be disallowed: %d", rec.Code)
 	}
 }
-func TestDiscoveryIncludesSuppliedHeroImage(t *testing.T) {
+func TestDiscoveryIncludesSuppliedHeroVideo(t *testing.T) {
 	rec := httptest.NewRecorder()
 	routes().ServeHTTP(rec, httptest.NewRequest("GET", "/discover", nil))
 	body := rec.Body.String()
-	for _, s := range []string{"discovery-sunset-hero.webp", "dx-hero-photo", "/static/css/style.css", "Vehicle Intelligence", "/static/js/discover-premium.js"} {
+	for _, s := range []string{"discover-hero.mp4", "dx-hero-film", "/static/css/style.css", "Vehicle Intelligence", "/static/js/discover-premium.js"} {
 		if !strings.Contains(body, s) {
 			t.Errorf("discover page missing %s", s)
 		}

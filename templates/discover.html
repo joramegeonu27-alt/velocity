@@ -5,23 +5,27 @@
 <meta name="theme-color" content="#0a0b0c"><meta name="description" content="VÉLOCITY Discovery — an intelligent way to explore automotive makers, models, vehicle specifications, VIN research and safety insights.">
 <title>{{.Title}}</title><link rel="icon" href="/static/images/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/static/css/style.css"><link rel="stylesheet" href="/static/css/velocity-premium.css">
-<link rel="stylesheet" href="/static/css/discover-premium.css?v=20261027-fix2">
+<link rel="stylesheet" href="/static/css/discover-premium.css?v=20261028-motion">
 <!-- Critical page styling is embedded from the same CSS file at Go build time.
      This prevents the Discovery layout from falling apart when a CSS URL is stale. -->
 <style id="velocity-discovery-styles">{{.DiscoveryCSS}}</style>
-<script src="/static/js/site.js" defer></script><script src="/static/js/discover-premium.js?v=20261027-fix2" defer></script>
+<script src="/static/js/site.js" defer></script><script src="/static/js/discover-film.js?v=20261028-motion" defer></script><script src="/static/js/discover-premium.js?v=20261028-motion" defer></script>
+<link rel="stylesheet" href="/static/css/typography-refined.css?v=1">
 </head>
 <body class="page-discover">
 {{template "nav" .}}
 <div class="discover-scroll-line" id="discoverScrollLine" aria-hidden="true"></div>
 <main id="main">
  <section class="dx-hero dx-hero-cinematic" id="top" aria-labelledby="dxTitle">
-   <!-- Decorative background: no normal-flow <img> element, so the photo can never
-        push the copy onto a separate part of the page if a stylesheet fails. -->
-   <div class="dx-hero-photo" aria-hidden="true"></div>
+   <!-- The portrait-format film is layered behind editorial copy; it never participates in document flow. -->
+   <div class="dx-hero-photo dx-hero-film" aria-hidden="true">
+     <video id="discoverHeroVideo" class="dx-hero-film-video" autoplay muted loop playsinline preload="metadata" poster="/static/images/discover-film-poster.webp">
+       <source src="/static/videos/discover-hero.mp4" type="video/mp4">
+     </video>
+   </div>
    <div class="dx-hero-atmosphere" aria-hidden="true"></div><div class="dx-grid-glow" aria-hidden="true"></div>
    <div class="shell dx-hero-grid">
-      <div class="dx-hero-photo-label" aria-hidden="true"><span class="dx-photo-line"></span><span>THE ART OF ARRIVAL<br><b>AFTER DARK / 001</b></span></div>
+      <div class="dx-hero-photo-label"><span class="dx-photo-line"></span><span>THE ART OF EXPLORATION<br><b>DISCOVERY IN MOTION / 001</b></span><button id="discoverFilmToggle" class="dx-film-toggle" type="button" aria-label="Pause Discovery film" aria-pressed="false">PAUSE <span aria-hidden="true">Ⅱ</span></button></div>
       <div class="dx-hero-copy">
         <p class="dx-eyebrow"><span class="dx-status-light"></span> THE NEXT CHAPTER / 03 — VÉLOCITY DISCOVERY</p>
         <h1 id="dxTitle">CURIOSITY<br>HAS <em>NO</em><br><span>REDLINE.</span></h1>

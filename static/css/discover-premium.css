@@ -112,42 +112,6 @@
 @media(prefers-reduced-motion:reduce){.dx-hero-photo img{animation:none;transform:none}}
 
 
-/* Discovery hero reliability fix · sunset photo is a decorative CSS background.
-   The hero stays one cohesive section: media + heading + CTAs. */
-.dx-hero-cinematic .dx-hero-photo{
-  position:absolute;
-  inset:0;
-  z-index:-3;
-  pointer-events:none;
-  background-color:#0a0a0d;
-  background-image:url('/static/images/discovery-sunset-hero.webp');
-  background-size:cover;
-  background-repeat:no-repeat;
-  background-position:47% 58%;
-  filter:saturate(.98) brightness(.9) contrast(1.04);
-  transform:scale(1.012);
-  transform-origin:center center;
-  animation:dxPhotoArrival 1.6s ease-out both;
-}
-@media(max-width:1150px){
-  .dx-hero-cinematic .dx-hero-photo{background-position:42% 58%}
-}
-@media(max-width:900px){
-  .dx-hero-cinematic .dx-hero-photo{background-position:38% center}
-}
-@media(max-width:650px){
-  .dx-hero-cinematic .dx-hero-photo{
-    inset:auto 0 0;
-    height:63%;
-    background-image:url('/static/images/discovery-sunset-mobile.webp');
-    background-position:35% center;
-    filter:saturate(1.07) brightness(.91);
-  }
-}
-@media(prefers-reduced-motion:reduce){
-  .dx-hero-cinematic .dx-hero-photo{animation:none;transform:none}
-}
-
 .dx-vin-samples{margin-top:22px;padding:19px;background:rgba(218,165,122,.045);border:1px solid rgba(215,171,130,.25);border-radius:14px}
 .dx-vin-samples>span{display:block;font-size:10px;font-weight:800;letter-spacing:.21em;color:#ecc3a0;margin-bottom:12px}
 .dx-vin-sample-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
@@ -156,3 +120,47 @@
 .dx-vin-sample-list b{font-size:12px;letter-spacing:.09em}.dx-vin-sample-list small{color:#b6a89f;font-size:11px;line-height:1.4}
 .dx-demo-note{display:block;margin-top:13px;line-height:1.5;color:#bcae9f}
 @media(max-width:650px){.dx-vin-sample-list{grid-template-columns:1fr}}
+
+
+/* 2026 Discovery moving-image hero. Portrait film occupies the left editorial frame,
+   with an unobtrusive right-side fade for the headline. No image is used as hero media. */
+.dx-hero-cinematic{background:#0b0909;isolation:isolate}
+.dx-hero-cinematic .dx-hero-film{
+  position:absolute;inset:0;z-index:-3;pointer-events:none;
+  overflow:hidden;background:#100c0a;
+}
+.dx-hero-cinematic .dx-hero-film::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(10,8,8,.04) 0%,rgba(13,9,8,.11) 30%,rgba(12,9,8,.76) 53%,#0b0909 80%),
+             linear-gradient(0deg,#0b0909 0%,transparent 17%,transparent 81%,rgba(11,9,9,.66) 100%);
+}
+.dx-hero-cinematic .dx-hero-film-video{
+  position:absolute;left:0;top:50%;width:52%;height:100%;
+  display:block;object-fit:contain;object-position:left center;
+  transform:translateY(-50%);filter:brightness(.81) saturate(.83);
+  opacity:1;max-width:none;
+}
+.dx-hero-cinematic::before{
+  background:linear-gradient(90deg,transparent 0%,transparent 35%,rgba(13,9,8,.46) 53%,rgba(13,9,8,.66) 100%),
+  linear-gradient(0deg,rgba(9,8,8,.87) 0%,transparent 13%,transparent 78%,rgba(9,8,8,.49) 100%);
+}
+.dx-hero-cinematic .dx-hero-atmosphere{background:radial-gradient(ellipse at 80% 48%,rgba(127,67,38,.14),transparent 55%)}
+.dx-hero-cinematic .dx-grid-glow{opacity:.04}
+.dx-film-toggle{margin-left:12px;border:1px solid rgba(223,181,144,.52);border-radius:4px;display:inline-flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(17,13,12,.6);color:#f3dfce;letter-spacing:.12em;font:700 10px var(--display);cursor:pointer;pointer-events:auto;backdrop-filter:blur(8px);transition:background-color .2s,border-color .2s}
+.dx-film-toggle:hover,.dx-film-toggle:focus-visible{border-color:#e9bd96;background:rgba(80,48,33,.7)}
+.dx-film-toggle:focus-visible{outline:2px solid #e9bd96;outline-offset:2px}
+.dx-hero-cinematic .dx-hero-photo-label{z-index:2}
+@media(max-width:900px){
+ .dx-hero-cinematic .dx-hero-film-video{width:64%;height:100%;object-position:center center}
+ .dx-hero-cinematic .dx-hero-film::after{background:linear-gradient(180deg,rgba(9,8,8,.76) 0%,rgba(9,8,8,.65) 31%,rgba(9,8,8,.22) 52%,rgba(9,8,8,.69) 90%,#0b0909),linear-gradient(90deg,transparent 0%,rgba(11,9,9,.55) 80%)}
+ .dx-hero-cinematic::before{background:linear-gradient(180deg,rgba(9,8,8,.43),transparent 38%,rgba(9,8,8,.53))}
+ .dx-hero-cinematic .dx-hero-photo-label{flex-wrap:wrap;gap:12px}
+}
+@media(max-width:650px){
+ .dx-hero-cinematic .dx-hero-film{inset:37% 0 0;height:63%;}
+ .dx-hero-cinematic .dx-hero-film-video{width:100%;height:100%;left:0;top:0;transform:none;object-fit:contain;object-position:center center}
+ .dx-hero-cinematic .dx-hero-film::after{background:linear-gradient(180deg,#0b0909 0%,rgba(11,9,9,.45) 16%,rgba(11,9,9,.06) 42%,rgba(11,9,9,.58) 88%,#0b0909)}
+ .dx-hero-cinematic .dx-hero-photo-label{gap:10px;margin-top:110px}
+ .dx-film-toggle{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){.dx-hero-cinematic .dx-hero-film-video{animation:none}}

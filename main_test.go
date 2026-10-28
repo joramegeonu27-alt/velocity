@@ -137,7 +137,7 @@ func TestPremiumHomepageAndAssets(t *testing.T) {
 		"WELCOME TO THE EXTRAORDINARY",
 		"BEYOND SPEED.", "BEYOND ORDINARY.", "AUTOMOTIVE EXCELLENCE.",
 		"signal-beacon",
-		"03 / THE EXPERIENCE",
+		"05 / THE EXPERIENCE",
 		"home-motion.js",
 		"home-premium.css",
 		"featured-exotic.svg",

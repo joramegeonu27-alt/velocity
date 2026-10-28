@@ -1,3 +1,5 @@
+> **Photo & Typography Edition (October 2026):** The Compare hero and Our Story photography use the five new images supplied by the project owner. Main headings across the site are uppercase, upright, and bold. See [`PHOTO-AND-TYPOGRAPHY-UPDATE.md`](PHOTO-AND-TYPOGRAPHY-UPDATE.md) for details.
+
 # VÉLOCITY — premium automotive discovery
 
 VÉLOCITY is a responsive automotive discovery experience built with **Go**, Go's standard-library HTTP server and HTML templates, and plain CSS/JavaScript. No Node.js build step or paid UI libraries are required.

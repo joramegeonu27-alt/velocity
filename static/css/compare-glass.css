@@ -111,3 +111,11 @@
 @media print{
  .page-compare-studio :is(.vc-panel,.vc-table-control,.vc-battle-car,.vc-insight){background:#fff!important;color:#111!important;box-shadow:none!important;border:1px solid #aaa!important}
 }
+
+/* Subtle dark vignette to balance the user's original image without altering it. */
+.page-compare-studio .vc-editorial-media::after {
+ content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+ background:radial-gradient(ellipse at 50% 49%,transparent 24%,rgba(4,3,3,.12) 64%,rgba(4,3,3,.46) 100%),
+ linear-gradient(to bottom,rgba(5,3,3,.30),transparent 32%,transparent 70%,rgba(5,3,3,.27));
+}
+.page-compare-studio .vc-editorial-title{z-index:2}

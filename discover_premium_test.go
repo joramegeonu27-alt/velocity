@@ -19,7 +19,7 @@ func TestDiscoverPremiumRoute(t *testing.T) {
 	if result.StatusCode != http.StatusOK {
 		t.Fatalf("/discover status = %d; body=%s", result.StatusCode, body)
 	}
-	for _, want := range []string{"CURIOSITY", "discoveryForm", "discover-premium.css", "Vehicle Intelligence", "discovery-sunset-hero.webp"} {
+	for _, want := range []string{"CURIOSITY", "discoveryForm", "discover-premium.css", "Vehicle Intelligence", "discover-hero.mp4"} {
 		if !strings.Contains(string(body), want) {
 			t.Errorf("page missing %q", want)
 		}

@@ -1,11 +1,164 @@
 {{define "about.html"}}
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b0e10"><link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg"><meta name="description" content="Learn about Vélocity, a thoughtfully designed automotive discovery experience made for enthusiasts."><title>{{.Title}}</title><link rel="stylesheet" href="/static/css/style.css"><script defer src="/static/js/site.js"></script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b0d">
+  <meta name="description" content="The story behind VÉLOCITY — an independent digital space for automotive culture, engineering, discovery and the machines that move us.">
+  <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+  <title>Our Story — VÉLOCITY</title>
+  <link rel="stylesheet" href="/static/css/style.css">
   <link rel="stylesheet" href="/static/css/velocity-premium.css">
+  <link rel="stylesheet" href="/static/css/story-editorial.css?v=3-photos">
+  <script defer src="/static/js/site.js"></script>
+  <script defer src="/static/js/story-editorial.js?v=2"></script>
+<link rel="stylesheet" href="/static/css/typography-refined.css?v=1">
 </head>
-<body class="page-about">{{template "nav" .}}<main id="main">
-  <section class="inner-hero about-hero"><div class="inner-hero-background"></div><div class="shell inner-hero-content"><p class="eyebrow">03 / THE VÉLOCITY PHILOSOPHY</p><h1>Built for<br><em>what moves us.</em></h1><p>Because loving cars has never been just about getting from one place to another.</p></div><div class="hero-corner">A CULTURE OF MOTION</div></section>
-  <section class="section story-section"><div class="shell story-grid"><div><p class="eyebrow">01 / OUR STORY</p><span class="story-decoration">V<span>.</span></span></div><div class="story-content reveal"><h2>We believe a car<br>is more than <em>the sum<br>of its parts.</em></h2><p>There's the engineering you can measure, and the feeling you can't. The sculpted line, the quiet anticipation, the road that begs for one more turn.</p><p>Vélocity is a space to appreciate both. We put the world's most compelling machines in a carefully considered setting, making it easier to explore their character and compare the details that matter.</p><a class="text-link" href="/cars">Step into the collection ↗</a></div></div></section>
-  <section class="section values-section"><div class="shell"><div class="section-top"><div><p class="eyebrow">02 / WHAT DRIVES US</p><h2 class="section-title">A different kind<br>of <em>car culture.</em></h2></div></div><div class="values-grid"><article><span>01 /</span><h3>Considered design.</h3><p>A refined, distraction-free experience that lets the cars speak for themselves.</p></article><article><span>02 /</span><h3>Real curiosity.</h3><p>Space to discover, explore specifications and get to know what makes each vehicle different.</p></article><article><span>03 /</span><h3>Clear perspective.</h3><p>Side-by-side comparisons with honest “not listed” labels when data is unavailable.</p></article></div></div></section>
-  <section class="philosophy-banner"><div class="shell"><p class="eyebrow">THE FEELING NEVER GETS OLD</p><h2>Life's too short<br>for <em>ordinary drives.</em></h2><a href="/cars" class="button button-primary">Explore the collection ↗</a></div></section>
-</main>{{template "footer" .}}</body></html>
+<body class="page-about page-story-editorial">
+  {{template "nav" .}}
+  <div class="se-progress" id="storyProgress" aria-hidden="true"></div>
+  <main id="main" class="se-main">
+    <!-- A deliberately image-free editorial introduction. No hero/banner. -->
+    <section class="se-introduction" id="introduction" aria-labelledby="story-title">
+      <div class="se-frame">
+        <div class="se-intro-top"><span>VÉLOCITY / AUTOMOTIVE CULTURE</span><span>EST. 2026 &nbsp;—&nbsp; AN ONGOING STORY</span></div>
+        <div class="se-intro-rule" aria-hidden="true"></div>
+        <h1 id="story-title">OUR <span>STORY</span><span class="se-intro-period">.</span></h1>
+        <div class="se-intro-bottom">
+          <p class="se-opening-quote">Built for the curious.<br>Driven by <em>everything automotive.</em></p>
+          <div class="se-intro-copy"><p>There is a moment when a car stops being just a machine. A silhouette. A sound. A detail you notice long after it has passed.</p><p>VÉLOCITY exists for that moment—and for the questions that follow.</p><a class="se-text-link" href="#origin">READ OUR STORY <span aria-hidden="true">↘</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="se-chapters" id="storyChapters" aria-label="On this page">
+      <div class="se-chapters-inner">
+        <span class="se-chapters-label">THE CHAPTERS <span aria-hidden="true">/</span></span>
+        <div class="se-chapters-scroll">
+          <a href="#origin" data-story-nav>01 / ORIGIN</a>
+          <a href="#philosophy" data-story-nav>02 / PHILOSOPHY</a>
+          <a href="#experience" data-story-nav>03 / EXPERIENCE</a>
+          <a href="#platform" data-story-nav>04 / PLATFORM</a>
+          <a href="#intelligence" data-story-nav>05 / INTELLIGENCE</a>
+          <a href="#perspective" data-story-nav>06 / PERSPECTIVE</a>
+          <a href="#journey" data-story-nav>07 / WHAT'S NEXT</a>
+        </div>
+        <span class="se-chapters-end">THE LONG WAY ROUND ↗</span>
+      </div>
+    </nav>
+
+    <section class="se-section se-origin se-frame" id="origin" aria-labelledby="origin-heading">
+      <div class="se-section-head se-reveal"><span class="se-index">01 / THE BEGINNING</span><span class="se-small-motto">WHERE FASCINATION FINDS FORM</span></div>
+      <div class="se-origin-grid">
+        <div class="se-origin-copy se-reveal">
+          <p class="se-kicker">THE STORY BEHIND VÉLOCITY</p>
+          <h2 id="origin-heading">A passion for cars.<br><em>A place for curiosity.</em></h2>
+          <p>Every enthusiast starts somewhere. It might be a poster on a bedroom wall, the first engine note that stays with you, or the questions you ask while looking at a car you have never seen before.</p>
+          <p>That curiosity is the starting point of VÉLOCITY. We wanted to bring the feeling of automotive discovery into a digital setting that is clear, considered and worth spending time in.</p>
+          <p>Not a showroom. Not a catalogue of empty superlatives. A home for people who care about the machine, the thinking behind it and the stories in between.</p>
+          <span class="se-side-note">01 — THE IDEA WAS ALWAYS SIMPLE: LOOK CLOSER.</span>
+        </div>
+        <figure class="se-origin-figure se-reveal">
+          <div class="se-image-wrap se-image-origin"><img src="/static/images/story-afterdark.webp" alt="Two dark cars facing one another beneath warm tunnel lighting" width="2048" height="1152" loading="lazy" decoding="async"></div>
+          <figcaption><span>THE ART OF NOTICING</span><span>01 / 07</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="se-manifesto" id="philosophy" aria-labelledby="philosophy-heading">
+      <div class="se-frame">
+        <div class="se-section-head se-reveal"><span class="se-index">02 / OUR PHILOSOPHY</span><span class="se-small-motto">SUBSTANCE BEFORE SPECTACLE</span></div>
+        <p class="se-kicker se-reveal">THE THINGS WE BELIEVE IN</p>
+        <h2 id="philosophy-heading" class="se-manifesto-title se-reveal">EVERY DETAIL<span>.</span><br>EVERY MACHINE<span>.</span><br><em>EVERY STORY<span>.</span></em></h2>
+        <div class="se-manifesto-terms">
+          <article class="se-reveal"><span>01</span><h3>Design with intention.</h3><p>Make room for the lines, forms and decisions that define every vehicle. Let the work speak.</p></article>
+          <article class="se-reveal"><span>02</span><h3>Knowledge with context.</h3><p>Specifications mean more when they are understandable. Good research also makes room for what we don't know.</p></article>
+          <article class="se-reveal"><span>03</span><h3>Curiosity without limits.</h3><p>Appreciate the performance icon and the everyday pioneer. Innovation wears more than one badge.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <div class="se-fullbleed se-fullbleed-one se-reveal" aria-label="Cinematic automotive photography">
+      <img src="/static/images/story-rolling.webp" alt="Electric-blue performance car photographed at night in deep contrast" width="1365" height="2048" loading="lazy" decoding="async">
+      <div class="se-photo-shade"></div>
+      <div class="se-fullbleed-text"><span>THE OBJECT IS NEVER JUST THE OBJECT</span><strong>IT IS THE IDEA<br>BEHIND IT.</strong></div>
+      <span class="se-photo-side">VÉLOCITY / FRAME 002</span>
+    </div>
+
+    <section class="se-experience se-frame" id="experience" aria-labelledby="experience-heading">
+      <div class="se-section-head se-reveal"><span class="se-index">03 / THE VÉLOCITY EXPERIENCE</span><span class="se-small-motto">DESIGNED TO MAKE EXPLORATION FEEL DIFFERENT</span></div>
+      <div class="se-experience-intro se-reveal"><div><p class="se-kicker">THE EXPERIENCE</p><h2 id="experience-heading">Less noise.<br><em>More feeling.</em></h2></div><p>We believe a digital automotive experience should have the confidence to slow down. Thoughtful photography, intuitive pathways and useful research tools make the details easier to see—and more satisfying to understand.</p></div>
+      <div class="se-experience-rows">
+        <article class="se-experience-row se-reveal"><span>01 / OBSERVE</span><h3>Start with the feeling.</h3><p>The form, the craftsmanship, the remarkable things that pull you in.</p><span class="se-inline-arrow" aria-hidden="true">↗</span></article>
+        <article class="se-experience-row se-reveal"><span>02 / EXPLORE</span><h3>Follow the question.</h3><p>Discover manufacturers, models and the engineering behind familiar badges.</p><span class="se-inline-arrow" aria-hidden="true">↗</span></article>
+        <article class="se-experience-row se-reveal"><span>03 / UNDERSTAND</span><h3>See the whole picture.</h3><p>Read the data carefully, notice the differences and decide what matters to you.</p><span class="se-inline-arrow" aria-hidden="true">↗</span></article>
+      </div>
+    </section>
+
+    <section class="se-platform" id="platform" aria-labelledby="platform-heading">
+      <div class="se-frame">
+        <div class="se-section-head se-reveal"><span class="se-index">04 / INSIDE THE PLATFORM</span><span class="se-small-motto">FOUR WAYS TO GO DEEPER</span></div>
+        <div class="se-platform-heading se-reveal"><p class="se-kicker">A UNIVERSE IN MOTION</p><h2 id="platform-heading">One passion.<br><em>Many ways in.</em></h2><p>VÉLOCITY brings exploration, research and perspective into one continuous experience. Choose where the story takes you.</p></div>
+        <div class="se-platform-list" aria-label="Explore the main VÉLOCITY pages">
+          <a class="se-platform-item se-reveal" href="/" aria-label="Explore the VÉLOCITY homepage"><span class="se-platform-num">01 /</span><span class="se-platform-name">Home<small>THE FIRST IMPRESSION</small></span><span class="se-platform-desc">A cinematic introduction to automotive culture—and an invitation to look closer.</span><span class="se-platform-arrow" aria-hidden="true">↗</span></a>
+          <a class="se-platform-item se-reveal" href="/discover" aria-label="Explore vehicle discovery"><span class="se-platform-num">02 /</span><span class="se-platform-name">Discovery<small>FOLLOW YOUR CURIOSITY</small></span><span class="se-platform-desc">Find makes and models, trace ideas and unlock deeper vehicle research.</span><span class="se-platform-arrow" aria-hidden="true">↗</span></a>
+          <a class="se-platform-item se-reveal" href="/cars" aria-label="Explore the vehicle collection"><span class="se-platform-num">03 /</span><span class="se-platform-name">The Collection<small>MACHINES WORTH EXPLORING</small></span><span class="se-platform-desc">An edited selection of distinctive cars, presented with space to appreciate them.</span><span class="se-platform-arrow" aria-hidden="true">↗</span></a>
+          <a class="se-platform-item se-reveal" href="/compare" aria-label="Explore vehicle comparisons"><span class="se-platform-num">04 /</span><span class="se-platform-name">Compare<small>PERSPECTIVE THROUGH DETAIL</small></span><span class="se-platform-desc">Put different vehicles beside one another and understand where they diverge.</span><span class="se-platform-arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="se-feature se-feature-discover se-frame" id="discovery" aria-labelledby="discovery-heading">
+      <div class="se-feature-visual se-reveal"><div class="se-image-wrap"><img src="/static/images/story-sunset.webp" alt="Warm red and black luxury vehicle cabin with illuminated controls" width="1365" height="2048" loading="lazy" decoding="async"></div><div class="se-feature-image-tag">THE ART OF EXPLORATION <span>04A / DISCOVERY</span></div></div>
+      <div class="se-feature-copy se-reveal"><p class="se-kicker">DISCOVERY / THE OPEN QUESTION</p><h2 id="discovery-heading">Curiosity<br><em>starts here.</em></h2><p>Some journeys begin with a name. Others begin with a question about a model, a year or the people who made it.</p><p>Discovery gives that curiosity somewhere to go, connecting automotive history and vehicle research to an intuitive way to explore the wider automotive world.</p><a class="se-pill-link" href="/discover">ENTER DISCOVERY <span aria-hidden="true">↗</span></a><div class="se-feature-footnote">EXPLORE MAKES · FIND MODELS · OPEN NEW QUESTIONS</div></div>
+    </section>
+
+    <section class="se-feature se-feature-collection se-frame" id="collection" aria-labelledby="collection-heading">
+      <div class="se-feature-copy se-reveal"><p class="se-kicker">THE COLLECTION / A CLOSER LOOK</p><h2 id="collection-heading">The machine.<br><em>The moment.</em></h2><p>A great car rewards attention. The way the body catches light. The decisions underneath the surface. The character revealed when you look beyond the badge.</p><p>Our Collection is a visual starting point for that appreciation: carefully presented vehicles, concise information and a clearer path to the detail that matters.</p><a class="se-pill-link" href="/cars">EXPLORE THE COLLECTION <span aria-hidden="true">↗</span></a><div class="se-feature-footnote">THE DESIGN · THE DETAILS · THE DISTINCTIVE</div></div>
+      <div class="se-feature-visual se-reveal"><div class="se-image-wrap"><img src="/static/images/story-collection.webp" alt="Red American muscle car photographed from the front at a petrol station" width="1365" height="2048" loading="lazy" decoding="async"></div><div class="se-feature-image-tag">CRAFTED TO BE CONSIDERED <span>04B / COLLECTION</span></div></div>
+    </section>
+
+    <section class="se-intelligence" id="intelligence" aria-labelledby="intelligence-heading">
+      <div class="se-frame">
+        <div class="se-section-head se-reveal"><span class="se-index">05 / VEHICLE INTELLIGENCE</span><span class="se-small-motto">BEYOND THE BADGE</span></div>
+        <div class="se-intel-grid">
+          <div class="se-reveal"><p class="se-kicker">THE NUMBERS HAVE A STORY TOO</p><h2 id="intelligence-heading">Know the<br><em>machine.</em></h2><p>Looks invite us closer. Knowledge takes us further. Entering a vehicle's 17-character VIN can reveal available factory specifications and manufacturing details, along with related safety information and recalls when those records exist.</p><p>Not every field is available for every vehicle. What matters is the distinction between verified information and unanswered questions.</p><a class="se-pill-link" href="/discover#intelligence">EXPLORE VEHICLE INTELLIGENCE <span aria-hidden="true">↗</span></a></div>
+          <div class="se-intel-dossier se-reveal" aria-label="Illustration of a vehicle research dossier">
+            <div class="se-dossier-top"><span>VÉLOCITY / VEHICLE RESEARCH</span><span class="se-live-dot">● &nbsp; INTELLIGENCE</span></div>
+            <div class="se-dossier-center"><span class="se-dossier-label">THE 17-CHARACTER KEY</span><strong>VIN / <span>•••• •••• •••• •••••</span></strong><p>One identifier. A closer look at the vehicle.</p></div>
+            <div class="se-dossier-lines"><div><span>IDENTITY</span><span>MAKE · MODEL · YEAR</span></div><div><span>ENGINEERING</span><span>POWERTRAIN · BODY · ASSEMBLY</span></div><div><span>SAFETY</span><span>RATINGS &amp; RECALLS, IF AVAILABLE</span></div></div>
+            <small>ILLUSTRATIVE LAYOUT — NOT A DECODED VEHICLE RECORD</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="se-perspective se-frame" id="perspective" aria-labelledby="perspective-heading">
+      <div class="se-section-head se-reveal"><span class="se-index">06 / COMPARISON</span><span class="se-small-motto">CLARITY THROUGH CONTRAST</span></div>
+      <div class="se-perspective-head se-reveal"><div><p class="se-kicker">A MORE THOUGHTFUL POINT OF VIEW</p><h2 id="perspective-heading">Different machines.<br><em>One clear perspective.</em></h2></div><p>Comparison is not always about finding a winner. Sometimes it is about understanding two ideas, two approaches and what each vehicle was built to do. Put them side by side and let the details speak.</p></div>
+      <a class="se-compare-photo se-reveal" href="/compare" aria-label="Open VÉLOCITY Compare Studio"><img src="/static/images/story-versus.webp" alt="Two dark cars facing one another in a warmly illuminated tunnel" width="2048" height="1152" loading="lazy" decoding="async"><span class="se-compare-stamp">THE HEAD-TO-HEAD STUDIO <span aria-hidden="true">↗</span></span></a>
+      <div class="se-perspective-bottom se-reveal"><span>COMPARE POWER. ENGINEERING. CHARACTER.</span><a class="se-text-link" href="/compare">FIND YOUR PERSPECTIVE <span aria-hidden="true">↗</span></a></div>
+    </section>
+
+    <section class="se-journey" id="journey" aria-labelledby="journey-heading">
+      <div class="se-frame">
+        <div class="se-section-head se-reveal"><span class="se-index">07 / THE JOURNEY CONTINUES</span><span class="se-small-motto">NOT A FINISH LINE. A BEGINNING.</span></div>
+        <div class="se-journey-head se-reveal"><div><p class="se-kicker">AN ONGOING STORY</p><h2 id="journey-heading">The journey<br><em>never ends.</em></h2></div><p>Car culture keeps changing. New technologies emerge. Long-held ideas evolve. The next breakthrough may be hiding in a detail we have yet to notice. VÉLOCITY is here to keep asking better questions.</p></div>
+        <div class="se-timeline" id="storyTimeline" aria-label="VÉLOCITY's evolving journey">
+          <div class="se-timeline-controls" role="group" aria-label="Choose a chapter in the journey">
+            <button type="button" class="se-timeline-node is-active" data-story-timeline="0" aria-pressed="true"><span class="se-node-dot"></span><span>01</span><small>THE SPARK</small></button>
+            <button type="button" class="se-timeline-node" data-story-timeline="1" aria-pressed="false"><span class="se-node-dot"></span><span>02</span><small>THE IDEA</small></button>
+            <button type="button" class="se-timeline-node" data-story-timeline="2" aria-pressed="false"><span class="se-node-dot"></span><span>03</span><small>THE PLATFORM</small></button>
+            <button type="button" class="se-timeline-node" data-story-timeline="3" aria-pressed="false"><span class="se-node-dot"></span><span>04</span><small>THE NEXT TURN</small></button>
+          </div>
+          <div class="se-timeline-detail" id="storyTimelineDetail" aria-live="polite"><span id="storyTimelineIndex">CHAPTER 01 / 04</span><h3 id="storyTimelineHeading">It begins with a question.</h3><p id="storyTimelineText">What makes a machine memorable? The answer changes with every enthusiast—and that is where the story starts.</p></div>
+        </div>
+        <div class="se-conclusion se-reveal"><span class="se-ending-mark">V.</span><div><p class="se-kicker">THIS IS ONLY THE BEGINNING</p><h2>Stay curious.<br><em>Keep moving.</em></h2><p>The next great automotive story is waiting to be discovered.</p><div class="se-ending-links"><a class="se-pill-link" href="/discover">START DISCOVERING <span aria-hidden="true">↗</span></a><a class="se-text-link" href="/cars">VIEW THE COLLECTION <span aria-hidden="true">↗</span></a></div></div></div>
+      </div>
+    </section>
+  </main>
+  {{template "footer" .}}
+</body>
+</html>
 {{end}}
