@@ -584,6 +584,9 @@ func routes() http.Handler {
 	mux.HandleFunc("/compare", compareHandler)
 	mux.HandleFunc("/api/compare/specs", compareSpecsHandler)
 	mux.HandleFunc("/api/compare/catalogue", compareCatalogueHandler)
+	mux.HandleFunc("/api/velocity/search", carVariables.handler(true))
+	mux.HandleFunc("/api/velocity/vehicles", carVariables.handler(false))
+	mux.HandleFunc("/api/velocity/photo", carVariablesPhotos.handler)
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if !allowGet(w, r) {
 			return

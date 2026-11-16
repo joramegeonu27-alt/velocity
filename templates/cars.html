@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080b0e">
-  <meta name="description" content="Discover the Vélocity automotive collection. Explore extraordinary performance cars, compare specifications and find your next obsession.">
+  <meta name="description" content="Discover the Vélocity automotive collection. Explore extraordinary performance cars, view specifications and find your next obsession.">
   <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
   <title>{{.Title}}</title>
   <link rel="stylesheet" href="/static/css/style.css">
@@ -13,6 +13,8 @@
   <script defer src="/static/js/site.js"></script>
   <script defer src="/static/js/cars.js"></script>
 <link rel="stylesheet" href="/static/css/typography-refined.css?v=1">
+  <link rel="stylesheet" href="/static/css/vehicle-gallery.css?v=20261113-collection-compact">
+  <script defer src="/static/js/vehicle-gallery.js?v=20261115-photo-repair"></script>
 </head>
 <body class="page-cars">
   {{template "nav" .}}
@@ -28,8 +30,8 @@
       <div class="shell inner-hero-content collection-hero-copy">
         <p class="eyebrow collection-hero-eyebrow"><span class="collection-hero-dot" aria-hidden="true"></span> 01 / THE VÉLOCITY COLLECTION</p>
         <h1 id="collectionTitle">EXTRAORDINARY<br><em>MACHINES.</em></h1>
-        <p>Performance worth discovering. Design worth remembering. Explore a curated world of remarkable automobiles.</p>
-        <a class="collection-hero-explore" href="#collection">EXPLORE THE COLLECTION <span aria-hidden="true">↘</span></a>
+        <p>Performance worth discovering. Design worth remembering. Explore a live catalogue of remarkable automobiles.</p>
+        <a class="collection-hero-explore" href="#live-collection">EXPLORE THE COLLECTION <span aria-hidden="true">↘</span></a>
       </div>
       <div class="collection-hero-controls">
         <span class="collection-hero-film-label">VÉLOCITY / IN MOTION</span>
@@ -40,88 +42,14 @@
       </div>
     </section>
 
-    <section class="section catalogue-section" id="collection">
-      <div class="shell">
-        <div class="catalogue-intro">
-          <div>
-            <p class="eyebrow">02 / THE GARAGE</p>
-            <h2 class="section-title">The <em>collection.</em></h2>
-            <p class="catalogue-intro-description">Find the machine that moves you. Refine the details, explore the design, and follow your curiosity.</p>
-          </div>
-          <span class="count-pill">{{.TotalCars}} VEHICLES FOUND</span>
-        </div>
 
-        <form class="catalogue-form" action="/cars" method="get" role="search">
-          <div class="catalogue-form-header">
-            <span>DISCOVER THE EXTRAORDINARY</span>
-            <span class="catalogue-form-header-accent" aria-hidden="true">✦ CURATED SELECTION</span>
-          </div>
-          <div class="field field-search">
-            <label for="searchCars">Search the collection</label>
-            <div class="field-input">
-              <span class="search-glyph" aria-hidden="true">⌕</span>
-              <input id="searchCars" name="q" type="search" value="{{.Query}}" maxlength="80" placeholder="Search by model, marque, engine…" autocomplete="off">
-            </div>
-          </div>
-          <div class="field">
-            <label for="brandSelect">Marque</label>
-            <select id="brandSelect" name="brand">
-              <option value="">All marques</option>
-              {{range .Brands}}
-                <option value="{{.}}" {{if eq $.Brand .}}selected{{end}}>{{.}}</option>
-              {{end}}
-            </select>
-          </div>
-          <div class="field">
-            <label for="sortSelect">Order by</label>
-            <select id="sortSelect" name="sort">
-              <option value="featured" {{if eq .Sort "featured"}}selected{{end}}>Featured</option>
-              <option value="power" {{if eq .Sort "power"}}selected{{end}}>Highest power</option>
-              <option value="year" {{if eq .Sort "year"}}selected{{end}}>Newest year</option>
-              <option value="name" {{if eq .Sort "name"}}selected{{end}}>A — Z</option>
-            </select>
-          </div>
-          <button class="button button-primary filter-submit" type="submit">APPLY FILTERS <span aria-hidden="true">↗</span></button>
-          <div class="catalogue-filter-footer"><span>PRECISION MAKES THE DIFFERENCE.</span><a href="/cars">RESET FILTERS ↗</a></div>
-        </form>
-
-        <div class="collection-toolbar">
-          <p>{{if .TotalCars}}SHOWING {{.From}}—{{.To}} OF {{.TotalCars}}{{else}}NO MATCHES FOUND{{end}} <span class="toolbar-source">· {{.SourceLabel}}</span></p>
-          <div class="view-switch" aria-label="Collection display">
-            <button type="button" class="view-switch-button active" data-view="grid" aria-pressed="true" aria-label="Grid layout" title="Grid layout">▦</button>
-            <button type="button" class="view-switch-button" data-view="list" aria-pressed="false" aria-label="List layout" title="List layout">☷</button>
-          </div>
-        </div>
-
-        {{if .Cars}}
-          <div class="vehicle-grid catalogue-grid" id="vehicleGrid">
-            {{range .Cars}}
-              {{template "carcard" .}}
-            {{end}}
-          </div>
-        {{else}}
-          <div class="empty-state">
-            <span aria-hidden="true">⌕</span>
-            <h3>No vehicles found.</h3>
-            <p>Try a different search or reset the filters to explore the full collection.</p>
-            <a class="button button-outline" href="/cars">VIEW THE FULL COLLECTION ↗</a>
-          </div>
-        {{end}}
-
-        {{if gt .TotalPages 1}}
-          <nav class="pagination" aria-label="Collection pages">
-            {{if .PrevURL}}<a href="{{.PrevURL}}" rel="prev">← PREVIOUS</a>{{else}}<span></span>{{end}}
-            <span>PAGE {{.Page}} / {{.TotalPages}}</span>
-            {{if .NextURL}}<a href="{{.NextURL}}" rel="next">NEXT →</a>{{else}}<span></span>{{end}}
-          </nav>
-        {{end}}
-
-        <div class="collection-note">
-          <span class="note-marker">i</span>
-          <p>Vélocity is a discovery experience. Curated vehicle details are illustrative and may vary by model year, configuration and market. Contact a manufacturer or dealer to verify specifications.</p>
-        </div>
-      </div>
-    </section>
+<section class="vg-section" id="live-collection" data-velocity-gallery data-gallery-mode="collection" aria-labelledby="vg-collection-title">
+ <div class="shell vg-shell">
+  <div class="vg-overline"><span>02 / VEHICLE DIRECTORY</span><span>LIVE VEHICLE GENERATIONS · REAL SPECIFICATIONS</span></div>
+  <div class="vg-heading"><div><p class="vg-kicker">VÉLOCITY / VEHICLE CATALOGUE</p><h2 id="vg-collection-title">BROWSE THE COLLECTION.</h2><p>Browse live car photographs from the vehicle catalogue, filter by manufacturer and model, and explore available engine and trim specifications.</p></div><span class="vg-counter" data-vg-total>VEHICLES</span></div>
+<div data-vg-interface></div>
+ </div>
+</section>
   </main>
   {{template "footer" .}}
 </body>

@@ -19,10 +19,10 @@ func request(t *testing.T, method, path string) *httptest.ResponseRecorder {
 func TestPublicPagesRender(t *testing.T) {
 	cases := []struct{ path, text string }{
 		{"/", "BEYOND SPEED."},
-		{"/cars", "collection."},
+		{"/cars", "BROWSE THE COLLECTION."},
 		{"/cars/bmw-m4", "M4 Competition"},
-		{"/compare", "Choose the"},
-		{"/about", "Built for"},
+		{"/compare", "FIND YOUR NEXT RIVAL."},
+		{"/about", "ABOUT"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.path, func(t *testing.T) {
@@ -40,30 +40,17 @@ func TestPublicPagesRender(t *testing.T) {
 	}
 }
 
+// The Collection page now renders CarVariables results in the browser; the
+// server-side legacy car archive remains usable by its existing detail URLs.
 func TestCatalogueSearchSortPagination(t *testing.T) {
-	response := request(t, http.MethodGet, "/cars?q=Porsche")
-	if response.Code != 200 || !strings.Contains(response.Body.String(), "911 Carrera") || strings.Contains(response.Body.String(), "M4 Competition") {
-		t.Fatalf("unexpected search results")
-	}
-	response = request(t, http.MethodGet, "/cars?brand=BMW")
-	if !strings.Contains(response.Body.String(), "M4 Competition") || strings.Contains(response.Body.String(), "911 Carrera") {
-		t.Fatal("brand filtering incorrect")
-	}
-	response = request(t, http.MethodGet, "/cars?page=2")
-	if response.Code != 200 || !strings.Contains(response.Body.String(), "PAGE 2 / 2") || !strings.Contains(response.Body.String(), "mclaren-artura") {
-		t.Fatalf("pagination incorrect: %s", response.Body.String()[:300])
-	}
-	response = request(t, http.MethodGet, "/cars?page=999")
-	if !strings.Contains(response.Body.String(), "PAGE 2 / 2") {
-		t.Fatal("page bounds not enforced")
-	}
-	response = request(t, http.MethodGet, "/cars?q=nonexistent")
-	if !strings.Contains(response.Body.String(), "No vehicles found.") {
-		t.Fatal("missing empty state")
-	}
-	response = request(t, http.MethodGet, "/cars?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E")
-	if strings.Contains(response.Body.String(), "<script>alert(1)</script>") {
-		t.Fatal("unescaped reflected query")
+	for _, path := range []string{"/cars", "/cars?q=Porsche", "/cars?brand=BMW", "/cars?page=2"} {
+		response := request(t, http.MethodGet, path)
+		if response.Code != http.StatusOK || !strings.Contains(response.Body.String(), "data-velocity-gallery") {
+			t.Fatalf("live Collection missing on %s", path)
+		}
+		if strings.Contains(response.Body.String(), `id="vehicleGrid"`) {
+			t.Fatalf("legacy car photo gallery visible on %s", path)
+		}
 	}
 	cars, err := loadCars()
 	if err != nil {
@@ -72,7 +59,7 @@ func TestCatalogueSearchSortPagination(t *testing.T) {
 	sorted := filterAndSort(cars, "", "", "power")
 	for i := 1; i < len(sorted); i++ {
 		if sorted[i-1].Horsepower < sorted[i].Horsepower {
-			t.Fatal("power sort order incorrect")
+			t.Fatal("power sort incorrect")
 		}
 	}
 }
@@ -164,7 +151,7 @@ func TestPremiumCollectionVideoAndAssets(t *testing.T) {
 	if response.Code != http.StatusOK {
 		t.Fatalf("collection status = %d", response.Code)
 	}
-	for _, expected := range []string{"collectionHeroVideo", "/static/videos/collection-hero.mp4", "velocity-premium.css", "brandSelect", "sortSelect", "vehicleGrid"} {
+	for _, expected := range []string{"collectionHeroVideo", "/static/videos/collection-hero.mp4", "velocity-premium.css", "data-velocity-gallery", "vehicle-gallery.js", "live-collection"} {
 		if !strings.Contains(response.Body.String(), expected) {
 			t.Errorf("collection missing %q", expected)
 		}

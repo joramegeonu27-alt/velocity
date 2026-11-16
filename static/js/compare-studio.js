@@ -20,7 +20,8 @@
   const stripID = value => String(value||'').replace(/[^a-zA-Z0-9_:\-.]/g,'').slice(0,100);
   const escapeText = (value) => {const el=document.createElement('span');el.textContent=word(value);return el.innerHTML;};
   const escapeAttr = value => escapeText(value).replaceAll('\"','&quot;').replaceAll("'",'&#39;');
-  const img = value => /^https?:\/\//i.test(value||'')||String(value||'').startsWith('/static/')?value:fallback;
+  const img = value => /^https?:\/\//i.test(value||'')||String(value||'').startsWith('/static/')||String(value||'').startsWith('/api/velocity/photo?')?value:fallback;
+  const retryVehiclePhoto = event => {const image=event.target;const src=image.getAttribute('src')||'';const match=src.match(/^\/api\/velocity\/photo\?file=(car_[a-f0-9]{32,80}\.(?:avif|webp|jpe?g|png))$/i);if(match&&!image.dataset.triedDirect){image.dataset.triedDirect='1';image.src='https://carvariables.com/images/'+match[1];}else if(!src.endsWith('car-fallback.svg'))image.src=fallback;};
   const getCar = id => catalogue.find(car => car.id===id);
   const getNames = ids => ids.map(id=>getCar(id)).filter(Boolean).map(c=>`${c.brand} ${c.model}`);
   const showToast = message => { const el=$('compareToast');el.textContent=message;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,3600); };
@@ -32,19 +33,15 @@
     displacement:word(car.displacement),manufacturer:word(car.manufacturer),image:img(car.image),
     length:word(car.length),width:word(car.width),height:word(car.height),weight:word(car.weight),
     fuel_economy:word(car.fuel_economy),interior:word(car.interior),technology:word(car.technology),price:Number(car.price)||0,
-    source:car.source||'Curated vehicle', verified:!!car.verified
+    source:car.source||'Vehicle catalogue', verified:!!car.verified,zero_to_100:word(car.zero_to_100),cv_query:word(car.cv_query)
   });
   const init = async () => {
-    try {
-      const reply = await fetch('/api/compare/catalogue',{headers:{Accept:'application/json'}});
-      if(!reply.ok) throw new Error('not available');
-      const data = await reply.json();
-      catalogue = (Array.isArray(data)?data:[]).filter(c=>c.id&&c.brand&&c.model).map(fromServer);
-      renderFilters(); renderCards(); fromLink(); renderHistory(); loadMakes();
-    } catch {
-      $('pickerGrid').replaceChildren();const p=document.createElement('p');p.className='vc-empty';p.textContent='The collection is unavailable. Refresh the page or try again shortly.';$('pickerGrid').append(p);
-      $('pickerStatus').textContent='Unable to load the vehicle collection.';
-    }
+    // The visible picker is powered exclusively by live CarVariables generations.
+    // Do NOT seed the studio with unrelated static catalogue vehicle photos.
+    catalogue = [];
+    renderFilters(); renderCards();
+    await fromLink(); renderHistory(); loadMakes();
+    document.dispatchEvent(new Event('velocity:compare-ready'));
   };
   const renderFilters=()=>{
     const brands=[...new Set(catalogue.map(c=>c.brand))].sort();
@@ -60,11 +57,11 @@
     filtered.forEach(c=>{
       const btn=document.createElement('button');btn.type='button';btn.className='vc-picker-card';btn.dataset.id=c.id;btn.setAttribute('aria-pressed',String(selection.includes(c.id)));
       btn.innerHTML=`<div class="vc-picker-image"><img loading="lazy" alt="" src="${escapeAttr(c.image)}"><span class="vc-picker-badge">${selection.includes(c.id)?'✓':'+'}</span></div><div class="vc-picker-copy"><small>${escapeText(c.brand)} / ${c.year||'YEAR UNKNOWN'}</small><strong>${escapeText(c.model)}</strong><div class="vc-picker-foot"><span>${c.horsepower?`${c.horsepower} HP`:'POWER —'}</span><span>${escapeText(c.drivetrain||'DRIVE —')}</span></div></div>`;
-      btn.querySelector('img').addEventListener('error',event=>{if(event.target.src.endsWith(fallback)) return;event.target.src=fallback;});
+      btn.querySelector('img').addEventListener('error',retryVehiclePhoto);
       btn.addEventListener('click',()=>toggle(c.id));holder.append(btn);
     });
   };
-  const syncURL=()=>{const url=new URL(location.href);if(selection.length)url.searchParams.set('ids',selection.map(id=>encodeURIComponent(id)).join(','));else url.searchParams.delete('ids');history.replaceState(null,'',url.toString());};
+  const syncURL=()=>{const url=new URL(location.href);if(selection.length)url.searchParams.set('ids',selection.map(id=>encodeURIComponent(id)).join(','));else url.searchParams.delete('ids');const lookups={};selection.forEach(id=>{const c=getCar(id);if(id.startsWith('cv:')&&c?.cv_query)lookups[id]=c.cv_query});if(Object.keys(lookups).length)url.searchParams.set('cvq',JSON.stringify(lookups));else url.searchParams.delete('cvq');history.replaceState(null,'',url.toString());};
   const sync=()=>{const selected=selection.length;$('selectedCounter').textContent=`${selected} / ${MAX} SELECTED`;$('compareNow').disabled=selected<2;$('clearSelection').disabled=!selected;
     $('pickerStatus').textContent=selected<2?'Select two or three vehicles to unlock the studio.':selected===MAX?'Your three contenders are ready.':'Two contenders selected. Add a third or enter the studio.';
     renderCards();syncURL();activeRequest++;
@@ -78,12 +75,26 @@
   const fromLink=async()=>{const ids=(new URLSearchParams(location.search).get('ids')||'').split(',').map(x=>{try{return decodeURIComponent(x)}catch{return ''}}).filter(Boolean).slice(0,3);
     const missing=[...new Set(ids)].filter(id=>!getCar(id));
     await Promise.all(missing.map(async id=>{
+      if(id.startsWith('cv:')){try{
+        const lookups=JSON.parse(new URLSearchParams(location.search).get('cvq')||'{}');
+        const q=lookups[id];const converter=window.velocitySpecsToCompare;
+        if(typeof q==='string'&&q.length<=200&&typeof converter==='function'){
+          const params=new URLSearchParams({q,per:'50',variants:'1'});
+          const reply=await fetch('/api/velocity/search?'+params);
+          if(reply.ok){const body=await reply.json();const code=id.split(':')[1];const variantID=Number(id.split(':')[2]);
+            const generation=(body.data?.results||[]).find(c=>c.code===code);
+            const variant=generation?.variants?.find(v=>v.id===variantID);
+            if(generation&&variant&&!getCar(id))catalogue.push(fromServer(converter(generation,variant,q)));
+          }
+        }
+      }catch{/* The selected record may be unavailable from this catalogue search. */}}
       if(id.startsWith('model:')){try{const fields=decodeURIComponent(id.slice(6)).split(':');const yr=Number(fields.pop());const model=fields.pop(),brand=fields.join(':');if(brand&&model&&yr>1995&&!getCar(id))catalogue.push(fromServer({id,brand,model,year:yr,source:'Model research · limited data'}));}catch{ /* skip */ }}
       if(id.startsWith('vin:')&&/^[A-HJ-NPR-Z0-9]{17}$/.test(id.slice(4))){try{const r=await fetch('/api/discovery/vin?vin='+encodeURIComponent(id.slice(4)));if(!r.ok)return;const d=await r.json();if(d.make&&d.model)catalogue.push(fromServer({id,brand:d.make,model:d.model,year:d.year,trim:d.trim,horsepower:d.horsepower,engine:d.engine,drivetrain:d.drivetrain,transmission:d.transmission,fuel:d.fuel,body_class:d.body,doors:d.doors,cylinders:d.cylinders,manufacturer:d.manufacturer,source:'VIN decoded · configuration data',verified:true}));}catch{ /* skip */ }}
     }));
     selection=[...new Set(ids)].filter(id=>getCar(id)).slice(0,3);sync();if(selection.length>=2)runComparison(false);
   };
   const addToGarage=car=>{if(!car.id||!car.brand||!car.model)return;const old=getCar(car.id);if(!old)catalogue.push(car);if(!selection.includes(car.id)){if(selection.length>=3){selection.shift();showToast('Oldest slot replaced with the researched vehicle.');}selection.push(car.id)}sync();if(selection.length>=2)runComparison(true);};
+  document.addEventListener('velocity:add-car',event=>{const incoming=event.detail;if(!incoming||!incoming.id||!incoming.brand||!incoming.model)return;addToGarage(fromServer(incoming));$('externalStatus').textContent='Detailed vehicle trim added to your comparison. View the studio below.';});
   const loadMakes=async()=>{try{const r=await fetch('/api/nhtsa/makes');if(!r.ok)return;const j=await r.json();const makes=j.Results||j.results||[];const target=$('researchMakes');makes.slice(0,6000).forEach(m=>{const name=m.Make_Name||m.make_name||m.MakeName||m.name;if(name){const x=document.createElement('option');x.value=name;target.append(x)}})}catch{ /* manual make entry works */ }};
   const researchModels=async()=>{
     const make=$('researchMake').value.trim(),year=$('researchYear').value.trim();
@@ -108,7 +119,7 @@
   };
   const allGroups = [
     ['IDENTITY & CONFIGURATION',[['Manufacturer','brand'],['Model','model'],['Model year','year'],['Trim / version','trim'],['Body style','body_class'],['Manufacturer record','manufacturer']]],
-    ['PERFORMANCE',[['Engine','engine'],['Horsepower','horsepower'],['Torque','torque'],['0–60 mph','zero_to_sixty'],['Top speed','top_speed'],['Cylinders','cylinders'],['Engine displacement','displacement']]],
+    ['PERFORMANCE',[['Engine','engine'],['Horsepower','horsepower'],['Torque','torque'],['0–60 mph','zero_to_sixty'],['0–100 km/h','zero_to_100'],['Top speed','top_speed'],['Cylinders','cylinders'],['Engine displacement','displacement']]],
     ['POWERTRAIN',[['Transmission','transmission'],['Drivetrain','drivetrain'],['Fuel type','fuel'],['Fuel efficiency','fuel_economy']]],
     ['DIMENSIONS & PRACTICALITY',[['Length','length'],['Width','width'],['Height','height'],['Weight','weight'],['Seating capacity','seats'],['Doors','doors']]],
     ['SAFETY & TECHNOLOGY',[['Safety testing','safety'],['Reported recalls (model/year)','recalls'],['Interior / comfort','interior'],['Technology','technology']]]
@@ -119,13 +130,14 @@
     if(key==='safety')return safety?.ratings||'';if(key==='recalls')return safety?.recalls||'';
     const val=valid(extra[key])?extra[key]:car[key];if(!valid(val))return '';
     if(key==='horsepower')return `${val} hp`;
+    if(key==='zero_to_100')return `${val} s`;
     if(key==='top_speed'&&unit==='metric'){const v=asNumber(val);return v?`${Math.round(v*1.60934)} km/h`:val;}
     if(key==='zero_to_sixty'&&unit==='metric')return `${val} (0–60 mph)`; // Not a 0–100 km/h measurement.
     if(['length','width','height'].includes(key)&&unit==='metric'){const n=asNumber(val);return n?`${(n*2.54).toFixed(1)} cm`:val;}
     if(key==='weight'&&unit==='metric'){const n=asNumber(val);return n?`${Math.round(n*0.453592)} kg`:val;}
     return String(val);
   };
-  const scoreFields={horsepower:'high',top_speed:'high',zero_to_sixty:'low',year:'high'};
+  const scoreFields={horsepower:'high',top_speed:'high',zero_to_sixty:'low',zero_to_100:'low',year:'high'};
   const comparable=(car,key,spec)=>{
     const raw=valueFor(car,key,spec,null,'imperial');return raw?asNumber(raw):null;
   };
@@ -151,10 +163,10 @@
   const drawBattle=ids=>{
     const stage=$('battleStage');stage.replaceChildren();ids.forEach(id=>{const c=getCar(id);const el=document.createElement('article');el.className='vc-battle-car';
       el.innerHTML=`<div class="vc-battle-photo"><img src="${escapeAttr(c.image)}" alt="${escapeText(c.brand+' '+c.model)}"></div><div class="vc-battle-info"><small>${escapeText(c.brand)} / ${c.year||'YEAR UNKNOWN'}</small><h3>${escapeText(c.model)}</h3><p>${escapeText(c.source)}</p><div class="vc-battle-action"><button type="button" class="vc-mini" data-remove="${escapeAttr(id)}">REMOVE ×</button><button type="button" class="vc-mini" data-replace="${escapeAttr(id)}">REPLACE ↗</button></div></div>`;
-      el.querySelector('img').addEventListener('error',e=>{if(!e.target.src.endsWith(fallback))e.target.src=fallback});stage.append(el);
+      el.querySelector('img').addEventListener('error',retryVehiclePhoto);stage.append(el);
     });
   };
-  const metrics=[['HORSEPOWER','horsepower',true,'hp'],['TOP SPEED','top_speed',true,'mph'],['0–60 MPH','zero_to_sixty',false,'sec']];
+  const metrics=[['HORSEPOWER','horsepower',true,'hp'],['TOP SPEED','top_speed',true,'mph'],['0–60 MPH','zero_to_sixty',false,'sec'],['0–100 KM/H','zero_to_100',false,'sec']];
   const drawBars=ids=>{
     const host=$('performanceBars');host.replaceChildren();let recorded=0;
     metrics.forEach(([label,key,high,unit])=>{
@@ -169,15 +181,15 @@
   };
   const drawRadar=ids=>{
     const panel=$('radarPanel');panel.replaceChildren();
-    const cars=ids.map(id=>getCar(id));const matrix=cars.map(c=>metrics.map(([,key])=>comparable(c,key,lastSpecs.get(c.id))));
+    const cars=ids.map(id=>getCar(id));const use100=cars.filter(c=>comparable(c,'zero_to_100',lastSpecs.get(c.id))!=null).length>=2;const radarMetrics=metrics.slice(0,2).concat([use100?metrics[3]:metrics[2]]);const matrix=cars.map(c=>radarMetrics.map(([,key])=>comparable(c,key,lastSpecs.get(c.id))));
     const comparableCars=matrix.map((row,index)=>({row,index})).filter(x=>x.row.every(v=>v!=null));
-    if(comparableCars.length<2){const p=document.createElement('p');p.className='vc-disclaimer';p.textContent='A radar chart needs horsepower, top speed and 0–60 mph for at least two cars. Unknown measurements are never estimated.';panel.append(p);return;}
+    if(comparableCars.length<2){const p=document.createElement('p');p.className='vc-disclaimer';p.textContent='A radar chart needs horsepower, top speed and a matching acceleration measurement for at least two cars. Unknown measurements are never estimated.';panel.append(p);return;}
     const sizes=[0,1,2].map(i=>Math.max(...comparableCars.map(x=>x.row[i])));
     const lows=[0,1,2].map(i=>Math.min(...comparableCars.map(x=>x.row[i])));
     const colors=['#e9a46e','#b6b2aa','#f1d2aa'];const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 340 310');svg.setAttribute('role','img');svg.setAttribute('aria-label','Relative three-axis performance chart based on available data');
     const point=(i,percent)=>{const a=(-90+i*120)*Math.PI/180;return `${170+120*percent*Math.cos(a)},${149+120*percent*Math.sin(a)}`};
     [0.25,0.5,0.75,1].forEach(r=>{const p=document.createElementNS(ns,'polygon');p.setAttribute('points',[0,1,2].map(i=>point(i,r)).join(' '));p.setAttribute('fill','none');p.setAttribute('stroke','#a77e644b');svg.append(p)});
-    metrics.forEach(([name],i)=>{const [x,y]=point(i,1.24).split(',');const t=document.createElementNS(ns,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');t.textContent=name;svg.append(t)});
+    radarMetrics.forEach(([name],i)=>{const [x,y]=point(i,1.24).split(',');const t=document.createElementNS(ns,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');t.textContent=name;svg.append(t)});
     comparableCars.forEach(({row,index})=>{const data=row.map((v,i)=>i===2?lows[i]/v:v/sizes[i]);const p=document.createElementNS(ns,'polygon');p.setAttribute('points',data.map((r,i)=>point(i,Math.max(.08,r))).join(' '));p.setAttribute('fill',colors[index]+'33');p.setAttribute('stroke',colors[index]);p.setAttribute('stroke-width','3');svg.append(p)});panel.append(svg);
     const legend=document.createElement('div');legend.className='vc-radar-legend';comparableCars.forEach(({index})=>{const x=document.createElement('span');x.innerHTML=`<b style="background:${colors[index]}"></b>${escapeText(cars[index].brand+' '+cars[index].model)}`;legend.append(x)});panel.append(legend);
   };
@@ -185,7 +197,7 @@
     const host=$('insightCards');host.replaceChildren();const priority=$('prioritySelect').value;
     const build=(label,headline,body)=>{const card=document.createElement('article');card.className='vc-insight';const small=document.createElement('small');small.textContent=label;const h=document.createElement('h4');h.textContent=headline;const p=document.createElement('p');p.textContent=body;card.append(small,h,p);host.append(card)};
     const measure=(key,direction)=>ids.map(id=>({car:getCar(id),n:comparable(getCar(id),key,lastSpecs.get(id))})).filter(x=>x.n!=null).sort((a,b)=>direction==='low'?a.n-b.n:b.n-a.n);
-    const labels={power:['horsepower','high','HORSEPOWER','hp'],accel:['zero_to_sixty','low','0–60 MPH','sec'],speed:['top_speed','high','TOP SPEED','mph'],year:['year','high','MODEL YEAR','']};const [key,direction,title,unit]=labels[priority];const winners=measure(key,direction);
+    const labels={power:['horsepower','high','HORSEPOWER','hp'],accel100:['zero_to_100','low','0–100 KM/H','sec'],accel:['zero_to_sixty','low','0–60 MPH','sec'],speed:['top_speed','high','TOP SPEED','mph'],year:['year','high','MODEL YEAR','']};const [key,direction,title,unit]=labels[priority];const winners=measure(key,direction);
     if(winners.length>=2){const best=winners[0],next=winners[1];if(best.n===next.n)build('YOUR PRIORITY / '+title,'Too close to call',`The top reported ${title.toLowerCase()} value is tied at ${best.n} ${unit}.`);
       else build('YOUR PRIORITY / '+title,`${best.car.brand} ${best.car.model}`,`${best.n} ${unit} versus ${next.n} ${unit} for ${next.car.brand} ${next.car.model}, based on the selected records.`);
     }else build('YOUR PRIORITY / '+title,'Not enough evidence','We need recorded values for at least two vehicles to recommend a leader on this priority.');
@@ -196,7 +208,7 @@
   };
   const fetchSpecs=async id=>{
     const car=getCar(id);if(!car)return null;
-    if(id.startsWith('model:'))return null;
+    if(id.startsWith('model:')||id.startsWith('cv:'))return null;
     if(id.startsWith('vin:'))return {engine_hp:car.horsepower?String(car.horsepower):'',drive_type:car.drivetrain,body_class:car.body_class,transmission_style:car.transmission,fuel_primary:car.fuel,cylinders:car.cylinders,trim:car.trim,manufacturer:car.manufacturer,doors:car.doors};
     try{const r=await fetch('/api/compare/specs?vin='+encodeURIComponent(id));return r.ok?await r.json():null}catch{return null;}
   };
@@ -242,7 +254,7 @@
   $('clearSelection').addEventListener('click',()=>{selection=[];sync();$('compareResult').hidden=true;});
   $('compareNow').addEventListener('click',()=>runComparison(true));
   $('researchModelsButton').addEventListener('click',researchModels);$('addResearchButton').addEventListener('click',addResearch);$('addVINButton').addEventListener('click',addVIN);
-  $('battleStage').addEventListener('click',event=>{const rem=event.target.closest('[data-remove]');const replace=event.target.closest('[data-replace]');if(rem){toggle(rem.dataset.remove)}if(replace){toggle(replace.dataset.replace);$('studio').scrollIntoView({behavior:'smooth'});$('vehicleSearch').focus({preventScroll:true})}});
+  $('battleStage').addEventListener('click',event=>{const rem=event.target.closest('[data-remove]');const replace=event.target.closest('[data-replace]');if(rem){toggle(rem.dataset.remove)}if(replace){toggle(replace.dataset.replace);$('live-contenders').scrollIntoView({behavior:'smooth'});document.querySelector('#live-contenders input[name=q]')?.focus({preventScroll:true})}});
   $('swapVehicles').addEventListener('click',()=>{selection.reverse();sync();runComparison(false);});
   ['differenceOnly','highlightBest','unitToggle'].forEach(id=>$(id).addEventListener('change',()=>{if(selection.length>=2)drawTable(selection)}));
   $('prioritySelect').addEventListener('change',()=>{if(selection.length>=2)drawInsights(selection)});
@@ -250,5 +262,8 @@
   $('exportComparison').addEventListener('click',()=>{showToast('Use your browser Print dialog → Save as PDF.');setTimeout(()=>window.print(),450)});
   $('trendingGrid').addEventListener('click',e=>{const btn=e.target.closest('[data-match]');if(!btn)return;selection=btn.dataset.match.split(',').filter(id=>getCar(id)).slice(0,3);sync();if(selection.length>=2)runComparison(true);});
   $('clearHistory').addEventListener('click',()=>{localStorage.removeItem(STORE);localStorage.removeItem(STORE_RECENT);renderHistory();showToast('Comparison history cleared.')});
-  init();
+  // Wait for all deferred scripts, including vehicle-specification conversion,
+  // before restoring CarVariables selections from a shared URL.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, {once:true});
+  else init();
 })();

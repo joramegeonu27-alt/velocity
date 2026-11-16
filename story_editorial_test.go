@@ -13,9 +13,9 @@ func TestOurStoryLongform(t *testing.T) {
 	}
 	body := response.Body.String()
 	expected := []string{
-		"OUR", "STORY", "THE STORY BEHIND VÉLOCITY", "OUR PHILOSOPHY",
-		"THE VÉLOCITY EXPERIENCE", "INSIDE THE PLATFORM", "Curiosity",
-		"Vehicle Intelligence", "Different machines.", "The journey",
+		"ABOUT", "INTRODUCING VÉLOCITY", "WHAT WE BELIEVE",
+		"HOW VÉLOCITY WORKS", "INSIDE THE PLATFORM", "Curiosity",
+		"Vehicle Intelligence", "Different machines.", "WHAT COMES NEXT",
 		"THE COLLECTION", "story-editorial.css", "story-editorial.js",
 		"href=\"/discover#intelligence\"", "href=\"/compare\"", "href=\"/cars\"",
 	}
@@ -46,5 +46,28 @@ func TestOurStoryStaticAssets(t *testing.T) {
 		if response.Body.Len() == 0 {
 			t.Errorf("%s is empty", path)
 		}
+	}
+}
+
+func TestAboutNavigationAndPhotographs(t *testing.T) {
+	response := request(t, http.MethodGet, "/about")
+	body := response.Body.String()
+	if !strings.Contains(body, ">About</a>") {
+		t.Fatal("navigation should read About")
+	}
+	if !strings.Contains(body, "<title>About — VÉLOCITY</title>") {
+		t.Fatal("document title should read About")
+	}
+	originals := []string{
+		"story-afterdark.webp", "story-rolling.webp", "story-sunset.webp",
+		"story-collection.webp", "story-versus.webp",
+	}
+	previous := -1
+	for _, photo := range originals {
+		at := strings.Index(body, photo)
+		if at < previous || at < 0 {
+			t.Errorf("missing or rearranged photograph %q", photo)
+		}
+		previous = at
 	}
 }

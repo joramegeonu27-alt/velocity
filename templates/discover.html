@@ -10,8 +10,8 @@
      This prevents the Discovery layout from falling apart when a CSS URL is stale. -->
 <style id="velocity-discovery-styles">{{.DiscoveryCSS}}</style>
 <script src="/static/js/site.js" defer></script><script src="/static/js/discover-film.js?v=20261028-motion" defer></script><script src="/static/js/discover-premium.js?v=20261028-motion" defer></script>
-<link rel="stylesheet" href="/static/css/typography-refined.css?v=1">
-</head>
+<link rel="stylesheet" href="/static/css/typography-refined.css?v=1"><link rel="stylesheet" href="/static/css/velocity-specifications.css?v=1"><script defer src="/static/js/velocity-specifications.js?v=1"></script>
+<link rel="stylesheet" href="/static/css/vehicle-gallery.css?v=20261112-browse-only"><script defer src="/static/js/vehicle-gallery.js?v=20261115-photo-repair"></script></head>
 <body class="page-discover">
 {{template "nav" .}}
 <div class="discover-scroll-line" id="discoverScrollLine" aria-hidden="true"></div>
@@ -38,6 +38,14 @@
    <div class="shell dx-hero-bottom"><span>PRECISION OVER NOISE</span><span>AN AUTOMOTIVE UNIVERSE / EST. 2026</span><a href="#explore">SCROLL TO EXPLORE ↓</a></div>
  </section>
  <div class="dx-ticker" aria-hidden="true"><div class="dx-ticker-track">DISCOVER THE UNEXPECTED <i>✳</i> ENGINEERED FOR THE CURIOUS <i>✳</i> BUILT FOR THE DRIVE <i>✳</i> DISCOVER THE UNEXPECTED <i>✳</i> ENGINEERED FOR THE CURIOUS <i>✳</i> BUILT FOR THE DRIVE <i>✳</i></div></div>
+
+<section class="vg-section" id="live-vehicles" data-velocity-gallery data-gallery-mode="discover" aria-labelledby="vg-discover-title">
+ <div class="shell vg-shell">
+  <div class="vg-overline"><span>00 / LIVE VEHICLE GALLERY</span><span>REAL MODEL GENERATIONS · ENGINE VARIANTS</span></div>
+  <div class="vg-heading"><div><p class="vg-kicker">VÉLOCITY / VEHICLE CATALOGUE</p><h2 id="vg-discover-title">THE MACHINES, REVEALED.</h2><p>Explore photographed vehicle generations by manufacturer, model or year. View engine and trim specifications without leaving Discovery.</p></div><span class="vg-counter" data-vg-total>VEHICLES</span></div>
+<div data-vg-interface></div>
+ </div>
+</section>
  <section class="dx-section shell" id="explore">
    <div class="dx-section-rail" data-reveal><span>01 / DISCOVERY ENGINE</span><span>YOUR NEXT OBSESSION STARTS HERE</span></div>
    <div class="dx-section-heading" data-reveal><div><p class="dx-kicker">THE SEARCH, REIMAGINED</p><h2>Find your <em>frequency.</em></h2><p>Choose a manufacturer, explore real model records, and open a research dossier for deeper insights.</p></div><span class="dx-section-stamp">D / 001</span></div>
@@ -69,7 +77,22 @@
      </aside>
    </div>
  </section>
- <section class="dx-intelligence" id="intelligence"><div class="shell dx-intel-inner">
+ <section class="velocity-specs" id="full-specs" data-velocity-specs data-mode="discover" aria-label="Detailed vehicle specifications">
+  <div class="velocity-specs-header"><div><p class="velocity-specs-kicker">02 / VÉLOCITY SPECIFICATIONS</p><h2>GO BEYOND <em>THE BADGE.</em></h2><p class="velocity-specs-desc">Explore vehicle generations and engine variants, from horsepower and torque to transmission, drivetrain and dimensions. Browse catalogued specifications; availability depends on each configuration.</p></div></div>
+  <form class="velocity-specs-form" data-vs-form><div class="velocity-specs-fields">
+    <label>SMART VEHICLE SEARCH<input name="q" type="search" placeholder="BMW M3 2008, Porsche 911…" maxlength="200" autocomplete="off"></label>
+    <label>MANUFACTURER<input name="make" type="text" placeholder="BMW" maxlength="120"></label>
+    <label>MODEL<input name="modelFamily" type="text" placeholder="3 Series" maxlength="160"></label>
+    <label>MODEL YEAR<input name="modelYear" type="number" min="1886" max="2100" placeholder="2020"></label>
+    <label>BODY TYPE<select name="body"><option value="">All body types</option><option value="coupe">Coupe</option><option value="sedan">Sedan</option><option value="hatchback">Hatchback</option><option value="wagon">Wagon</option><option value="gt">GT</option><option value="suv">SUV</option><option value="mpv">MPV</option><option value="pickup">Pickup</option><option value="van">Van</option><option value="convertible">Convertible</option></select></label>
+    <label>FUEL TYPE<select name="fuel"><option value="">All fuels</option><option value="petrol">Petrol</option><option value="diesel">Diesel</option><option value="hybrid">Hybrid</option><option value="electric">Electric</option><option value="other">Other</option></select></label>
+    <label>DRIVETRAIN<select name="drive"><option value="">All drivetrains</option><option value="rwd">Rear-wheel drive</option><option value="fwd">Front-wheel drive</option><option value="awd">All-wheel drive</option></select></label>
+  </div><div class="velocity-specs-controls"><button type="submit" class="velocity-specs-button">FIND VEHICLE SPECIFICATIONS ↗</button><p class="velocity-specs-note">Enter a search phrase, or use precise filters. Search runs only when you submit.</p></div></form>
+  <p class="velocity-specs-status" data-vs-status role="status" aria-live="polite">Search a manufacturer, model, year or engine variant to explore available records.</p><div class="velocity-specs-grid" data-vs-results></div>
+  <div class="velocity-specs-paging"><button class="velocity-specs-button" type="button" data-vs-more hidden>LOAD MORE RESULTS ↓</button><span data-vs-pages></span></div>
+  <p class="velocity-specs-attribution">Vehicle specification records and photographs: <a href="https://carvariables.com" target="_blank" rel="noopener noreferrer">CarVariables</a>. Exact equipment varies by engine, trim and market; unavailable values are not estimated.</p>
+</section>
+<section class="dx-intelligence" id="intelligence"><div class="shell dx-intel-inner">
    <div class="dx-section-rail" data-reveal><span>02 / VEHICLE INTELLIGENCE</span><span>THE DETAILS MAKE THE DIFFERENCE</span></div>
    <div class="dx-intel-head" data-reveal><div><p class="dx-kicker">02 / VEHICLE INTELLIGENCE</p><h2>Know the machine.<br><em>Beyond the badge.</em></h2><p>Enter a vehicle’s 17-character VIN to explore its factory specifications, manufacturing details, available safety information, and recalls—all in one place.</p></div><div class="dx-vin-watermark" aria-hidden="true">VIN<span>17</span></div></div>
    <div class="dx-vin-box" data-reveal>
