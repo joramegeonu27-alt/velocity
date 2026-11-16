@@ -88,3 +88,111 @@
 @media(max-width:870px){.page-cars .vg-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.page-cars .vg-form{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:650px){.page-cars .vg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page-cars .vg-form{grid-template-columns:repeat(2,minmax(0,1fr))}.page-cars .vg-card-body{padding:11px}.page-cars .vg-car-name{font-size:17px}.page-cars .vg-heading h2{font-size:34px}}
 @media(max-width:420px){.page-cars .vg-grid{gap:9px}.page-cars .vg-photo{aspect-ratio:1.25}.page-cars .vg-compact-stats{display:block}.page-cars .vg-compact-stats span{display:block}.page-cars .vg-form{grid-template-columns:1fr}.page-cars .vg-form .vg-keyword{grid-column:auto}}
+
+/* 2026 VÉLOCITY / copper glass directory. Overrides the older blue Collection palette. */
+.page-cars .vg-section{position:relative;background:
+ radial-gradient(ellipse 45% 34% at 93% 16%,rgba(147,86,43,.16),transparent 75%),
+ radial-gradient(ellipse 60% 37% at 9% 78%,rgba(126,69,43,.10),transparent 76%),
+ linear-gradient(155deg,#100e0d,#17120f 50%,#0d0c0b);padding:clamp(66px,5.5vw,95px) 0;overflow:clip;color:#f4e8df}
+.page-cars .vg-section::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.48;background:radial-gradient(ellipse 27% 18% at 15% 17%,rgba(249,172,97,.12),transparent 80%);animation:vg-ambient 19s ease-in-out infinite alternate}
+@keyframes vg-ambient{0%{transform:translate(-4%,1%)}100%{transform:translate(11%,-8%)}}
+.page-cars .vg-shell{position:relative;max-width:none;width:100%;padding-inline:clamp(16px,2.5vw,48px)}
+.page-cars .vg-heading{margin-block:34px 32px}.page-cars .vg-heading h2{color:#fbf0e7}
+.page-cars .vg-form{background:linear-gradient(125deg,rgba(66,46,36,.48),rgba(31,24,21,.76));border:1px solid rgba(224,171,128,.23);border-radius:22px;padding:23px;backdrop-filter:blur(18px)}
+.page-cars .vg-form input,.page-cars .vg-form select{border-radius:11px;background:rgba(19,16,15,.72);border-color:rgba(201,160,124,.28);color:#f8eee5}
+.page-cars .vg-form label{color:#c8a992}.page-cars .vg-submit{border-radius:11px;background:linear-gradient(115deg,#e3b48d,#b47d58);border:0}
+.page-cars .vg-clear{border-radius:11px}.page-cars .vg-quick button,.page-cars .vg-all-makes{border-radius:100px}
+.vg-all-makes{display:inline-flex;align-items:center;justify-content:center;color:#e5b890;text-decoration:none;font-size:10px;letter-spacing:.1em;font-weight:800;border:1px solid rgba(210,157,108,.44);padding:9px 14px}
+.vg-all-makes:hover{background:rgba(221,154,104,.11)}
+.vg-view-controls{display:flex;align-items:center;gap:15px;white-space:nowrap}
+.vg-layout-switch{display:flex;gap:3px;padding:4px;background:rgba(40,31,28,.82);border:1px solid rgba(215,170,134,.28);border-radius:13px;backdrop-filter:blur(16px)}
+.vg-layout-switch button{border:0;background:transparent;color:#bda896;border-radius:9px;padding:7px 11px;font-size:20px;min-width:41px;min-height:38px;cursor:pointer;line-height:1}
+.vg-layout-switch button[aria-pressed="true"]{background:linear-gradient(135deg,rgba(222,174,133,.31),rgba(105,69,46,.48));color:#ffe2c8;box-shadow:inset 0 1px rgba(255,255,255,.17)}
+.vg-layout-switch button:focus-visible,.vg-view-details:focus-visible{outline:2px solid #f2c7a1;outline-offset:2px}
+.page-cars .vg-result-head{align-items:center}
+.vg-browse{display:block;min-width:0}
+.vg-browse-main{min-width:0}
+.vg-inspector{display:none}
+.page-cars .vg-browse{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(340px,1fr);gap:clamp(16px,2vw,32px);align-items:start}
+.page-cars .vg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.15vw,20px)}
+.page-cars .vg-inspector{display:block;position:sticky;top:90px;max-height:calc(100vh - 108px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#98694b #241b17;border:1px solid rgba(227,166,111,.28);border-radius:23px;padding:clamp(14px,1.5vw,26px);background:linear-gradient(138deg,rgba(65,46,36,.78),rgba(25,21,19,.87) 42%,rgba(29,22,19,.88));backdrop-filter:blur(28px) saturate(135%);box-shadow:0 22px 76px rgba(0,0,0,.29),inset 0 1px 0 rgba(255,229,205,.10)}
+.page-cars .vg-card{position:relative;background:linear-gradient(145deg,rgba(60,45,37,.78),rgba(27,23,22,.82));border:1px solid rgba(220,164,121,.30);border-radius:19px;box-shadow:0 8px 26px rgba(0,0,0,.18),inset 0 1px rgba(255,226,198,.12);backdrop-filter:blur(22px) saturate(130%);overflow:hidden;isolation:isolate}
+.page-cars .vg-card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(117deg,transparent 20%,rgba(251,214,178,.065) 48%,transparent 73%);background-size:250% 100%;animation:vg-glass 11s linear infinite}
+@keyframes vg-glass{0%{background-position:170% 0}100%{background-position:-110% 0}}
+.page-cars .vg-card:hover,.page-cars .vg-card.vg-selected{border-color:rgba(255,191,133,.82);transform:translateY(-2px);box-shadow:0 18px 44px rgba(0,0,0,.28),0 0 23px rgba(219,139,75,.14),inset 0 1px rgba(255,245,226,.19)}
+.page-cars .vg-photo{aspect-ratio:1.48;height:auto;border:0;border-radius:0;background:#231b17;width:100%;padding:0;display:block;text-align:left;cursor:pointer}
+.page-cars .vg-photo img{object-fit:cover;background:#30241e;transition:transform .7s ease}
+.page-cars .vg-photo:hover img{transform:scale(1.065)}
+.page-cars .vg-photo:focus-visible{outline:3px solid #f5c197;outline-offset:-3px}
+.page-cars .vg-card-body{padding:clamp(14px,1.3vw,22px)}
+.page-cars .vg-make-row{font-size:12px;color:#ceb6a5;gap:9px;margin-bottom:7px}
+.page-cars .vg-car-name{font-size:clamp(18px,1.45vw,25px);min-height:0;line-height:1.2;color:#fff4ec;margin:0 0 10px}
+.page-cars .vg-model-years{font-size:12px;color:#bfa998;margin-bottom:11px}
+.page-cars .vg-fuel-badges{margin-bottom:14px;min-height:27px}
+.page-cars .vg-fuel{border-color:#735640;background:rgba(68,48,35,.7);color:#e9c6aa;border-radius:8px;padding:5px 8px}
+.page-cars .vg-fuel-hybrid,.page-cars .vg-fuel-electric{border-color:#486757;background:rgba(36,59,50,.6);color:#97ddbe}
+.page-cars .vg-compact-stats{border-top-color:rgba(225,187,151,.21);font-size:11px;color:#d6c0b0;line-height:1.65}
+.page-cars .vg-view-details{border-radius:9px;border:1px solid rgba(239,192,151,.36);color:#ffdbbf;padding:12px 9px;font-size:10px;background:rgba(255,238,220,.04);margin-top:14px}
+.page-cars .vg-view-details:hover{background:rgba(231,159,106,.14);border-color:#d2a17d}
+.page-cars .vg-photo-missing{color:#cba68a}
+.vg-inspector-head{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#be9474;font-size:9px;letter-spacing:.15em;font-weight:800}
+.vg-inspector-code{opacity:.55;font-size:9px}
+.vg-inspector-title{font-size:clamp(24px,2.4vw,40px);text-transform:uppercase;letter-spacing:-.035em;line-height:1.06;color:#fff0e5;margin:17px 0 8px}
+.vg-inspector-period{color:#c0ab9b;font-size:12px;margin:0 0 19px}
+.vg-inspector-photo{height:clamp(200px,19vw,340px);border-radius:16px;overflow:hidden;background:#2d2421;pointer-events:auto}
+.vg-inspector-photo img{object-fit:cover}
+.vg-inspector-photo-note{font-size:10px;color:#bda795;margin:10px 1px 15px}
+.vg-inspector-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.vg-inspector-meta .vg-fact{padding:12px;background:rgba(255,244,232,.04);border:1px solid rgba(233,187,152,.19);border-radius:10px}
+.vg-inspector-meta dt,.vg-inspector-facts dt{font-size:10px;color:#a99586;letter-spacing:.1em}
+.vg-inspector-meta dd,.vg-inspector-facts dd{font-size:12px;color:#f3dfcd;font-weight:750;line-height:1.5;margin-top:6px;overflow-wrap:anywhere}
+.vg-inspector-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#936c4e transparent;margin:0 0 16px;padding-bottom:5px}
+.vg-inspector-tab{flex:0 0 auto;background:transparent;color:#d1b19c;border:0;border-bottom:2px solid transparent;padding:11px 8px;font-size:10px;font-weight:800;letter-spacing:.05em;cursor:pointer}
+.vg-inspector-tab[aria-selected="true"]{color:#ffe0c1;border-bottom-color:#f0bb8a}
+.vg-inspector-content{margin-top:22px;min-height:125px}
+.vg-inspector-content h4{font-size:11px;letter-spacing:.08em;color:#e7c7ac;margin:8px 0 14px}
+.vg-inspector-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0}
+.vg-inspector-facts .vg-fact{background:rgba(249,208,171,.045);padding:11px;border:1px solid rgba(233,187,152,.15);border-radius:10px}
+.vg-trim{padding:12px 0;border-bottom:1px solid rgba(230,190,150,.16)}
+.vg-trim summary{cursor:pointer;color:#ffe4ce;font-size:12px;line-height:1.7;font-weight:700}
+.vg-trim .vg-inspector-facts{margin-top:14px}
+.vg-trim-dimensions{margin-bottom:23px}
+.vg-inspector-hint{font-size:12px;color:#b8a393;line-height:1.6}
+.vg-timeline-years{font-size:25px;color:#f5d4b9;font-weight:800;letter-spacing:-.03em}
+.vg-inspector-welcome{padding:34px 12px 50px;text-align:center}.vg-inspector-welcome h3{font-size:28px;color:#f4d9c4}.vg-inspector-welcome p:last-child{font-size:12px;color:#c3ac99;line-height:1.8}.vg-inspector-icon{font-size:42px;color:#d9a779}
+/* Grid/list toggle across Collection, Discovery and Compare. */
+.vg-browse.vg-is-list .vg-grid{grid-template-columns:1fr!important}
+.vg-browse.vg-is-list .vg-card{display:grid;grid-template-columns:minmax(180px,38%) minmax(0,1fr);align-items:stretch}
+.vg-browse.vg-is-list .vg-photo{height:100%;min-height:190px;aspect-ratio:auto}
+.vg-browse.vg-is-list .vg-card-body{padding:clamp(14px,1.5vw,25px)}
+.vg-browse.vg-is-list .vg-car-name{font-size:clamp(19px,1.6vw,27px)}
+.vg-browse.vg-is-list .vg-details{grid-column:2}
+/* Shared gallery improvements for Discovery/Compare. */
+.page-discover .vg-section,.page-compare .vg-section{background:linear-gradient(135deg,#110e0d,#1b1511 56%,#110d0c)}
+.page-discover .vg-layout-switch,.page-compare .vg-layout-switch{background:rgba(76,55,41,.43)}
+.page-discover .vg-photo-button,.page-compare .vg-photo-button{padding:0;border:0;width:100%;text-align:left}
+.page-discover .vg-photo img,.page-compare .vg-photo img{object-fit:cover}
+.page-discover .vg-card,.page-compare .vg-card{border-radius:16px;overflow:hidden}
+.page-discover .vg-view-details,.page-compare .vg-view-details{background:transparent;border:1px solid rgba(205,159,119,.32);border-radius:8px;color:#edc49e;padding:10px;margin-top:15px;cursor:pointer;font-size:10px;letter-spacing:.06em}
+.page-discover .vg-make-row,.page-compare .vg-make-row{display:flex;align-items:center;gap:8px;color:#cda889;font-size:12px;margin:0 0 7px}
+.page-discover .vg-fuel-badges,.page-compare .vg-fuel-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.page-discover .vg-fuel,.page-compare .vg-fuel{border:1px solid rgba(208,168,131,.28);border-radius:5px;padding:4px 7px;text-transform:capitalize;font-size:10px;color:#dfbc9f}
+.page-discover .vg-compact-stats,.page-compare .vg-compact-stats{display:flex;justify-content:space-between;border-top:1px solid rgba(208,168,131,.22);padding-top:10px;color:#cdb8a7;font-size:11px}
+.page-discover .vg-details,.page-compare .vg-details{margin-top:14px}
+.page-discover .vg-details:not([open]),.page-compare .vg-details:not([open]){display:none}
+.page-discover .vg-photo,.page-compare .vg-photo{height:auto;aspect-ratio:1.55}
+.page-discover .vg-grid,.page-compare .vg-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:1450px){.page-cars .vg-browse{grid-template-columns:minmax(0,1.55fr) minmax(330px,1fr)}.page-cars .vg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1100px){.page-cars .vg-browse{grid-template-columns:minmax(0,1fr)}.page-cars .vg-inspector{position:static;max-height:none;order:-1;scroll-margin-top:95px}.page-cars .vg-browse{display:flex;flex-direction:column}.page-cars .vg-browse-main,.page-cars .vg-inspector{width:100%}.page-cars .vg-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:850px){.page-cars .vg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page-cars .vg-form{grid-template-columns:repeat(2,minmax(0,1fr))}.page-discover .vg-grid,.page-compare .vg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.page-cars .vg-shell{padding-inline:14px}.page-cars .vg-grid{gap:12px}.page-cars .vg-card-body{padding:12px}.page-cars .vg-car-name{font-size:17px}.page-cars .vg-form{grid-template-columns:1fr}.page-cars .vg-form .vg-keyword{grid-column:auto}.page-cars .vg-inspector{padding:14px}.page-cars .vg-inspector-meta{grid-template-columns:repeat(2,minmax(0,1fr))}.page-discover .vg-grid,.page-compare .vg-grid{grid-template-columns:1fr}.vg-result-head{flex-direction:column;align-items:flex-start!important}.vg-view-controls{width:100%;justify-content:space-between}.vg-browse.vg-is-list .vg-card{grid-template-columns:minmax(110px,36%) 1fr}.vg-browse.vg-is-list .vg-photo{min-height:150px}.vg-browse.vg-is-list .vg-card-body{padding:12px}.vg-browse.vg-is-list .vg-card .vg-details{grid-column:1/-1}.vg-browse.vg-is-list .vg-fuel-badges{margin-bottom:6px}}
+@media(prefers-reduced-motion:reduce){.page-cars .vg-section::before,.page-cars .vg-card::after{animation:none}.page-cars .vg-photo img{transition:none}}
+
+/* More visible copper light sweep on live vehicle cards throughout the site. */
+.vg-section .vg-card{position:relative;isolation:isolate;overflow:hidden}
+.vg-section .vg-card::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;background:linear-gradient(113deg,transparent 10%,rgba(255,212,166,.035) 35%,rgba(255,197,135,.115) 50%,rgba(255,228,191,.055) 55%,transparent 76%);background-size:260% 100%;animation:vg-copper-sweep 11s linear infinite;mix-blend-mode:screen}
+.vg-section .vg-card:nth-child(3n+2)::after{animation-delay:-2.3s}
+.vg-section .vg-card:nth-child(3n)::after{animation-delay:-4.4s}
+.vg-section .vg-card:hover::after{background:linear-gradient(113deg,transparent 5%,rgba(255,213,169,.06) 37%,rgba(255,201,140,.20) 50%,transparent 77%);background-size:260% 100%;animation-duration:7s}
+@keyframes vg-copper-sweep{0%{background-position:190% 0}100%{background-position:-150% 0}}
+@media(prefers-reduced-motion:reduce){.vg-section .vg-card::after{animation:none;opacity:.18}}

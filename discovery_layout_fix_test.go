@@ -15,7 +15,7 @@ func TestDiscoveryInlineStylesAndHeroBackground(t *testing.T) {
 		t.Fatalf("discovery status=%d: %s", res.Code, res.Body.String())
 	}
 	body := res.Body.String()
-	for _, fragment := range []string{"id=\"velocity-discovery-styles\"", "id=\"discoverHeroVideo\"", "class=\"dx-hero-photo dx-hero-film\"", "class=\"dx-hero-copy\"", "dx-hero-grid", "Vehicle intelligence", "discover-film.js?v=20261028-motion"} {
+	for _, fragment := range []string{"id=\"velocity-discovery-styles\"", "id=\"discoverHeroVideo\"", "class=\"dx-hero-photo dx-hero-film\"", "class=\"dx-hero-copy\"", "dx-hero-grid", "Vehicle intelligence", "discover-film.js?v=20261116-film"} {
 		if !strings.Contains(body, fragment) {
 			t.Errorf("Discovery response missing %q", fragment)
 		}

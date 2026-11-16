@@ -572,6 +572,7 @@ func routes() http.Handler {
 	}))
 	mux.HandleFunc("/", homeHandler)
 	mux.HandleFunc("/cars", carsHandler)
+	mux.HandleFunc("/manufacturers", manufacturersHandler)
 	mux.HandleFunc("/cars/", carDetailHandler)
 	mux.HandleFunc("/about", aboutHandler)
 	mux.HandleFunc("/discover", discoverPremiumHandler)

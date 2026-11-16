@@ -2281,3 +2281,6 @@ img {
     flex-wrap:wrap;
     gap:13px;
 }
+/* Six destination links + action fit comfortably without crowding. */
+@media(min-width:821px){.nav-links{gap:clamp(11px,1.65vw,27px)}.nav-links>a:not(.nav-action){font-size:12px}.nav-action{padding:11px 13px;margin-left:0}.nav-action span{margin-left:9px}}
+@media(min-width:821px) and (max-width:1080px){.nav-links{gap:10px}.velocity-nav-logo{max-width:180px;height:auto}.nav-links>a:not(.nav-action){font-size:11px}}

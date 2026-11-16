@@ -15,7 +15,7 @@ func TestDiscoveryVideoHeroAndControls(t *testing.T) {
 		t.Fatalf("/discover returned %d", rec.Code)
 	}
 	page := rec.Body.String()
-	for _, expected := range []string{"id=\"discoverHeroVideo\"", "id=\"discoverFilmToggle\"", "/static/videos/discover-hero.mp4", "discover-film-poster.webp", "discover-film.js?v=20261028-motion"} {
+	for _, expected := range []string{"id=\"discoverHeroVideo\"", "/static/videos/discover-hero.mp4", "discover-film-poster.webp", "discover-film.js?v=20261116-film"} {
 		if !strings.Contains(page, expected) {
 			t.Errorf("missing video hero detail: %q", expected)
 		}

@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="/static/css/home-editorial.css?v=20261028-hero2">
   <script defer src="/static/js/site.js"></script>
   <script defer src="/static/js/home-motion.js"></script>
-  <script defer src="/static/js/home-editorial.js?v=20261028-hero2"></script>
+  <script defer src="/static/js/home-editorial.js?v=20261116-film"></script>
 </head>
 <body class="page-home">
 {{template "nav" .}}
@@ -46,8 +46,6 @@
       <div class="vh-hero-meta"><span>VÉLOCITY / AUTOMOTIVE CULTURE</span><span>EST. 2026</span></div>
     </div>
     <div class="vh-hero-controls">
-      <span class="vh-hero-running" id="heroPlaybackStatus">FILM / PLAYING</span>
-      <button type="button" id="velocityHeroVideoToggle" aria-label="Pause hero film" aria-pressed="false">PAUSE <span aria-hidden="true">Ⅱ</span></button>
       <a href="#featured" class="vh-hero-down">SCROLL TO EXPLORE ↓</a>
     </div>
   </section>
@@ -131,7 +129,7 @@
         <video id="homeEditorialVideo" muted autoplay loop playsinline preload="metadata" poster="/static/images/home-film-poster.jpg" aria-label="Short aerial film of a performance car moving through tyre smoke in a parking area">
           <source src="/static/videos/home-editorial-film.mp4" type="video/mp4">
         </video>
-        <div class="vh-film-overlay"><span>FRAME 002 / IN MOTION</span><button type="button" id="homeEditorialVideoToggle" aria-label="Pause film" aria-pressed="false">PAUSE FILM <span aria-hidden="true">Ⅱ</span></button></div>
+        <div class="vh-film-overlay"><span>FRAME 002 / IN MOTION</span></div>
       </div>
     </div>
   </section>
@@ -140,13 +138,14 @@
     <div class="shell">
       <div class="vh-section-header vh-reveal">
         <div><p class="vh-index">05 / THE EXPERIENCE</p><h2 id="vhExperienceTitle">CURIOUS BY<br>DESIGN.</h2></div>
-        <div class="vh-section-side"><p>Go deeper into the cars, the stories, and the intelligence behind the badge.</p></div>
+        <div class="vh-section-side"><p>Explore remarkable cars and the manufacturers behind them, then follow the details that inspire you.</p></div>
       </div>
       <nav class="vh-paths" aria-label="Explore VÉLOCITY features">
         <a href="/discover" class="vh-path"><span class="vh-path-num">01</span><span class="vh-path-content"><strong>DISCOVERY</strong><small>Explore manufacturers, models, and vehicle intelligence.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
         <a href="/cars" class="vh-path"><span class="vh-path-num">02</span><span class="vh-path-content"><strong>THE COLLECTION</strong><small>Discover a considered selection of remarkable machines.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
-        <a href="/compare" class="vh-path"><span class="vh-path-num">03</span><span class="vh-path-content"><strong>COMPARE</strong><small>See how different cars measure up, side by side.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
-        <a href="/about" class="vh-path"><span class="vh-path-num">04</span><span class="vh-path-content"><strong>ABOUT</strong><small>Meet the ideas, curiosity, and passion behind VÉLOCITY.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
+        <a href="/manufacturers" class="vh-path"><span class="vh-path-num">03</span><span class="vh-path-content"><strong>MANUFACTURERS</strong><small>Discover iconic marques by country, then browse their models and generations.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
+        <a href="/compare" class="vh-path"><span class="vh-path-num">04</span><span class="vh-path-content"><strong>COMPARE</strong><small>See how different cars measure up, side by side.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
+        <a href="/about" class="vh-path"><span class="vh-path-num">05</span><span class="vh-path-content"><strong>ABOUT</strong><small>Meet the ideas, curiosity, and passion behind VÉLOCITY.</small></span><span class="vh-path-arrow" aria-hidden="true">↗</span></a>
       </nav>
     </div>
   </section>

@@ -5,49 +5,18 @@
   if (!body.classList.contains('page-home')) return;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const film = document.getElementById('homeEditorialVideo');
-  const toggle = document.getElementById('homeEditorialVideoToggle');
 
-  // Hero film: autoplay muted, user-controlled pause, and visibility-aware playback.
+  // Muted, looping background films. Controls intentionally removed.
   const heroFilm = document.getElementById('velocityHeroVideo');
-  const heroToggle = document.getElementById('velocityHeroVideoToggle');
-  const heroStatus = document.getElementById('heroPlaybackStatus');
-  if (heroFilm && heroToggle) {
-    let pausedByUser = false;
-    const updateHero = () => {
-      const paused = heroFilm.paused;
-      heroToggle.setAttribute('aria-pressed', String(paused));
-      heroToggle.setAttribute('aria-label', paused ? 'Play hero film' : 'Pause hero film');
-      heroToggle.innerHTML = paused ? 'PLAY <span aria-hidden="true">▶</span>' : 'PAUSE <span aria-hidden="true">Ⅱ</span>';
-      if (heroStatus) heroStatus.textContent = paused ? 'FILM / PAUSED' : 'FILM / PLAYING';
-    };
-    heroToggle.addEventListener('click', () => {
-      if (heroFilm.paused) {
-        pausedByUser = false;
-        heroFilm.play().catch(updateHero);
-      } else { pausedByUser = true; heroFilm.pause(); }
-      updateHero();
-    });
-    heroFilm.addEventListener('play', updateHero);
-    heroFilm.addEventListener('pause', updateHero);
-    if (reducedMotion) { pausedByUser = true; heroFilm.pause(); }
-    else {
-      heroFilm.play().catch(updateHero);
-      if ('IntersectionObserver' in window) {
-        const watching = new IntersectionObserver(entries => {
-          for (const item of entries) {
-            if (item.isIntersecting && !pausedByUser && !document.hidden) heroFilm.play().catch(updateHero);
-            else if (!item.isIntersecting) heroFilm.pause();
-          }
-        }, { threshold: 0.06 });
-        watching.observe(heroFilm);
-      }
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) heroFilm.pause();
-        else if (!pausedByUser && heroFilm.getBoundingClientRect().bottom > 0 && heroFilm.getBoundingClientRect().top < innerHeight) heroFilm.play().catch(updateHero);
-      });
-    }
-    updateHero();
-  }
+  const startFilm = (video) => {
+    if (!video) return;
+    video.muted = true;
+    video.loop = true;
+    if (reducedMotion) { video.pause(); return; }
+    const attempt = video.play();
+    if (attempt && typeof attempt.catch === 'function') attempt.catch(() => {});
+  };
+  startFilm(heroFilm);
   // Accessible vehicle browser uses only already-rendered Go catalogue data.
   const atelierTabs = [...document.querySelectorAll('[data-atelier-tab]')];
   const activateAtelier = (index, focus = false) => {
@@ -93,43 +62,7 @@
     });
   });
 
-  if (film && toggle) {
-    let manuallyPaused = false;
-    const setToggle = () => {
-      const paused = film.paused;
-      toggle.setAttribute('aria-pressed', String(paused));
-      toggle.setAttribute('aria-label', paused ? 'Play film' : 'Pause film');
-      toggle.innerHTML = paused ? 'PLAY FILM <span aria-hidden="true">▶</span>' : 'PAUSE FILM <span aria-hidden="true">Ⅱ</span>';
-    };
-    toggle.addEventListener('click', () => {
-      if (film.paused) {
-        manuallyPaused = false;
-        film.play().catch(() => {});
-      } else { manuallyPaused = true; film.pause(); }
-      setToggle();
-    });
-    film.addEventListener('play', setToggle);
-    film.addEventListener('pause', setToggle);
-    if (reducedMotion) { manuallyPaused = true; film.pause(); }
-    else {
-      const canPlay = film.play();
-      if (canPlay && typeof canPlay.catch === 'function') canPlay.catch(() => { film.pause(); setToggle(); });
-      if ('IntersectionObserver' in window) {
-        const watchFilm = new IntersectionObserver(entries => {
-          for (const entry of entries) {
-            if (entry.isIntersecting && !manuallyPaused && !document.hidden) film.play().catch(() => {});
-            else if (!entry.isIntersecting) film.pause();
-          }
-        }, {threshold: 0.12});
-        watchFilm.observe(film);
-      }
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) film.pause();
-        else if (!manuallyPaused && film.getBoundingClientRect().bottom > 0 && film.getBoundingClientRect().top < innerHeight) film.play().catch(() => {});
-      });
-    }
-    setToggle();
-  }
+  startFilm(film);
 
   if (!reducedMotion && 'IntersectionObserver' in window) {
     const elements = [...document.querySelectorAll('.vh-reveal')];

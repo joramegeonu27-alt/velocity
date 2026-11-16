@@ -1,0 +1,38 @@
+{{define "manufacturers.html"}}
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#120e0c">
+<meta name="description" content="Explore automotive manufacturers around the world. Browse marques, discover model generations, photographs and performance information with VÉLOCITY.">
+<title>{{.Title}}</title><link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+<link rel="stylesheet" href="/static/css/style.css"><link rel="stylesheet" href="/static/css/velocity-premium.css"><link rel="stylesheet" href="/static/css/typography-refined.css">
+<link rel="stylesheet" href="/static/css/manufacturers.css?v=20261116-softlight"><script defer src="/static/js/site.js"></script><script defer src="/static/js/manufacturers.js?v=20261116-logos"></script>
+</head><body class="page-manufacturers">{{template "nav" .}}<main id="main">
+<section class="mm-intro mm-photo-hero" aria-label="Manufacturers hero — Mercedes-Benz badge at sunset">
+  <div class="mm-ambient" aria-hidden="true"></div>
+  <div class="mm-shell mm-hero-inner">
+    <div class="mm-hero-story"><span class="mm-hero-kicker">VÉLOCITY / THE MARQUES</span><h1>BEHIND EVERY BADGE,<br><em>A LEGACY.</em></h1><p>Explore the makers shaping the automotive world—from timeless icons to forward-thinking innovators. Discover their models, generations, and the engineering that defines each name.</p><a href="#manufacturers" class="mm-hero-link">EXPLORE MANUFACTURERS <span aria-hidden="true">↗</span></a></div>
+    <div class="mm-intro-note"><span>CURATED WORLDWIDE DIRECTORY</span><strong>ONE WORLD.<br>ENDLESS MACHINES.</strong><span>REAL MODEL RECORDS / GENERATION SPECS</span></div>
+  </div>
+</section>
+<section class="mm-directory" id="manufacturers" data-manufacturers aria-labelledby="mm-directory-heading"><div class="mm-shell">
+  <div class="mm-section-rail"><span>01 / MANUFACTURER INDEX</span><span>EXPLORE BY MARQUE · COUNTRY · MODEL</span></div>
+  <div class="mm-heading"><div><p class="mm-eyebrow">GLOBAL AUTOMOTIVE DIRECTORY</p><h2 id="mm-directory-heading">ALL <em>MANUFACTURERS.</em></h2><p>Choose a name to explore the models and generations available in the VÉLOCITY vehicle catalogue.</p></div><span class="mm-count" data-mm-count>MANUFACTURERS</span></div>
+  <div data-mm-directory>
+    <div class="mm-controls" data-mm-controls>
+      <label class="mm-search">SEARCH MANUFACTURERS<input type="search" data-mm-search placeholder="Search BMW, Toyota, Lexus…" maxlength="90" autocomplete="off"></label>
+      <label>COUNTRY<select data-mm-country><option value="">🌍 All countries</option></select></label>
+      <label>SORT BY<select data-mm-sort><option value="featured">Featured brands</option><option value="az">Name A–Z</option><option value="za">Name Z–A</option></select></label>
+      <div class="mm-switch" role="group" aria-label="Manufacturer directory layout"><button type="button" data-mm-view="grid" aria-label="Grid view" aria-pressed="true">▦</button><button type="button" data-mm-view="list" aria-label="List view" aria-pressed="false">☷</button></div>
+    </div>
+    <div class="mm-grid" data-mm-grid aria-live="polite"></div>
+    <p class="mm-smallprint">Brand logos load from third-party brand-icon services where available. If a mark is unavailable, a neutral vehicle emblem is shown. Manufacturer names and country information remain searchable.</p>
+  </div>
+  <section class="mm-results" data-mm-results hidden aria-label="Manufacturer model generations">
+    <button type="button" class="mm-back" data-mm-back>← ALL MANUFACTURERS</button>
+    <div class="mm-selected-head"><span class="mm-brand-emblem" data-mm-emblem aria-hidden="true">V.</span><div><p class="mm-eyebrow" data-mm-country-label>THE MARQUE / COUNTRY</p><h2 data-mm-brand-heading>MANUFACTURER</h2><p data-mm-result-status role="status" aria-live="polite">Loading generations…</p></div></div>
+    <form class="mm-model-form" data-mm-model-form><label>MODEL NAME<input name="modelFamily" type="search" placeholder="Search this maker's models" maxlength="160"></label><label>ORDER BY<select name="sort"><option value="newest">Newest generations</option><option value="oldest">Oldest first</option><option value="name">Model name A–Z</option></select></label><button type="submit">EXPLORE MODELS ↗</button></form>
+    <div class="mm-model-grid" data-mm-model-grid></div><div class="mm-more-row"><button type="button" data-mm-more hidden>LOAD MORE GENERATIONS ↓</button></div>
+  </section>
+  <p class="mm-attribution">Generation photography and specifications provided by <a href="https://carvariables.com" target="_blank" rel="noopener noreferrer">CarVariables</a>. Photographs are representative; some models may not have published images.</p>
+</div></section>
+</main>{{template "footer" .}}</body></html>
+{{end}}

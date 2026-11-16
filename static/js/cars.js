@@ -1,6 +1,6 @@
 
 /* Velocity collection: preserve server filtering and the grid/list switch.
-   The collection hero video has no visible pause/play button. */
+   The Collection film plays on a continuous muted loop without controls. */
 (() => {
   "use strict";
 
@@ -58,6 +58,8 @@
   const video = document.getElementById("collectionHeroVideo");
 
   if (!video) return;
+  video.muted = true;
+  video.loop = true;
 
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
@@ -66,7 +68,7 @@
   const updateMotionPreference = () => {
     if (reduceMotion.matches) {
       video.pause();
-    } else if (!document.hidden) {
+    } else {
       const playRequest = video.play();
 
       if (
@@ -83,13 +85,6 @@
     updateMotionPreference
   );
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      video.pause();
-    } else {
-      updateMotionPreference();
-    }
-  });
 
   updateMotionPreference();
 })();

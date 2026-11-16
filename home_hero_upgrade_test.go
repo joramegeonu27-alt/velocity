@@ -13,7 +13,7 @@ func TestLuxuryHeroMediaMigration(t *testing.T) {
 		t.Fatalf("home HTTP %d", home.Code)
 	}
 	body := home.Body.String()
-	for _, token := range []string{"velocityHeroVideo", "home-rivals-hero.mp4", "vh-hero-left-shade", "vh-atelier", "vh-direction", "vh-manifesto", "velocityHeroVideoToggle"} {
+	for _, token := range []string{"velocityHeroVideo", "home-rivals-hero.mp4", "vh-hero-left-shade", "vh-atelier", "vh-direction", "vh-manifesto"} {
 		if !strings.Contains(body, token) {
 			t.Errorf("home missing %q", token)
 		}

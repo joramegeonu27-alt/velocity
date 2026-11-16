@@ -17,7 +17,7 @@ func TestHomeEditorialMediaAndNavigation(t *testing.T) {
 		"home-editorial.css", "home-editorial.js", "home-rivals-hero.mp4",
 		"home-motion-car.webp", "home-classic.webp", "home-editorial-film.mp4",
 		"home-film-poster.jpg", "THE ROAD", "05 / THE EXPERIENCE",
-		"THE FINER DETAILS", "homeEditorialVideoToggle", "BEYOND SPEED.",
+		"THE FINER DETAILS", "BEYOND SPEED.",
 		"BEYOND ORDINARY.", "AUTOMOTIVE EXCELLENCE.",
 		"href=\"/discover\"", "href=\"/cars\"", "href=\"/compare\"", "href=\"/about\"",
 	} {
